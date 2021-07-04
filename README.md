@@ -13,7 +13,7 @@ We use NGINX as a reverse proxy. You can find the configuration in [`nginx`](htt
 https://digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-20-04
 
 # Configuring COTURN
-You can see how to configure [COTURN](https://github.com/coturn/coturn) here:
+You can find the configuration of [COTURN](https://github.com/coturn/coturn) in the directory [`coturn`](https://github.com/MrPoll0/tree/prod/coturn).
 
 https://ourcodeworld.com/articles/read/1175/how-to-create-and-configure-your-own-stun-turn-server-with-coturn-in-ubuntu-18-04
 
