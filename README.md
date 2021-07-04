@@ -39,6 +39,5 @@ SSH -> 22
 # Running locally in development mode
 To run [`api`](https://github.com/MrPoll0/e1/tree/prod/api) and [`app`](https://github.com/MrPoll0/e1/tree/prod/app)
 
-        cd api/src && pm2 start server.js --name api
-        cd ../../app && pm2 start npm --name "app" -- run dev
-
+	cd api/src && pm2 start server.js --name api
+	cd ../../app && pm2 start npm --name "app" -- run dev
