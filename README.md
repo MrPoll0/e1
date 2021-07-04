@@ -1,6 +1,6 @@
 # Project Eco #1
 
-# Getting started
+# Getting starte
 To get started, run the following commands:
 
 	git clone https://github.com/MrPoll0/e1.git
