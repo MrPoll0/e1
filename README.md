@@ -1,4 +1,5 @@
 # Project Eco #1
+## Not compatible with Socket.io 2.4.0 at the moment!
 
 # Getting started
 To get started, run the following commands:
