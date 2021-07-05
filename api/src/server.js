@@ -25,10 +25,10 @@ const io = require('socket.io')(server, {
 // Sockets
 io.on('connection', (socket) => {
 
-  console.log("Socket conectado: " + socket.id);
+  console.log("Socket connected: " + socket.id);
 
   socket.on('disconnect', () => {
-    console.log("Socket desconectado: " + socket.id);
+    console.log("Socket disconnected: " + socket.id);
   });
 
 
