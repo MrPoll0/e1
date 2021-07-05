@@ -6,12 +6,14 @@ export default function Layout({ children }) {
     return ( 
         <>
         <Head>
-            <title>Test</title>
+            <title>E1</title>
         </Head>
         <Header />
+        <br />
         <main>
             {children}
         </main>
+        <br />
         <Footer />
         </>
     )
