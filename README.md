@@ -41,3 +41,11 @@ To run [`api`](https://github.com/MrPoll0/e1/tree/prod/api) and [`app`](https://
 
 	cd api/src && pm2 start server.js --name api
 	cd ../../app && pm2 start npm --name "app" -- run dev
+
+# How to Git
+
+	git init
+	git add . (add all [.] or specific files)
+	git commit -m "Commit message"
+	git push origin [local branch]:[remote branch]
+To check local branch: `git branch`.
