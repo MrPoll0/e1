@@ -18,7 +18,7 @@ const iceServers = {
 }
 
 let remoteStream
-let isRoomCreator
+let isCaller
 let rtcPeerConnection // Connection between the local device and the remote peer.
 let roomId
 
@@ -31,7 +31,7 @@ const Video = () => {
     const [roomN, setRoomN] = useState("");
     const [show, setShow] = useState("");
     const [joinedRoom, setJoinedRoom] = useState("");
-    const [joinedRoomN, setJoinedRoomN] = useState("");
+    const [Name, setName] = useState("");
     const [streaming, setStreaming] = useState();
     const [remoting, setRemoting] = useState();
     //const localStreamR = useRef(null);
@@ -45,7 +45,7 @@ const Video = () => {
     }
 
     const handleClick = (e) => {
-        setJoinedRoomN(roomN);
+        setName(roomN);
         setJoinedRoom(true);
     }
 
@@ -53,47 +53,23 @@ const Video = () => {
         setShow(true);
     }
 
-    /*const addLocalTracks = (rtcPeerConnection) => {
-      localStreamR.current.getTracks().forEach((track) => {
-        rtcPeerConnection.addTrack(track, localStreamR.current)
-      })
-    }*/
-
     useEffect(() => {
         if(!isMounted.current){ 
           isMounted.current = true;
         }else{ 
           const socket = socketIOClient(ENDPOINT);
           let localStream;
-          socket.on("connect", () => {
-            console.log("Socket conectado: " + socket.id);
-          });
-
-          socket.on("disconnect", () => {
-            console.log("Socket disconectado: " + socket.id);
-          });
 
           console.log('useeffect')
           if(joinedRoom) {
-              if (joinedRoomN === '') {
-                alert('Please type a room ID')
+              if (Name === '') {
+                alert('Please type a nickname')
               } else {
-                roomId = joinedRoomN
-                socket.emit('join', joinedRoomN)
+                socket.emit('join', {"username": Name})
                 showVideoConference()
+                console.log("joined")
               }
           }
-            
-          /*async function setLocalStream(mediaConstraints) {
-              navigator.mediaDevices.getUserMedia(mediaConstraints).then(stream => {
-                setStreaming(stream)
-                //localStreamR.current = stream;
-                localStream = stream;
-                videoRef.current.srcObject = stream
-              }).catch((error) => {
-                console.error('Could not get user media', error)
-              })
-          }*/
 
           async function setLocalStream(mediaConstraints) {
             let stream
@@ -122,6 +98,8 @@ const Video = () => {
               } catch (error) {
                 console.error(error)
               }
+
+              console.log("emmited offer");
             
               socket.emit('webrtc_offer', {
                 type: 'webrtc_offer',
@@ -139,6 +117,8 @@ const Video = () => {
                 console.error(error)
               }
             
+              console.log("emmited answer");
+
               socket.emit('webrtc_answer', {
                 type: 'webrtc_answer',
                 sdp: sessionDescription,
@@ -147,10 +127,11 @@ const Video = () => {
           }
             
           function setRemoteStream(event) {
-              //remoteVideoComponent.srcObject = event.streams[0]
               setRemoting(event.streams[0])
               videoRRef.current.srcObject = event.streams[0]
               remoteStream = event.stream
+
+              //console.log("remote stream settled");
           }
             
           function sendIceCandidate(event) {
@@ -164,30 +145,34 @@ const Video = () => {
           }
       
           // SOCKET EVENT CALLBACKS =====================================================
-          socket.on('room_created', async () => {
-              console.log('Socket event callback: room_created')
-            
-              await setLocalStream(mediaConstraints)
-              isRoomCreator = true
-          })
-            
-          socket.on('room_joined', async () => {
-              console.log('Socket event callback: room_joined')
-            
-              await setLocalStream(mediaConstraints)
-              socket.emit('start_call', roomId)
-          })
-            
-          socket.on('full_room', () => {
-              console.log('Socket event callback: full_room')
-            
-              alert('The room is full, please try another one')
+          socket.on("connect", () => {
+            console.log("Socket connected: " + socket.id);
+          });
+
+          socket.on("disconnect", () => {
+            console.log("Socket disconnected: " + socket.id);
+          });
+
+          socket.on('room_joined', async (bool, room) => {
+              await setLocalStream(mediaConstraints);
+              isCaller = bool;
+              roomId = room;
+
+              console.log("room_joined --> " + isCaller);
+
+              if(isCaller){
+                socket.emit('caller_ready', room);
+                //socket.emit('start_call', room);
+              }else{
+                socket.emit('receiver_ready', room);
+              }
           })
             
           socket.on('start_call', async () => {
-              console.log('Socket event callback: start_call')
-            
-              if (isRoomCreator) {
+            console.log("received start_call");
+              if (isCaller) {
+                console.log("started call");
+
                 rtcPeerConnection = new RTCPeerConnection(iceServers)
                 addLocalTracks(rtcPeerConnection)
                 rtcPeerConnection.ontrack = setRemoteStream
@@ -197,9 +182,9 @@ const Video = () => {
           })
             
           socket.on('webrtc_offer', async (event) => {
-              console.log('Socket event callback: webrtc_offer')
-            
-              if (!isRoomCreator) {
+              if (!isCaller) {
+                console.log("received offer");
+
                 rtcPeerConnection = new RTCPeerConnection(iceServers)
                 addLocalTracks(rtcPeerConnection)
                 rtcPeerConnection.ontrack = setRemoteStream
@@ -210,7 +195,7 @@ const Video = () => {
           })
             
           socket.on('webrtc_answer', (event) => {
-              console.log('Socket event callback: webrtc_answer')
+              console.log('received answer');
             
               rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(event))
           })
@@ -226,7 +211,7 @@ const Video = () => {
               rtcPeerConnection.addIceCandidate(candidate)
           })
         }
-    }, [joinedRoom, joinedRoomN])
+    }, [joinedRoom, Name])
 
 
     let UserVideo;
