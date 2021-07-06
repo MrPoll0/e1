@@ -22,53 +22,77 @@ const io = require('socket.io')(server, {
   }
 });
 
+
+var queue = [];
+var allUsers = {};
+var names = {};
+var rooms = {};
+var waitingList = [];
+
+function isEmptyObject(obj){
+  return !Object.keys(obj).length;
+}
+
+function queueSocket(socket){
+    if(!isEmptyObject(queue)){
+      var peer = queue.pop();
+      var room = socket.id + "#" + peer.id;
+
+      peer.join(room);
+      socket.join(room);
+      rooms[peer.id] = room;
+      rooms[socket.id] = room;
+      console.log(names[socket.id] + " and " + names[peer.id] + " joined the room: " + room);
+
+      waitingList[socket.id] = peer;
+      socket.emit('room_joined', true, room);
+      //peer.emit('room_joined', false, room);
+    }else{
+      queue.push(socket);
+      console.log(names[socket.id] + " joined the queue");
+    }
+}
+
 // Sockets
 io.on('connection', (socket) => {
-
   console.log("Socket connected: " + socket.id);
 
   socket.on('disconnect', () => {
     console.log("Socket disconnected: " + socket.id);
   });
 
+  socket.on('join', (data) => {
+    console.log(data.username + " joined");
 
-  socket.on('join', (roomId) => {
-    console.log(roomId);
-    const roomClients = io.sockets.adapter.rooms[roomId] || { length: 0 }
-    const numberOfClients = roomClients.length
-    console.log(numberOfClients)
-
-    // These events are emitted only to the sender socket.
-    if (numberOfClients == 0) {
-      console.log(`Creating room ${roomId} and emitting room_created socket event`)
-      socket.join(roomId)
-      socket.emit('room_created', roomId)
-      console.log(io.sockets.adapter.rooms[roomId])
-    } else if (numberOfClients == 1) {
-      console.log(`Joining room ${roomId} and emitting room_joined socket event`)
-      socket.join(roomId)
-      socket.emit('room_joined', roomId)
-    } else {
-      console.log(`Can't join room ${roomId}, emitting full_room socket event`)
-      socket.emit('full_room', roomId)
-    }
+    names[socket.id] = data.username;
+    allUsers[socket.id] = socket;
+    queueSocket(socket);
   })
+
+  socket.on('caller_ready', (roomId) => {
+    console.log("caller is ready");
+    var peer = waitingList[socket.id];
+    delete waitingList[socket.id];
+    peer.emit('room_joined', false, roomId);
+  });
+
+  socket.on('receiver_ready', (roomId) => {
+    console.log("receiver is ready");
+    io.in(roomId).emit('start_call');
+    
+    console.log("start_call broadcasted: " + socket.id);
+  });
   
-  // These events are emitted to all the sockets connected to the same room except the sender.
-  socket.on('start_call', (roomId) => {
-    console.log(`Broadcasting start_call event to peers in room ${roomId}`)
-    socket.broadcast.to(roomId).emit('start_call')
-  })
   socket.on('webrtc_offer', (event) => {
-    console.log(`Broadcasting webrtc_offer event to peers in room ${event.roomId}`)
+    console.log(`webrtc_offer to ${event.roomId}`)
     socket.broadcast.to(event.roomId).emit('webrtc_offer', event.sdp)
   })
   socket.on('webrtc_answer', (event) => {
-    console.log(`Broadcasting webrtc_answer event to peers in room ${event.roomId}`)
+    console.log(`webrtc_answer to ${event.roomId}`)
     socket.broadcast.to(event.roomId).emit('webrtc_answer', event.sdp)
   })
   socket.on('webrtc_ice_candidate', (event) => {
-    console.log(`Broadcasting webrtc_ice_candidate event to peers in room ${event.roomId}`)
+    //console.log(`Broadcasting webrtc_ice_candidate event to peers in room ${event.roomId}`)
     socket.broadcast.to(event.roomId).emit('webrtc_ice_candidate', event)
   })
 })
