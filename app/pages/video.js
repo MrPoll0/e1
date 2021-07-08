@@ -21,6 +21,7 @@ let remoteStream
 let isCaller
 let rtcPeerConnection // Connection between the local device and the remote peer.
 let roomId
+let peerName
 
 const mediaConstraints = {
     audio: true,
@@ -34,7 +35,6 @@ const Video = () => {
     const [Name, setName] = useState("");
     const [streaming, setStreaming] = useState();
     const [remoting, setRemoting] = useState();
-    //const localStreamR = useRef(null);
     const videoRef = useRef(null);
     const videoRRef = useRef(null);
 
@@ -130,8 +130,6 @@ const Video = () => {
               setRemoting(event.streams[0])
               videoRRef.current.srcObject = event.streams[0]
               remoteStream = event.stream
-
-              //console.log("remote stream settled");
           }
             
           function sendIceCandidate(event) {
@@ -162,13 +160,18 @@ const Video = () => {
 
               if(isCaller){
                 socket.emit('caller_ready', room);
-                //socket.emit('start_call', room);
               }else{
                 socket.emit('receiver_ready', room);
               }
           })
             
-          socket.on('start_call', async () => {
+          socket.on('start_call', async (names) => {
+            if(names[0] === Name){
+              peerName = names[1];
+            }else{
+              peerName = names[0];
+            }
+            
             console.log("received start_call");
               if (isCaller) {
                 console.log("started call");
@@ -217,14 +220,24 @@ const Video = () => {
     let UserVideo;
     if(streaming){
       UserVideo = (
-        <video ref={ videoRef } autoPlay muted></video>
+        <div>
+          {Name}
+          <video ref={ videoRef } autoPlay muted></video>
+        </div>
       );
     }
 
-    let RemoteVideo;
+    let RemoteVideo = (
+      <div>
+        Waiting for the love of your life...
+      </div>
+    );
     if(remoting){
       RemoteVideo = (
-        <video ref={ videoRRef} autoPlay></video>
+        <div>
+          {peerName}
+          <video ref={ videoRRef } autoPlay></video>
+        </div>  
       );
     }
 
