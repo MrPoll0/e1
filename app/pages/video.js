@@ -229,7 +229,7 @@ const Video = () => {
 
     let RemoteVideo = (
       <div>
-        Waiting for the love of your life...
+        Waiting...
       </div>
     );
     if(remoting){

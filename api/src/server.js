@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require('dotenv');
 const cors = require("cors");
+const { Console } = require("console");
 
 // Init express
 const app = express();
@@ -57,6 +58,11 @@ io.on('connection', (socket) => {
   console.log("Socket connected: " + socket.id);
 
   socket.on('disconnect', () => {
+    delete names[socket.id];
+    delete allUsers[socket.id];
+    if(waitingList[socket.id]){ delete waitingList[socket.id]; }
+    //if(queue[socket]){ delete queue[socket]; } 
+
     console.log("Socket disconnected: " + socket.id);
   });
 
