@@ -47,7 +47,7 @@ const Video = () => {
 
     const handleClick = (e) => {
         setName(roomN);
-        setGender(document.querySelector("input[name='gender']:checked").value);
+        if(document.querySelector("input[name='gender']:checked") !== null){ setGender(document.querySelector("input[name='gender']:checked").value); }
         setJoinedRoom(true);
     }
 
