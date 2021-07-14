@@ -45,10 +45,43 @@ const Video = () => {
         setRoomN(e.target.value);
     }
 
-    const handleClick = (e) => {
-        setName(roomN);
-        if(document.querySelector("input[name='gender']:checked") !== null){ setGender(document.querySelector("input[name='gender']:checked").value); }
-        setJoinedRoom(true);
+    async function nameTaken(uName){
+      let res = await fetch(`https://api.mrpoll0.cf/name`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({name: uName})
+      }).then(response => response.json())
+        .then((body) => {
+          console.log("body: " + body)
+          return body;
+        });
+      return res;
+    }
+
+    async function handleClick(e){
+      if(roomN != "" && document.querySelector("input[name='gender']:checked") !== null){
+        let taken
+        try{
+          taken = await nameTaken(roomN);
+        }catch(err){
+          console.log(err);
+        }
+        if(!taken){
+          setName(roomN);
+          setGender(document.querySelector("input[name='gender']:checked").value);
+          setJoinedRoom(true);
+        }else{
+          alert("Name already taken");
+        }
+      }else if(roomN != ""){
+        alert("Please, select a gender");
+      }else if(document.querySelector("input[name='gender']:checked") !== null){
+        alert("Please, type a nickname");
+      }else{
+        alert("Please, fill in your personal information");
+      }
     }
 
     const showVideoConference = () => {
@@ -64,13 +97,9 @@ const Video = () => {
 
           console.log('useeffect')
           if(joinedRoom) {
-              if (name === '' || gender === '') {
-                alert('Please, fill in your personal information')
-              } else {
-                socket.emit('join', {"username": name, "gender": gender})
-                showVideoConference()
-                console.log("joined")
-              }
+            socket.emit('join', {"username": name, "gender": gender})
+            showVideoConference()
+            console.log("joined")
           }
 
           async function setLocalStream(mediaConstraints) {
@@ -216,7 +245,7 @@ const Video = () => {
               rtcPeerConnection.addIceCandidate(candidate)
           })
         }
-    }, [joinedRoom, name]);
+    }, [joinedRoom]);
 
 
     let UserVideo;

@@ -14,6 +14,20 @@ app.use(cors());
 // Enable pre-flight
 app.options("*", cors());
 
+app.get("/", function(req, res) {
+  res.send("So... you're a spy, huh?")
+})
+
+app.post("/name", function(req, res) {
+  if(names.find(element => req.body.name === element)){
+    console.log("true");
+    res.send(true);
+  }else{
+    console.log("false");
+    res.send(false);
+  }
+})
+
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
   cors: {
