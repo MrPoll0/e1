@@ -19,11 +19,9 @@ app.get("/", function(req, res) {
 })
 
 app.post("/name", function(req, res) {
-  if(names.find(element => req.body.name === element)){
-    console.log("true");
+  if(Object.keys(names).find(key => names[key] === req.body.name)){
     res.send(true);
   }else{
-    console.log("false");
     res.send(false);
   }
 })
