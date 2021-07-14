@@ -1,7 +1,6 @@
 const express = require("express");
 const dotenv = require('dotenv');
 const cors = require("cors");
-const { Console } = require("console");
 
 // Init express
 const app = express();
@@ -24,11 +23,12 @@ const io = require('socket.io')(server, {
 });
 
 
-var queue = [];
-var allUsers = {};
-var names = {};
-var rooms = {};
-var waitingList = [];
+var queue = new Array();
+var allUsers = new Array();
+var names = new Array();
+var genders = new Array();
+var rooms = new Array();
+var waitingList = new Array();
 
 function isEmptyObject(obj){
   return !Object.keys(obj).length;
@@ -59,17 +59,18 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     delete names[socket.id];
+    delete genders[socket.id];
     delete allUsers[socket.id];
     if(waitingList[socket.id]){ delete waitingList[socket.id]; }
-    //if(queue[socket]){ delete queue[socket]; } 
-
+    var index = queue.indexOf(socket);
+    if(index != -1){ queue.splice(index, 1); }
     console.log("Socket disconnected: " + socket.id);
   });
 
   socket.on('join', (data) => {
     console.log(data.username + " joined");
-
     names[socket.id] = data.username;
+    genders[socket.id] = data.gender;
     allUsers[socket.id] = socket;
     queueSocket(socket);
   })

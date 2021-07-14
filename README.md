@@ -19,7 +19,8 @@ You can find the configuration of [COTURN](https://github.com/coturn/coturn) in 
 https://ourcodeworld.com/articles/read/1175/how-to-create-and-configure-your-own-stun-turn-server-with-coturn-in-ubuntu-18-04
 
 # Configuring LETSENCRYPT
-We use Letsencrypt for HTTPS. To configure it, you can copy the directory [`live`] from [`letsencrypt`] and add it to your own or paste the following commands:
+We use Letsencrypt for HTTPS. To configure it, you can copy the directory `live` from [`letsencrypt`](https://github.com/MrPoll0/e1/tree/prod/letsencrypt/live) and add it to your own or paste the following commands:
+
 	sudo apt install certbot python3-certbot-nginx
 	sudo certbot --nginx -d mrpoll0.cf -d www.mrpoll0.cf
 	sudo certbot --nginx -d api.mrpoll0.cf

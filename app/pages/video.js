@@ -32,9 +32,10 @@ const Video = () => {
     const [roomN, setRoomN] = useState("");
     const [show, setShow] = useState("");
     const [joinedRoom, setJoinedRoom] = useState("");
-    const [Name, setName] = useState("");
+    const [name, setName] = useState("");
     const [streaming, setStreaming] = useState();
     const [remoting, setRemoting] = useState();
+    const [gender, setGender] = useState();
     const videoRef = useRef(null);
     const videoRRef = useRef(null);
 
@@ -46,6 +47,7 @@ const Video = () => {
 
     const handleClick = (e) => {
         setName(roomN);
+        setGender(document.querySelector("input[name='gender']:checked").value);
         setJoinedRoom(true);
     }
 
@@ -62,10 +64,10 @@ const Video = () => {
 
           console.log('useeffect')
           if(joinedRoom) {
-              if (Name === '') {
-                alert('Please type a nickname')
+              if (name === '' || gender === '') {
+                alert('Please, fill in your personal information')
               } else {
-                socket.emit('join', {"username": Name})
+                socket.emit('join', {"username": name, "gender": gender})
                 showVideoConference()
                 console.log("joined")
               }
@@ -166,7 +168,7 @@ const Video = () => {
           })
             
           socket.on('start_call', async (names) => {
-            if(names[0] === Name){
+            if(names[0] === name){
               peerName = names[1];
             }else{
               peerName = names[0];
@@ -214,14 +216,14 @@ const Video = () => {
               rtcPeerConnection.addIceCandidate(candidate)
           })
         }
-    }, [joinedRoom, Name])
+    }, [joinedRoom, name]);
 
 
     let UserVideo;
     if(streaming){
       UserVideo = (
         <div>
-          {Name}
+          {name}
           <video ref={ videoRef } autoPlay muted></video>
         </div>
       );
@@ -244,7 +246,19 @@ const Video = () => {
     return (
         <div>
             <div style={{ display: show ? "none" : "block"}}>
+                <label>Name</label>
                 <input type="text" onChange={ handleChange }></input>
+
+                <br/>
+
+                <label>Male</label>
+                <input type="radio" name="gender" value="male"/>
+                <label>Female</label>
+                <input type="radio" name="gender" value="female"/>
+                
+
+                <br/>
+
                 <button onClick={ handleClick }>Connect</button>
             </div>
             <div style={{ display: show ? "block" : "none"}}>
