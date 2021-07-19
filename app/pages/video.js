@@ -64,12 +64,6 @@ const Video = () => {
     async function handleClick(e){
       if(!(roomN != "" && document.querySelector("input[name='gender']:checked") !== null && document.querySelector("input[name='pref']:checked") !== null)){
         alert("Please, fill in your personal information");
-      }else if(!(roomN != "")){
-        alert("Please, type a nickname");
-      }else if(!(document.querySelector("input[name='gender']:checked") !== null)){
-        alert("Please, select a gender");
-      }else if(!(document.querySelector("input[name='pref']:checked") !== null)){
-        alert("Please, select your preference");
       }else{
         let taken
         try{
@@ -185,10 +179,6 @@ const Video = () => {
 
           socket.on("disconnect", () => {
             console.log("Socket disconnected: " + socket.id);
-          });
-
-          socket.on("alone", () => {
-            alert("Nobody's ready for you. Keep trying, bro");
           });
 
           socket.on('room_joined', async (bool, room) => {
