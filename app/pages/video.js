@@ -36,6 +36,7 @@ const Video = () => {
     const [streaming, setStreaming] = useState();
     const [remoting, setRemoting] = useState();
     const [gender, setGender] = useState();
+    const [pref, setPref] = useState();
     const videoRef = useRef(null);
     const videoRRef = useRef(null);
 
@@ -61,7 +62,15 @@ const Video = () => {
     }
 
     async function handleClick(e){
-      if(roomN != "" && document.querySelector("input[name='gender']:checked") !== null){
+      if(!(roomN != "" && document.querySelector("input[name='gender']:checked") !== null && document.querySelector("input[name='pref']:checked") !== null)){
+        alert("Please, fill in your personal information");
+      }else if(!(roomN != "")){
+        alert("Please, type a nickname");
+      }else if(!(document.querySelector("input[name='gender']:checked") !== null)){
+        alert("Please, select a gender");
+      }else if(!(document.querySelector("input[name='pref']:checked") !== null)){
+        alert("Please, select your preference");
+      }else{
         let taken
         try{
           taken = await nameTaken(roomN);
@@ -71,16 +80,12 @@ const Video = () => {
         if(!taken){
           setName(roomN);
           setGender(document.querySelector("input[name='gender']:checked").value);
+          setPref(document.querySelector("input[name='pref']:checked").value);
           setJoinedRoom(true);
         }else{
           alert("Name already taken");
         }
-      }else if(roomN != ""){
-        alert("Please, select a gender");
-      }else if(document.querySelector("input[name='gender']:checked") !== null){
-        alert("Please, type a nickname");
-      }else{
-        alert("Please, fill in your personal information");
+        
       }
     }
 
@@ -97,7 +102,7 @@ const Video = () => {
 
           console.log('useeffect')
           if(joinedRoom) {
-            socket.emit('join', {"username": name, "gender": gender})
+            socket.emit('join', {"username": name, "gender": gender, "pref": pref})
             showVideoConference()
             console.log("joined")
           }
@@ -180,6 +185,10 @@ const Video = () => {
 
           socket.on("disconnect", () => {
             console.log("Socket disconnected: " + socket.id);
+          });
+
+          socket.on("alone", () => {
+            alert("Nobody's ready for you. Keep trying, bro");
           });
 
           socket.on('room_joined', async (bool, room) => {
@@ -278,15 +287,23 @@ const Video = () => {
                 <label>Name</label>
                 <input type="text" onChange={ handleChange }></input>
 
-                <br/>
+                <br/><br/>
 
+                <h1>Gender</h1>
                 <label>Male</label>
                 <input type="radio" name="gender" value="male"/>
                 <label>Female</label>
                 <input type="radio" name="gender" value="female"/>
-                
 
-                <br/>
+                <br/><br/>
+
+                <h1>Preference</h1>
+                <label>Male</label>
+                <input type="radio" name="pref" value="male"/>
+                <label>Female</label>
+                <input type="radio" name="pref" value="female"/>
+                
+                <br/><br/>
 
                 <button onClick={ handleClick }>Connect</button>
             </div>

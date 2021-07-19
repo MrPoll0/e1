@@ -41,6 +41,7 @@ var names = new Array();
 var genders = new Array();
 var rooms = new Array();
 var waitingList = new Array();
+var preferences = new Array();
 
 function isEmptyObject(obj){
   return !Object.keys(obj).length;
@@ -48,17 +49,28 @@ function isEmptyObject(obj){
 
 function queueSocket(socket){
     if(!isEmptyObject(queue)){
-      var peer = queue.pop();
-      var room = socket.id + "#" + peer.id;
+      var filtered = queue.filter(element => genders[element.id] === preferences[socket.id] && preferences[element.id] === genders[socket.id]);
+      var peer = filtered[Math.floor(Math.random()*filtered.length)];
+      if(peer != undefined){ 
+        var room = socket.id + "#" + peer.id;
 
-      peer.join(room);
-      socket.join(room);
-      rooms[peer.id] = room;
-      rooms[socket.id] = room;
-      console.log(names[socket.id] + " and " + names[peer.id] + " joined the room: " + room);
+        peer.join(room);
+        socket.join(room);
+        rooms[peer.id] = room;
+        rooms[socket.id] = room;
+        console.log(names[socket.id] + " and " + names[peer.id] + " joined the room: " + room);
 
-      waitingList[socket.id] = peer;
-      socket.emit('room_joined', true, room);
+        var indexS = queue.indexOf(socket);
+        if(indexS != -1){ queue.splice(indexS, 1); }
+        var indexP = queue.indexOf(peer);
+        if(indexP != -1){ queue.splice(indexP, 1); }
+
+        waitingList[socket.id] = peer;
+        socket.emit('room_joined', true, room);
+      }else{
+        queue.push(socket);
+        console.log(names[socket.id] + " joined the queue");
+      }
     }else{
       queue.push(socket);
       console.log(names[socket.id] + " joined the queue");
@@ -72,6 +84,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     delete names[socket.id];
     delete genders[socket.id];
+    delete preferences[socket.id];
     delete allUsers[socket.id];
     if(waitingList[socket.id]){ delete waitingList[socket.id]; }
     var index = queue.indexOf(socket);
@@ -83,6 +96,7 @@ io.on('connection', (socket) => {
     console.log(data.username + " joined");
     names[socket.id] = data.username;
     genders[socket.id] = data.gender;
+    preferences[socket.id] = data.pref;
     allUsers[socket.id] = socket;
     queueSocket(socket);
   })
