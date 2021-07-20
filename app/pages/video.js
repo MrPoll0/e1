@@ -4,11 +4,12 @@ const ENDPOINT = "https://api.mrpoll0.cf";
 
 const iceServers = {
     iceServers: [
-      { urls: 'stun:stun.l.google.com:19302'  },
-      { urls: 'stun:stun1.l.google.com:19302' },
-      { urls: 'stun:stun2.l.google.com:19302' },
-      { urls: 'stun:stun3.l.google.com:19302' },
-      { urls: 'stun:stun4.l.google.com:19302' },
+      { url: 'stun:stun.l.google.com:19302'  },
+      { url: 'stun:stun1.l.google.com:19302' },
+      { url: 'stun:stun2.l.google.com:19302' },
+      { url: 'stun:stun3.l.google.com:19302' },
+      { url: 'stun:stun4.l.google.com:19302' },
+      { url: 'stun:turn.mrpoll0.cf' },
       {
         url: 'turn:turn.mrpoll0.cf',
         credential: 'qwertyuiopasdfghjklñzxcvbnm121;!',
@@ -21,6 +22,7 @@ let remoteStream
 let isCaller
 let rtcPeerConnection // Connection between the local device and the remote peer.
 let roomId
+let peerName
 
 const mediaConstraints = {
     audio: true,
@@ -31,10 +33,11 @@ const Video = () => {
     const [roomN, setRoomN] = useState("");
     const [show, setShow] = useState("");
     const [joinedRoom, setJoinedRoom] = useState("");
-    const [Name, setName] = useState("");
+    const [name, setName] = useState("");
     const [streaming, setStreaming] = useState();
     const [remoting, setRemoting] = useState();
-    //const localStreamR = useRef(null);
+    const [gender, setGender] = useState();
+    const [pref, setPref] = useState();
     const videoRef = useRef(null);
     const videoRRef = useRef(null);
 
@@ -44,9 +47,41 @@ const Video = () => {
         setRoomN(e.target.value);
     }
 
-    const handleClick = (e) => {
-        setName(roomN);
-        setJoinedRoom(true);
+    async function nameTaken(uName){
+      let res = await fetch(`https://api.mrpoll0.cf/name`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({name: uName})
+      }).then(response => response.json())
+        .then((body) => {
+          console.log("body: " + body)
+          return body;
+        });
+      return res;
+    }
+
+    async function handleClick(e){
+      if(!(roomN != "" && document.querySelector("input[name='gender']:checked") !== null && document.querySelector("input[name='pref']:checked") !== null)){
+        alert("Please, fill in your personal information");
+      }else{
+        let taken
+        try{
+          taken = await nameTaken(roomN);
+        }catch(err){
+          console.log(err);
+        }
+        if(!taken){
+          setName(roomN);
+          setGender(document.querySelector("input[name='gender']:checked").value);
+          setPref(document.querySelector("input[name='pref']:checked").value);
+          setJoinedRoom(true);
+        }else{
+          alert("Name already taken");
+        }
+        
+      }
     }
 
     const showVideoConference = () => {
@@ -62,13 +97,9 @@ const Video = () => {
 
           console.log('useeffect')
           if(joinedRoom) {
-              if (Name === '') {
-                alert('Please type a nickname')
-              } else {
-                socket.emit('join', {"username": Name})
-                showVideoConference()
-                console.log("joined")
-              }
+            socket.emit('join', {"username": name, "gender": gender, "pref": pref})
+            showVideoConference()
+            console.log("joined")
           }
 
           async function setLocalStream(mediaConstraints) {
@@ -130,8 +161,6 @@ const Video = () => {
               setRemoting(event.streams[0])
               videoRRef.current.srcObject = event.streams[0]
               remoteStream = event.stream
-
-              //console.log("remote stream settled");
           }
             
           function sendIceCandidate(event) {
@@ -162,13 +191,18 @@ const Video = () => {
 
               if(isCaller){
                 socket.emit('caller_ready', room);
-                //socket.emit('start_call', room);
               }else{
                 socket.emit('receiver_ready', room);
               }
           })
             
-          socket.on('start_call', async () => {
+          socket.on('start_call', async (names) => {
+            if(names[0] === name){
+              peerName = names[1];
+            }else{
+              peerName = names[0];
+            }
+            
             console.log("received start_call");
               if (isCaller) {
                 console.log("started call");
@@ -211,27 +245,57 @@ const Video = () => {
               rtcPeerConnection.addIceCandidate(candidate)
           })
         }
-    }, [joinedRoom, Name])
+    }, [joinedRoom]);
 
 
     let UserVideo;
     if(streaming){
       UserVideo = (
-        <video ref={ videoRef } autoPlay muted></video>
+        <div>
+          {name}
+          <video ref={ videoRef } autoPlay muted></video>
+        </div>
       );
     }
 
-    let RemoteVideo;
+    let RemoteVideo = (
+      <div>
+        Waiting...
+      </div>
+    );
     if(remoting){
       RemoteVideo = (
-        <video ref={ videoRRef} autoPlay></video>
+        <div>
+          {peerName}
+          <video ref={ videoRRef } autoPlay></video>
+        </div>  
       );
     }
 
     return (
         <div>
             <div style={{ display: show ? "none" : "block"}}>
+                <label>Name</label>
                 <input type="text" onChange={ handleChange }></input>
+
+                <br/><br/>
+
+                <h1>Gender</h1>
+                <label>Male</label>
+                <input type="radio" name="gender" value="male"/>
+                <label>Female</label>
+                <input type="radio" name="gender" value="female"/>
+
+                <br/><br/>
+
+                <h1>Preference</h1>
+                <label>Male</label>
+                <input type="radio" name="pref" value="male"/>
+                <label>Female</label>
+                <input type="radio" name="pref" value="female"/>
+                
+                <br/><br/>
+
                 <button onClick={ handleClick }>Connect</button>
             </div>
             <div style={{ display: show ? "block" : "none"}}>

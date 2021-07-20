@@ -16,7 +16,23 @@ https://digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application
 # Configuring COTURN
 You can find the configuration of [COTURN](https://github.com/coturn/coturn) in the directory [`coturn`](https://github.com/MrPoll0/e1/tree/prod/coturn).
 
+To get your own cli-password:
+	
+	turnadmin -P -p mypassword
+
 https://ourcodeworld.com/articles/read/1175/how-to-create-and-configure-your-own-stun-turn-server-with-coturn-in-ubuntu-18-04
+
+https://stackoverflow.com/questions/31161864/how-to-create-stun-turn-server-instance-using-aws-ec2/32113146#32113146
+
+https://gyazo.com/282acca705b768d0696d195dff98c9ff
+
+# Configuring LETSENCRYPT
+We use Letsencrypt for HTTPS. To configure it, you can copy the directory `live` from [`letsencrypt`](https://github.com/MrPoll0/e1/tree/prod/letsencrypt/live) and add it to your own or paste the following commands:
+
+	sudo apt install certbot python3-certbot-nginx
+	sudo certbot --nginx -d mrpoll0.cf -d www.mrpoll0.cf
+	sudo certbot --nginx -d api.mrpoll0.cf
+	sudo certbot --nginx -d turn.mrpoll0.cf
 
 # Ports to open
 You will need to open the following ports: (remember too see your ip with `ip a`)
@@ -31,8 +47,6 @@ You will need to open the following ports: (remember too see your ip with `ip a`
 
 `turn2`: 5349
 
-`turn3`: 49152
-
 `MySQL`: 3306
 
 `SSH`: 22
@@ -42,6 +56,7 @@ To run [`api`](https://github.com/MrPoll0/e1/tree/prod/api) and [`app`](https://
 
 	cd api/src && pm2 start server.js --name api
 	cd ../../app && pm2 start npm --name "app" -- run dev
+	pm2 save
 
 # How to Git
 
