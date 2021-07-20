@@ -21,6 +21,7 @@ To get your own cli-password:
 	turnadmin -P -p mypassword
 
 https://ourcodeworld.com/articles/read/1175/how-to-create-and-configure-your-own-stun-turn-server-with-coturn-in-ubuntu-18-04
+
 https://stackoverflow.com/questions/31161864/how-to-create-stun-turn-server-instance-using-aws-ec2/32113146#32113146
 
 # Configuring LETSENCRYPT
