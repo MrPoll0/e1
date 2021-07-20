@@ -24,6 +24,8 @@ https://ourcodeworld.com/articles/read/1175/how-to-create-and-configure-your-own
 
 https://stackoverflow.com/questions/31161864/how-to-create-stun-turn-server-instance-using-aws-ec2/32113146#32113146
 
+https://gyazo.com/282acca705b768d0696d195dff98c9ff
+
 # Configuring LETSENCRYPT
 We use Letsencrypt for HTTPS. To configure it, you can copy the directory `live` from [`letsencrypt`](https://github.com/MrPoll0/e1/tree/prod/letsencrypt/live) and add it to your own or paste the following commands:
 
