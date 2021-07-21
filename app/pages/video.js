@@ -38,6 +38,7 @@ const Video = () => {
     const [remoting, setRemoting] = useState();
     const [gender, setGender] = useState();
     const [pref, setPref] = useState();
+    const [pos, setPos] = useState(new Array());
     const videoRef = useRef(null);
     const videoRRef = useRef(null);
 
@@ -62,6 +63,16 @@ const Video = () => {
       return res;
     }
 
+    function handleCheckbox(e){
+      if(document.querySelector("input[name='geo']").checked){
+        if(window.navigator.geolocation){
+          window.navigator.geolocation.getCurrentPosition(setPos);
+        }else{
+          alert("Distance not available");
+        }
+      }
+    }
+
     async function handleClick(e){
       if(!(roomN != "" && document.querySelector("input[name='gender']:checked") !== null && document.querySelector("input[name='pref']:checked") !== null)){
         alert("Please, fill in your personal information");
@@ -80,7 +91,6 @@ const Video = () => {
         }else{
           alert("Name already taken");
         }
-        
       }
     }
 
@@ -97,7 +107,12 @@ const Video = () => {
 
           console.log('useeffect')
           if(joinedRoom) {
-            socket.emit('join', {"username": name, "gender": gender, "pref": pref})
+            if(pos.coords != undefined){ 
+              console.log(pos);
+              socket.emit('join', {"username": name, "gender": gender, "pref": pref, "lat": pos.coords.latitude, "long": pos.coords.longitude});
+            }else{
+              socket.emit('join', {"username": name, "gender": gender, "pref": pref});
+            }
             showVideoConference()
             console.log("joined")
           }
@@ -295,6 +310,11 @@ const Video = () => {
                 <input type="radio" name="pref" value="female"/>
                 
                 <br/><br/>
+
+                <label>Use distance</label>
+                <input type="checkbox" name="geo" onClick={ handleCheckbox }/>
+
+                <br/>
 
                 <button onClick={ handleClick }>Connect</button>
             </div>
