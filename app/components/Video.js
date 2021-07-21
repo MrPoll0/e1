@@ -1,35 +1,34 @@
 import { useEffect, useState, useRef } from "react";
 import socketIOClient from "socket.io-client";
-const ENDPOINT = "https://api.mrpoll0.cf";
-
-const iceServers = {
-    iceServers: [
-      { url: 'stun:stun.l.google.com:19302'  },
-      { url: 'stun:stun1.l.google.com:19302' },
-      { url: 'stun:stun2.l.google.com:19302' },
-      { url: 'stun:stun3.l.google.com:19302' },
-      { url: 'stun:stun4.l.google.com:19302' },
-      { url: 'stun:turn.mrpoll0.cf' },
-      {
-        url: 'turn:turn.mrpoll0.cf',
-        credential: 'qwertyuiopasdfghjklñzxcvbnm121;!',
-        username: 'admin',
-      },
-    ],
-}
-
-let remoteStream
-let isCaller
-let rtcPeerConnection // Connection between the local device and the remote peer.
-let roomId
-let peerName
-
-const mediaConstraints = {
-    audio: true,
-    video: { width: 1280, height: 720 },
-}
 
 const Video = () => {
+    const ENDPOINT = "https://api.mrpoll0.cf";
+
+    const iceServers = {
+        iceServers: [
+          { url: 'stun:stun.l.google.com:19302'  },
+          { url: 'stun:stun1.l.google.com:19302' },
+          { url: 'stun:stun2.l.google.com:19302' },
+          { url: 'stun:stun3.l.google.com:19302' },
+          { url: 'stun:stun4.l.google.com:19302' },
+          { url: 'stun:turn.mrpoll0.cf' },
+          {
+            url: 'turn:turn.mrpoll0.cf',
+            credential: 'qwertyuiopasdfghjklñzxcvbnm121;!',
+            username: 'admin',
+          },
+        ],
+    }
+
+    let remoteStream;
+    let isCaller;
+    let rtcPeerConnection; // Connection between the local device and the remote peer.
+    let roomId;
+
+    const mediaConstraints = {
+        audio: true,
+        video: { width: 1280, height: 720 },
+    }
     const [roomN, setRoomN] = useState("");
     const [show, setShow] = useState("");
     const [joinedRoom, setJoinedRoom] = useState("");
@@ -38,7 +37,8 @@ const Video = () => {
     const [remoting, setRemoting] = useState();
     const [gender, setGender] = useState();
     const [pref, setPref] = useState();
-    const [pos, setPos] = useState(new Array());
+    const [pos, setPos] = useState([]);
+    const [peerName, setPeerName] = useState();
     const videoRef = useRef(null);
     const videoRRef = useRef(null);
 
@@ -70,6 +70,8 @@ const Video = () => {
         }else{
           alert("Distance not available");
         }
+      }else{
+        setPos([]);
       }
     }
 
@@ -213,9 +215,9 @@ const Video = () => {
             
           socket.on('start_call', async (names) => {
             if(names[0] === name){
-              peerName = names[1];
+                setPeerName(names[1]);
             }else{
-              peerName = names[0];
+                setPeerName(names[0]);
             }
             
             console.log("received start_call");
@@ -326,4 +328,4 @@ const Video = () => {
     )
 }
   
-export default Video
+export default Video;

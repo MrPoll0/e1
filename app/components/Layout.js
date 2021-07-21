@@ -1,6 +1,5 @@
-import Header from "./Header"
-import Footer from "./Footer"
-import Head from "next/head"
+import Footer from "./Footer";
+import Head from "next/head";
 
 export default function Layout({ children }) {
     return ( 
@@ -8,8 +7,6 @@ export default function Layout({ children }) {
         <Head>
             <title>E1</title>
         </Head>
-        <Header />
-        <br />
         <main>
             {children}
         </main>

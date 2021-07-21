@@ -35,14 +35,14 @@ const io = require('socket.io')(server, {
 });
 
 
-var queue = new Array();
-var allUsers = new Array();
-var names = new Array();
-var genders = new Array();
-var rooms = new Array();
-var waitingList = new Array();
-var preferences = new Array();
-var coords = new Array();
+var queue = [];
+var allUsers = [];
+var names = [];
+var genders = [];
+var rooms = [];
+var waitingList = [];
+var preferences = [];
+var coords = [];
 
 function isEmptyObject(obj){
   return !Object.keys(obj).length;
@@ -70,6 +70,24 @@ Array.prototype.min = function() {
   return Math.min.apply(null, this);
 };
 
+function connectPeers(socket, peer){
+  var room = socket.id + "#" + peer.id;
+
+  peer.join(room);
+  socket.join(room);
+  rooms[peer.id] = room;
+  rooms[socket.id] = room;
+  console.log(names[socket.id] + " and " + names[peer.id] + " joined the room: " + room);
+
+  var indexS = queue.indexOf(socket);
+  if(indexS != -1){ queue.splice(indexS, 1); }
+  var indexP = queue.indexOf(peer);
+  if(indexP != -1){ queue.splice(indexP, 1); }
+
+  waitingList[socket.id] = peer;
+  socket.emit('room_joined', true, room);
+}
+
 function queueSocket(socket){
     if(!isEmptyObject(queue)){
       var filtered = queue.filter(element => genders[element.id] === preferences[socket.id] && preferences[element.id] === genders[socket.id] && coords[element.id].using === coords[socket.id].using);
@@ -78,7 +96,7 @@ function queueSocket(socket){
         console.log(names[socket.id] + " joined the queue");
       }else{ 
         if(coords[socket.id].using){ 
-          let d = new Array();
+          let d = [];
           let minDist;
           for(let i=0; i < filtered.length; i++){
             let dist = (getDistanceFromLatLonInKm(coords[socket.id].lat, coords[socket.id].long, coords[filtered[i].id].lat, coords[filtered[i].id].long));
@@ -90,30 +108,23 @@ function queueSocket(socket){
           minDist = d.min();
           console.log(minDist);
           var peer = filtered[d.indexOf(minDist)];
+
+          if(peer != undefined){ 
+            connectPeers(socket, peer);
+          }else{
+            queue.push(socket);
+            console.log(names[socket.id] + " joined the queue");
+          }
         }else{ 
           var peer = filtered[Math.floor(Math.random()*filtered.length)];
+
+          if(peer != undefined){ 
+            connectPeers(socket, peer);
+          }else{
+            queue.push(socket);
+            console.log(names[socket.id] + " joined the queue");
+          }
         }
-      }
-
-      if(peer != undefined){ 
-        var room = socket.id + "#" + peer.id;
-
-        peer.join(room);
-        socket.join(room);
-        rooms[peer.id] = room;
-        rooms[socket.id] = room;
-        console.log(names[socket.id] + " and " + names[peer.id] + " joined the room: " + room);
-
-        var indexS = queue.indexOf(socket);
-        if(indexS != -1){ queue.splice(indexS, 1); }
-        var indexP = queue.indexOf(peer);
-        if(indexP != -1){ queue.splice(indexP, 1); }
-
-        waitingList[socket.id] = peer;
-        socket.emit('room_joined', true, room);
-      }else{
-        queue.push(socket);
-        console.log(names[socket.id] + " joined the queue");
       }
     }else{
       queue.push(socket);
