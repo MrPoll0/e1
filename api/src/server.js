@@ -69,23 +69,6 @@ function deg2rad(deg) {
 Array.prototype.min = function() {
   return Math.min.apply(null, this);
 };
-/*
-function queueSocket(socket){
-  if(!isEmptyObject(queue)){
-    console.log(names[socket.id] + " didnt join the queue");
-    var filtered = queue.filter(element => genders[element.id] === preferences[socket.id] && preferences[element.id] === genders[socket.id] && coords[element.id].using == coords[socket.id].using);
-
-    for(let i=0; i < filtered.length; i++){
-      console.log(i);
-      for(let j=i+1; j < filtered.length; j++){
-        console.log(j);
-      }
-    }
-  }else{
-    queue.push(socket);
-    console.log(names[socket.id] + " joined the queue");
-  }
-}*/
 
 function queueSocket(socket){
     if(!isEmptyObject(queue)){
