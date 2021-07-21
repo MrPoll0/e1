@@ -42,15 +42,76 @@ var genders = new Array();
 var rooms = new Array();
 var waitingList = new Array();
 var preferences = new Array();
+var coords = new Array();
 
 function isEmptyObject(obj){
   return !Object.keys(obj).length;
 }
 
+function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ; 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
+
+Array.prototype.min = function() {
+  return Math.min.apply(null, this);
+};
+/*
+function queueSocket(socket){
+  if(!isEmptyObject(queue)){
+    console.log(names[socket.id] + " didnt join the queue");
+    var filtered = queue.filter(element => genders[element.id] === preferences[socket.id] && preferences[element.id] === genders[socket.id] && coords[element.id].using == coords[socket.id].using);
+
+    for(let i=0; i < filtered.length; i++){
+      console.log(i);
+      for(let j=i+1; j < filtered.length; j++){
+        console.log(j);
+      }
+    }
+  }else{
+    queue.push(socket);
+    console.log(names[socket.id] + " joined the queue");
+  }
+}*/
+
 function queueSocket(socket){
     if(!isEmptyObject(queue)){
-      var filtered = queue.filter(element => genders[element.id] === preferences[socket.id] && preferences[element.id] === genders[socket.id]);
-      var peer = filtered[Math.floor(Math.random()*filtered.length)];
+      var filtered = queue.filter(element => genders[element.id] === preferences[socket.id] && preferences[element.id] === genders[socket.id] && coords[element.id].using === coords[socket.id].using);
+      if(isEmptyObject(filtered)){
+        queue.push(socket);
+        console.log(names[socket.id] + " joined the queue");
+      }else{ 
+        if(coords[socket.id].using){ 
+          let d = new Array();
+          let minDist;
+          for(let i=0; i < filtered.length; i++){
+            let dist = (getDistanceFromLatLonInKm(coords[socket.id].lat, coords[socket.id].long, coords[filtered[i].id].lat, coords[filtered[i].id].long));
+              
+            console.log(dist);
+            console.log(":" + i);
+            d[i] = dist;
+          }
+          minDist = d.min();
+          console.log(minDist);
+          var peer = filtered[d.indexOf(minDist)];
+        }else{ 
+          var peer = filtered[Math.floor(Math.random()*filtered.length)];
+        }
+      }
+
       if(peer != undefined){ 
         var room = socket.id + "#" + peer.id;
 
@@ -86,6 +147,7 @@ io.on('connection', (socket) => {
     delete genders[socket.id];
     delete preferences[socket.id];
     delete allUsers[socket.id];
+    delete coords[socket.id];
     if(waitingList[socket.id]){ delete waitingList[socket.id]; }
     var index = queue.indexOf(socket);
     if(index != -1){ queue.splice(index, 1); }
@@ -98,6 +160,13 @@ io.on('connection', (socket) => {
     genders[socket.id] = data.gender;
     preferences[socket.id] = data.pref;
     allUsers[socket.id] = socket;
+
+    if(data.lat != undefined && data.long != undefined){
+      coords[socket.id] = {"using": true, "lat": data.lat, "long": data.long};
+    }else{
+      coords[socket.id] = {"using": false};
+    }
+
     queueSocket(socket);
   })
 
