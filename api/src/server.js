@@ -73,16 +73,16 @@ Array.prototype.min = function() {
 function connectPeers(socket, peer){
   var room = socket.id + "#" + peer.id;
 
+  var indexS = queue.indexOf(socket);
+  if(indexS != -1){ queue.splice(indexS, 1); }
+  var indexP = queue.indexOf(peer);
+  if(indexP != -1){ queue.splice(indexP, 1); }
+
   peer.join(room);
   socket.join(room);
   rooms[peer.id] = room;
   rooms[socket.id] = room;
   console.log(names[socket.id] + " and " + names[peer.id] + " joined the room: " + room);
-
-  var indexS = queue.indexOf(socket);
-  if(indexS != -1){ queue.splice(indexS, 1); }
-  var indexP = queue.indexOf(peer);
-  if(indexP != -1){ queue.splice(indexP, 1); }
 
   waitingList[socket.id] = peer;
   socket.emit('room_joined', true, room);
@@ -146,6 +146,14 @@ io.on('connection', (socket) => {
     var index = queue.indexOf(socket);
     if(index != -1){ queue.splice(index, 1); }
     console.log("Socket disconnected: " + socket.id);
+
+    if(io.sockets.adapter.rooms[rooms[socket.id]]){ 
+      var peerId = rooms[socket.id].split('#');
+      peerId = peerId[0] === socket.id ? peerId[1] : peerId[1];
+      socket.to(rooms[socket.id]).emit("peer_disconnected");
+      console.log("sent");
+      delete rooms[socket.id];
+    }
   });
 
   socket.on('join', (data) => {
@@ -163,6 +171,18 @@ io.on('connection', (socket) => {
 
     queueSocket(socket);
   })
+
+  socket.on('next', () => {
+    socket.leave(rooms[socket.id]);
+    if(io.sockets.adapter.rooms[rooms[socket.id]]){ 
+      var peerId = rooms[socket.id].split('#');
+      peerId = peerId[0] === socket.id ? peerId[1] : peerId[1];
+      socket.to(rooms[socket.id]).emit("peer_disconnected");
+      console.log("sent");
+      delete rooms[socket.id];
+    }
+    queueSocket(socket);
+  });
 
   socket.on('caller_ready', (roomId) => {
     console.log("caller is ready");

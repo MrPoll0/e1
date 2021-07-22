@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import socketIOClient from "socket.io-client";
+import socket from "socket.io-client/lib/socket";
 
 const Video = () => {
     const ENDPOINT = "https://api.mrpoll0.cf";
@@ -57,13 +58,12 @@ const Video = () => {
         body: JSON.stringify({name: uName})
       }).then(response => response.json())
         .then((body) => {
-          console.log("body: " + body)
           return body;
         });
       return res;
     }
 
-    function handleCheckbox(e){
+    function handleCheckbox(){
       if(document.querySelector("input[name='geo']").checked){
         if(window.navigator.geolocation){
           window.navigator.geolocation.getCurrentPosition(setPos);
@@ -107,7 +107,12 @@ const Video = () => {
           const socket = socketIOClient(ENDPOINT);
           let localStream;
 
-          console.log('useeffect')
+          document.querySelector("div[id='next']").addEventListener("click", function(){
+            if(localStream){
+              socket.emit("next");
+            }
+          });
+
           if(joinedRoom) {
             if(pos.coords != undefined){ 
               console.log(pos);
@@ -197,6 +202,14 @@ const Video = () => {
 
           socket.on("disconnect", () => {
             console.log("Socket disconnected: " + socket.id);
+          });
+
+          socket.on("peer_disconnected", () => {
+            setStreaming(false);
+            setRemoting(false);
+            localStream = undefined;
+            alert("Your mate disconnected. Looking for new people... (with the same options)");
+            socket.emit("next");
           });
 
           socket.on('room_joined', async (bool, room) => {
@@ -321,8 +334,17 @@ const Video = () => {
                 <button onClick={ handleClick }>Connect</button>
             </div>
             <div style={{ display: show ? "block" : "none"}}>
-                {UserVideo}
-                {RemoteVideo}
+              <div className="flex relative">
+                <div id="next" className="fixed w-10 h-screen right-0 hover:cursor-pointer">
+                  <div className="flex w-10 h-screen bg-gray-100 justify-center items-center">
+                    <i className="border-black border-solid border-t-0 border-r-2 border-b-2 border-l-0 p-1 transform -rotate-45 mr-1.5"></i>
+                  </div>
+                </div>
+                <div className="relative">
+                  {UserVideo}
+                  {RemoteVideo}
+                </div>
+              </div>
             </div>
         </div>
     )
