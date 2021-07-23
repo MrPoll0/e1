@@ -109,7 +109,12 @@ const Video = () => {
 
           document.querySelector("div[id='next']").addEventListener("click", function(){
             if(localStream){
-              socket.emit("next");
+              setStreaming(false);
+              setRemoting(false);
+              localStream = undefined;
+              setTimeout(() => {
+                socket.emit("next");
+              }, 3000)
             }
           });
 
@@ -209,7 +214,9 @@ const Video = () => {
             setRemoting(false);
             localStream = undefined;
             alert("Your mate disconnected. Looking for new people... (with the same options)");
-            socket.emit("next");
+            setTimeout(() => {
+              socket.emit("next");
+            }, 5000)
           });
 
           socket.on('room_joined', async (bool, room) => {
@@ -334,8 +341,8 @@ const Video = () => {
                 <button onClick={ handleClick }>Connect</button>
             </div>
             <div style={{ display: show ? "block" : "none"}}>
-              <div className="flex relative">
-                <div id="next" className="fixed w-10 h-screen right-0 hover:cursor-pointer">
+              <div id="next" className="flex relative hover:cursor-pointer">
+                <div className="fixed w-10 h-screen right-0">
                   <div className="flex w-10 h-screen bg-gray-100 justify-center items-center">
                     <i className="border-black border-solid border-t-0 border-r-2 border-b-2 border-l-0 p-1 transform -rotate-45 mr-1.5"></i>
                   </div>
