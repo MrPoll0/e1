@@ -308,38 +308,57 @@ const Video = () => {
         </div>  
       );
     }
-
     return (
-        <div>
-            <div style={{ display: show ? "none" : "block"}}>
-                <label>Name</label>
-                <input type="text" onChange={ handleChange }></input>
+        <> 
+            <div style={{ display: show ? "none" : "block"}} className="flex flex-col bg-white rounded border-red-300 border-l-4 border-r-4 border-t-8 border-b-8 shadow-xl m-5 mt-24 overflow-hidden">
+              <div className="mb-5 flex items-center rounded-xl py-2 m-4 text-white shadow-inner border "> 
+                <input className="font-semibold appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:ring-0" type="text" placeholder="Your name" aria-label="Full name" onChange={ handleChange }/>
+              </div>
 
-                <br/><br/>
+              <div className="main flex border rounded-full overflow-hidden m-5 my-1 select-none">
+                <div className="title py-3 my-auto px-5 bg-red-500 text-white text-sm font-semibold mr-3">Gender</div>
+                <div className="inline-flex space-x-3">
+                  <label className="inline-flex items-center">
+                    <input className="form-radio text-red-500 focus:ring-0" type="radio" name="gender" value="male"/>
+                    <span className="ml-2 text-gray-600">Male</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input className="form-radio text-red-500 focus:ring-0" type="radio" name="gender" value="female"/>
+                    <span className="ml-2 text-gray-600">Female</span>
+                  </label>
+                </div>
+              </div>
 
-                <h1>Gender</h1>
-                <label>Male</label>
-                <input type="radio" name="gender" value="male"/>
-                <label>Female</label>
-                <input type="radio" name="gender" value="female"/>
+              <div className="flex border rounded-full overflow-hidden m-4 my-3 select-none">
+                <div className="title py-3 my-auto px-5 bg-red-500 text-white text-sm font-semibold mr-3">Preferences</div>
+                <div className="inline-flex space-x-3">
+                  <label className="inline-flex items-center">
+                    <input className="form-radio text-red-500 focus:ring-0" type="radio" name="pref" value="male"/>
+                    <span className="ml-2 text-gray-600">Male</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input className="form-radio text-red-500 focus:ring-0" type="radio" name="pref" value="female"/>
+                    <span className="ml-2 text-gray-600">Female</span>
+                  </label>
+                </div>
+              </div>
 
-                <br/><br/>
+              <div className="mb-5 flex items-center rounded-xl py-2 m-4 text-white shadow-inner border "> 
+                <textarea className="font-semibold appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:ring-0 resize-none" placeholder="Description of yourself..." rows="3" aria-label="Description"></textarea>
+              </div>
 
-                <h1>Preference</h1>
-                <label>Male</label>
-                <input type="radio" name="pref" value="male"/>
-                <label>Female</label>
-                <input type="radio" name="pref" value="female"/>
-                
-                <br/><br/>
+              <div className="flex flex-col"> 
+                <label className="inline-flex items-center ml-4 my-3">
+                  <input name="geo" onClick={ handleCheckbox } type="checkbox" className="form-checkbox h-5 w-5 text-red-600 focus:ring-0"/>
+                  <span className="ml-2 text-gray-700">Use distance</span>
+                </label>
 
-                <label>Use distance</label>
-                <input type="checkbox" name="geo" onClick={ handleCheckbox }/>
-
-                <br/>
-
-                <button onClick={ handleClick }>Connect</button>
+                <button onClick={ handleClick } className="w-auto mt-2 rounded px-3 py-2 m-1 border-b-4 border-l-2 shadow-lg bg-red-700 border-red-800 text-white">
+                  Connect
+                </button>
+              </div>
             </div>
+
             <div style={{ display: show ? "block" : "none"}}>
               <div id="next" className="flex relative hover:cursor-pointer">
                 <div className="fixed w-10 h-screen right-0">
@@ -353,7 +372,7 @@ const Video = () => {
                 </div>
               </div>
             </div>
-        </div>
+        </>
     )
 }
   

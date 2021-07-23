@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       cursor: ['hover', 'responsive'],
     },
+    outline: ["focus"],
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/forms'),],
 }
