@@ -19,7 +19,7 @@ app.get("/", function(req, res) {
 })
 
 app.post("/name", function(req, res) {
-  if(Object.keys(names).find(key => names[key] === req.body.name)){
+  if(Object.keys(names).find(key => names[key].toLowerCase() === req.body.name.toLowerCase())){
     res.send(true);
   }else{
     res.send(false);
