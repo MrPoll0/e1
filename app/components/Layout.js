@@ -9,7 +9,7 @@ export default function Layout({ children }) {
                 <title>E1</title>
                 <meta name="theme-color" content="#F87171"/>
             </Head>
-            <div className="bg-red-400 h-screen w-screen overflow-hidden">
+            <div className="w-screen h-screen bg-white overflow-hidden">
                 <Header />
                 {children}
                 <Footer />
@@ -19,4 +19,4 @@ export default function Layout({ children }) {
 }
 
 
-// RECUERDA CAMBIAR CLASS A CLASSNAME  .. NECESARIO?
+// RECUERDA CAMBIAR CLASS A CLASSNAME 
