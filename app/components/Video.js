@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import socketIOClient from "socket.io-client";
 import socket from "socket.io-client/lib/socket";
 import { minHeight, width } from "tailwindcss/defaultTheme";
+import { version } from "../package.json"
 
 const Video = () => {
     const ENDPOINT = "https://api.mrpoll0.cf";
@@ -30,16 +31,13 @@ const Video = () => {
 
     const mediaConstraints = {
         audio: true,
-        video: { 
-          facingMode: "application",
-          //aspectRatio: 16/9,
-        },
+        video: true,
     }
     const [pName, setpName] = useState("");
     const [show, setShow] = useState("");
     const [joinedRoom, setJoinedRoom] = useState("");
     const [name, setName] = useState("");
-    const [streaming, setStreaming] = useState();
+    const [streaming, setStreaming] = useState(false);
     const [remoting, setRemoting] = useState();
     const [gender, setGender] = useState();
     const [pref, setPref] = useState();
@@ -47,6 +45,7 @@ const Video = () => {
     const [peerName, setPeerName] = useState();
     const [date, setDate] = useState("");
     const [description, setDescription] = useState("");
+    const [screenWidth, setscreenWidth] = useState();
     const videoRef = useRef(null);
     const videoRRef = useRef(null);
 
@@ -157,16 +156,16 @@ const Video = () => {
           const socket = socketIOClient(ENDPOINT);
           let localStream;
 
-          document.querySelector("div[id='next']").addEventListener("click", function(){
+          /*document.querySelector("div[id='next']").addEventListener("click", function(){
             if(localStream){
               setStreaming(false);
               setRemoting(false);
-              localStream = undefined;
+              localStream = undefined;  HAVE TO ADD BUTTON TO GO NEXT
               setTimeout(() => {
                 socket.emit("next");
               }, 3000)
             }
-          });
+          });*/
 
           if(joinedRoom) {
             if(pos.coords != undefined){ 
@@ -334,32 +333,26 @@ const Video = () => {
         }
     }, [joinedRoom]);
 
-
-    let UserVideo = (
-      <div className="text-center absolute top-1/2">
-        Connecting...
-      </div>
-    ); // {name}            BLUR FOR 18+ ??
-    if(streaming){
-      UserVideo = (
-        <div>
-          <video width="400" height="300" ref={ videoRef } autoPlay muted></video>
-        </div>
-      );
-    }
-
-    let RemoteVideo = (
-      <div className="text-center absolute top-1/2">
-        Waiting for the love of your live...
-      </div>
-    );
-    if(remoting){  // {peerName}
-      RemoteVideo = (
-        <div>
-          <video width="400" height="300" ref={ videoRRef } autoPlay></video>
-        </div>  
-      );
-    }
+    /*
+    function setOrientation(){
+      if(window.screen.width < 1024 && window.screen.orientation.type == "landscape" || window.screen.orientation.type == "landscape-primary"){
+        var p = document.createElement("div");
+        p.id = "alert";
+        p.innerHTML = "Please change to portrait!";
+        p.className = "absolute top-1/2 left-1/2 text";
+        var all = document.querySelector("main").firstChild;
+        all.className = all.className + " opacity-25";
+        document.querySelector("button[name='continue']").disabled = true;
+        all.append(p);
+        
+      }else if(window.screen.width < 1024 && document.querySelector("#alert").innerHTML == "Please change to portrait!" && window.screen.orientation.type == "portrait" || window.screen.orientation.type == "portrait-primary"){
+        document.querySelector("#alert").remove();
+        var all = document.querySelector("main").firstChild;
+        all.className = all.className.replace("opacity-25", "");
+        document.querySelector("button[name='continue']").disabled = false;
+        setscreenWidth(window.screen.width);
+      }
+    }*/
 
     function checkInput(step){
       switch(step){
@@ -576,14 +569,14 @@ const Video = () => {
           if(pName != ""){
             let taken
             try{
-              taken = await nameTaken(pName);
+              taken = await nameTaken(pName); // REMOVE THIS AND ON HANDLECLICK GO STEP 1 IF NAME TAKEN
             }catch(err){
               console.log(err);
             }
             if(!taken){
               setStep(currentStep, nextStep);
             }else{
-              // taken
+              alert("Name already taken");
             }
           }else{
             // not filled
@@ -596,9 +589,99 @@ const Video = () => {
       }
     }
 
+    let UserVideo = (
+      <div className="text-center absolute top-1/2">
+        Connecting...
+      </div>
+    ); // {name}
+    if(streaming){
+      UserVideo = (
+        <div>
+          <video name="local" className="h-1/4 rounded-xl shadow-md absolute z-50" ref={ videoRef } autoPlay muted></video>
+        </div>
+      );
+    }
+
+    useEffect(() => {
+      if(streaming && UserVideo !== (
+        <div className="text-center absolute top-1/2">
+          Connecting...
+        </div>
+      )){ 
+        var isMobile = false;
+
+        if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) 
+            || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0,4))) { 
+            isMobile = true;
+        }
+        var mousePosition;
+        var offset = [0,0];
+        var div;
+        var isDown = false;
+        var local = document.querySelector("video[name='local']")
+        if(!isMobile){ 
+          local.addEventListener('mousedown', function(e) {
+            isDown = true;
+            offset = [
+              local.offsetLeft - e.clientX,
+              local.offsetTop - e.clientY
+            ];
+          }, true);
+
+          document.addEventListener('mouseup', function() {
+              isDown = false;
+          }, true);
+          
+          document.addEventListener('mousemove', function(event) {
+              event.preventDefault();
+              if (isDown) {
+                mousePosition = {
+                    x : event.clientX,
+                    y : event.clientY
+                  };
+                local.style.left = (mousePosition.x + offset[0]) + 'px';
+                local.style.top  = (mousePosition.y + offset[1]) + 'px';
+              }
+          }, true);
+        }else{          
+          local.addEventListener('touchmove', function(event) {
+            event.preventDefault();
+            var touchLocation = event.targetTouches[0];
+            
+            local.style.left = (touchLocation.pageX-(local.clientWidth)/2) + 'px';
+            local.style.top = (touchLocation.pageY-(local.clientHeight)/2) + 'px';
+          });
+
+          local.addEventListener('touchend', function(e) {
+            var x = parseInt(local.style.left);
+            var y = parseInt(local.style.top);
+          });
+        }
+      }
+    }, [streaming]);
+
+    let RemoteVideo = (
+      <div className="text-center absolute top-1/2">
+        Waiting for the love of your live...
+      </div>
+    );
+    if(remoting){  // {peerName}
+      RemoteVideo = (
+        <div>
+          <video className="absolute h-full w-full" ref={ videoRRef } autoPlay></video>
+        </div>  
+      );
+    }
+
     return (
       <main>
         <div style={{ display: show ? "none" : "block"}}>
+          <header className="flex h-20 w-full border-b">
+              <div className="flex flex-col text-center m-auto">
+              <span className="text-4xl">🔥</span>
+              </div>
+          </header>
+
           <div id="progress" className="w-1/6 bg-gradient-to-r from-red-400 via-pink-500 to-yellow-400 h-2"></div>
     
           <div id="tab1" className="flex flex-col mx-7">
@@ -609,11 +692,28 @@ const Video = () => {
             <div id="container" className="flex flex-col">
               <input type="text" name="name" placeholder="Name" aria-label="Name" onChange={ handleName } className="focus:border-gray-600 focus:ring-0 mt-4 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-400"/>
             </div>
-            <button id="n1" type="button" onClick={ step } className="shadow-md max-w-xs h-12 bg-gradient-to-r text-white font-semibold from-red-600 via-pink-500 to-yellow-400 rounded-xl mt-10 m-auto px-28">CONTINUE</button>
+            <button id="n1" name="continue" type="button" onClick={ step } className="shadow-md max-w-xs h-12 bg-gradient-to-r text-white font-semibold from-red-600 via-pink-500 to-yellow-400 rounded-xl mt-10 m-auto px-28">CONTINUE</button>
           </div>
+
+          <footer className="fixed bottom-0 w-screen text-center text-gray-500 text-xs mb-1">
+              <p>&copy; MrPoll0 2021</p>
+              <p>Version: {version}</p>
+          </footer>
         </div>
     
-        <div style={{ display: show ? "block" : "none"}} id="next" className="flex flex-col max-w-screen-video h-screen m-auto">
+        <div style={{ display: show ? "block" : "none"}} id="next" className="flex flex-col">
+          {UserVideo}
+          {RemoteVideo}
+        </div>
+      </main>
+    )
+} 
+  
+export default Video;
+
+/*
+
+<div style={{ display: show ? "block" : "none"}} id="next" className="flex flex-col max-w-screen-video h-screen m-auto">
           <div className="aspect-w-16 aspect-h-9 flex flex-col bg-white rounded border-red-300 border-l-4 border-r-4 border-t-8 border-b-8 shadow-xl mx-5 mt-10 overflow-hidden">
             {RemoteVideo}
           </div>
@@ -622,11 +722,8 @@ const Video = () => {
             {UserVideo}
           </div>
         </div>
-      </main>
-    )
-}
-  
-export default Video;
+
+        */
 
 
 /*
