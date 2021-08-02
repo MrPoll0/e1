@@ -2,6 +2,7 @@ import next from "next";
 import { useEffect, useState, useRef } from "react";
 import socketIOClient from "socket.io-client";
 import socket from "socket.io-client/lib/socket";
+import url from "socket.io-client/lib/url";
 import { minHeight, width } from "tailwindcss/defaultTheme";
 import { version } from "../package.json"
 
@@ -145,6 +146,7 @@ const Video = () => {
         setName(pName);
         setJoinedRoom(true);
       }else{
+        setStep(6, 1);
         alert("Name already taken");
       }
     }
@@ -156,16 +158,14 @@ const Video = () => {
           const socket = socketIOClient(ENDPOINT);
           let localStream;
 
-          /*document.querySelector("div[id='next']").addEventListener("click", function(){
+          document.querySelector("div[id='next']").addEventListener("click", function(){
             if(localStream){
               setStreaming(false);
               setRemoting(false);
-              localStream = undefined;  HAVE TO ADD BUTTON TO GO NEXT
-              setTimeout(() => {
-                socket.emit("next");
-              }, 3000)
+              localStream = undefined;
+              socket.emit("next");
             }
-          });*/
+          });
 
           if(joinedRoom) {
             if(pos.coords != undefined){ 
@@ -265,7 +265,7 @@ const Video = () => {
             alert("Your mate disconnected. Looking for new people... (with the same options)");
             setTimeout(() => {
               socket.emit("next");
-            }, 5000)
+            }, 3000)
           });
 
           socket.on('room_joined', async (bool, room) => {
@@ -357,7 +357,10 @@ const Video = () => {
     function checkInput(step){
       switch(step){
         case 1:
-          return true;
+          if(pName != ""){
+            return true;
+          }
+          return false;
         case 2:
           if(gender != undefined){
             return true;
@@ -393,6 +396,13 @@ const Video = () => {
         case 1:
           document.querySelector("#p"+step).innerHTML = "My name is";
           container.className = defaultContainer;
+
+          var next = document.querySelector("#n"+step);
+          next.className = next.className.replace("hidden", "");
+          next.disabled = false;
+          if(document.querySelector("#connect")){
+            document.querySelector("#connect").remove();
+          }
 
           var input = document.createElement("input");
           input.type ="text";
@@ -487,7 +497,6 @@ const Video = () => {
           var next = document.querySelector("#n"+step);
           next.className = next.className.replace("hidden", "");
           next.disabled = false;
-
           if(document.querySelector("#connect")){
             document.querySelector("#connect").remove();
           }
@@ -565,25 +574,7 @@ const Video = () => {
       var lastStep = currentStep-1;
       
       if(direction == "n" && checkInput(currentStep)){
-        if(currentStep == 1){  
-          if(pName != ""){
-            let taken
-            try{
-              taken = await nameTaken(pName); // REMOVE THIS AND ON HANDLECLICK GO STEP 1 IF NAME TAKEN
-            }catch(err){
-              console.log(err);
-            }
-            if(!taken){
-              setStep(currentStep, nextStep);
-            }else{
-              alert("Name already taken");
-            }
-          }else{
-            // not filled
-          }
-        }else{
-          setStep(currentStep, nextStep);
-        }
+        setStep(currentStep, nextStep);
       }else if(direction == "b" && lastStep > 0){
         setStep(currentStep, lastStep);
       }
@@ -704,6 +695,18 @@ const Video = () => {
         <div style={{ display: show ? "block" : "none"}} id="next" className="flex flex-col">
           {UserVideo}
           {RemoteVideo}
+          <div class="w-screen fixed bottom-0 flex mb-3"> 
+            <div class="m-auto flex space-x-2">
+              <div id="cancel" class="w-20 h-20 rounded-full m-auto shadow-xl bg-red-500">
+                <i class="w-14 h-14 bg-auto block absolute ml-3 mt-3" style={{ background: 'url(https://mrpoll0.cf/cancel.svg)' }}></i>
+              </div>
+              <div id="mute-0" class="w-20 h-20 bg-gray-400 rounded-full m-auto shadow-xl"></div>
+              <div id="mute-1" class="w-20 h-20 bg-gray-400 rounded-full m-auto shadow-xl"></div>
+              <div id="next" class="w-20 h-20 rounded-full m-auto shadow-xl bg-green-500 hover:cursor-pointer">
+                <i class="w-14 h-14 bg-auto block absolute ml-3 mt-3" style={{ background: 'url(https://mrpoll0.cf/arrow.svg)' }}></i>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
     )
@@ -711,163 +714,5 @@ const Video = () => {
   
 export default Video;
 
-/*
 
-<div style={{ display: show ? "block" : "none"}} id="next" className="flex flex-col max-w-screen-video h-screen m-auto">
-          <div className="aspect-w-16 aspect-h-9 flex flex-col bg-white rounded border-red-300 border-l-4 border-r-4 border-t-8 border-b-8 shadow-xl mx-5 mt-10 overflow-hidden">
-            {RemoteVideo}
-          </div>
-    
-          <div className="aspect-w-15 aspect-h-2 flex flex-col h bg-white rounded border-red-300 border-l-4 border-r-4 border-t-8 border-b-8 shadow-xl mx-5 mt-6 overflow-hidden">
-            {UserVideo}
-          </div>
-        </div>
-
-        */
-
-
-/*
-
-
-          <div id="tab2" className="flex flex-col mx-7 hidden">
-            <div className="w-full h-10">
-              <button id="b2" onClick={ step } type="button" className="font-semibold text-gray-500 text-6xl">‹</button>
-            </div>
-            <h3 id="p2" className="font-semibold font-sans mt-10 text-3xl text-gray-800">My gender is</h3>
-            <div className="space-y-3 flex flex-col mt-10">
-              <button id="gfemale" aria-label="gender" className="w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-red-500 focus:text-red-500">Female</button>
-              <button id="gmale" aria-label="gender" className="w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-red-500 focus:text-red-500">Male</button>
-            </div>
-            <button id="n2" type="button" onClick={ step } className="shadow-md max-w-xs h-12 bg-gradient-to-r text-white font-semibold from-red-600 via-pink-500 to-yellow-400 rounded-xl mt-10 m-auto px-28">CONTINUE</button>
-          </div>
-    
-          <div id="tab3" className="flex flex-col mx-7 hidden">
-            <div className="w-full h-10">
-              <button id="b3" onClick={ step } type="button" className="font-semibold text-gray-500 text-6xl">‹</button>
-            </div>
-            <h3 id="p3" className="font-semibold font-sans mt-10 text-3xl text-gray-800">My birth date is</h3>
-            <input type="date" aria-label="age" className="mt-10 rounded-md"/>
-            <button id="n3" type="button" onClick={ step } className="shadow-md max-w-xs h-12 bg-gradient-to-r text-white font-semibold from-red-600 via-pink-500 to-yellow-400 rounded-xl mt-10 m-auto px-28">CONTINUE</button>
-          </div>
-    
-          <div id="tab4" className="flex flex-col mx-7 hidden">
-            <div className="w-full h-10">
-              <button id="b4" onClick={ step } type="button" className="font-semibold text-gray-500 text-6xl">‹</button>
-            </div>
-            <h3 id="p4" className="font-semibold font-sans mt-10 text-3xl text-gray-800">I'm sexually attracted to</h3>
-            <div className="space-y-3 flex flex-col mt-10">
-              <button id="pmale" aria-label="sexuality" className="w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-red-500 focus:text-red-500">Men</button>
-              <button id="pfemale" aria-label="sexuality" className="w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-red-500 focus:text-red-500">Women</button>
-            </div>
-            <button id="n4" type="button" onClick={ step } className="shadow-md max-w-xs h-12 bg-gradient-to-r text-white font-semibold from-red-600 via-pink-500 to-yellow-400 rounded-xl mt-10 m-auto px-28">CONTINUE</button>
-          </div>
-    
-          <div id="tab5" className="flex flex-col mx-7 hidden">
-            <div className="w-full h-10">
-              <button id="b5" onClick={ step } type="button" className="font-semibold text-gray-500 text-6xl">‹</button>
-            </div>
-            <h3 id="p5" className="font-semibold font-sans mt-10 text-3xl text-gray-800">I'm interested in</h3>
-            <textarea className="focus:ring-0 resize-none rounded-xl mt-10" aria-label="description" placeholder="I like..." rows="5" aria-label="Interests"></textarea>
-            <button id="but5" type="button" onClick={ step } className="shadow-md max-w-xs h-12 bg-gradient-to-r text-white font-semibold from-red-600 via-pink-500 to-yellow-400 rounded-xl mt-10 m-auto px-28">CONTINUE</button>
-          </div>
-    
-          <div id="tab6" className="flex flex-col mx-7 hidden">
-            <div className="w-full h-10">
-              <button id="b6" onClick={ step } type="button" className="font-semibold text-gray-500 text-6xl">‹</button>
-            </div>
-            <h3 id="p6" className="font-semibold font-sans mt-10 text-3xl text-gray-800">Do you want to look for people near you?</h3>
-            <div className="mt-10 space-x-10 inline-flex m-auto">
-              <button aria-label="location" className="text-4xl border-2 rounded border-red-400 p-2 text-red-500 hover:border-red-600 hover:text-red-600 focus:border-red-600 focus:text-red-600">NO</button>
-              <button aria-label="location" className="text-4xl border-2 rounded border-green-400 p-2 text-green-500 hover:border-green-600 hover:text-green-600 focus:border-green-600 focus:text-green-600">YES</button>
-            </div>
-            <button id="n6" type="button" onClick={ step } className="shadow-md max-w-xs h-12 bg-gradient-to-r text-white font-semibold from-red-600 via-pink-500 to-yellow-400 rounded-xl mt-10 m-auto px-28">CONNECT</button>
-          </div>
-
-          */
-
-
-
-/*
-
-        <> 
-          <div style={{ display: show ? "none" : "block"}} className="max-w-screen-sm m-auto">
-            <div className="flex flex-col bg-white rounded border-red-300 border-l-4 border-r-4 border-t-8 border-b-8 shadow-xl m-5 mt-24 overflow-hidden">
-              <div className="mb-5 flex items-center rounded-xl py-2 m-4 text-white shadow-inner border "> 
-                <input className="font-semibold appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:ring-0" type="text" placeholder="Your name" aria-label="Full name" onChange={ handleName }/>
-              </div>
-
-              <div className="main flex border rounded-full overflow-hidden m-5 my-1 select-none">
-                <div className="title py-3 my-auto px-5 bg-red-500 text-white text-sm font-semibold mr-3">Gender</div>
-                <div className="inline-flex space-x-3">
-                  <label className="inline-flex items-center">
-                    <input className="form-radio text-red-500 focus:ring-0" type="radio" name="gender" value="male"/>
-                    <span className="ml-2 text-gray-600">Male</span>
-                  </label>
-                  <label className="inline-flex items-center">
-                    <input className="form-radio text-red-500 focus:ring-0" type="radio" name="gender" value="female"/>
-                    <span className="ml-2 text-gray-600">Female</span>
-                  </label>
-                </div>
-              </div>
-
-              <div className="flex border rounded-full overflow-hidden m-4 my-3 select-none">
-                <div className="title py-3 my-auto px-5 bg-red-500 text-white text-sm font-semibold mr-3">Preferences</div>
-                <div className="inline-flex space-x-3">
-                  <label className="inline-flex items-center">
-                    <input className="form-radio text-red-500 focus:ring-0" type="radio" name="pref" value="male"/>
-                    <span className="ml-2 text-gray-600">Male</span>
-                  </label>
-                  <label className="inline-flex items-center">
-                    <input className="form-radio text-red-500 focus:ring-0" type="radio" name="pref" value="female"/>
-                    <span className="ml-2 text-gray-600">Female</span>
-                  </label>
-                </div>
-              </div>
-
-              <div className="mb-5 flex items-center rounded-xl py-2 m-4 text-white shadow-inner border "> 
-                <textarea className="font-semibold appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:ring-0 resize-none" placeholder="Description of yourself..." rows="3" aria-label="Description"></textarea>
-              </div>
-
-              <div className="flex flex-col"> 
-                <label className="inline-flex items-center ml-4 my-3">
-                  <input name="geo" onClick={ handleCheckbox } type="checkbox" className="form-checkbox h-5 w-5 text-red-600 focus:ring-0"/>
-                  <span className="ml-2 text-gray-700">Use distance</span>
-                </label>
-
-                <button onClick={ handleClick } className="w-auto mt-2 rounded px-3 py-2 m-1 border-b-4 border-l-2 shadow-lg bg-red-700 border-red-800 text-white">
-                  Connect
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          <div style={{ display: show ? "block" : "none"}} id="next" className="flex flex-col max-w-screen-video h-screen m-auto">
-            <div className="aspect-w-16 aspect-h-9 flex flex-col bg-white rounded border-red-300 border-l-4 border-r-4 border-t-8 border-b-8 shadow-xl mx-5 mt-10 overflow-hidden">
-              {RemoteVideo}
-            </div>
-
-            <div className="aspect-w-15 aspect-h-2 flex flex-col h bg-white rounded border-red-300 border-l-4 border-r-4 border-t-8 border-b-8 shadow-xl mx-5 mt-6 overflow-hidden">
-              {UserVideo}
-            </div>
-          </div>
-        </>
-
-*/
-
-
-
-/*
-            <div style={{ display: show ? "block" : "none"}}>
-              <div id="next" className="flex relative hover:cursor-pointer">
-                <div className="fixed w-10 h-screen right-0">
-                  <div className="flex w-10 h-screen bg-gray-100 justify-center items-center">
-                    <i className="border-black border-solid border-t-0 border-r-2 border-b-2 border-l-0 p-1 transform -rotate-45 mr-1.5"></i>
-                  </div>
-                </div>
-                <div className="relative">
-                  {UserVideo}
-                  {RemoteVideo}
-                </div>
-              </div>
-            </div>
-*/
+// creditos: <div>Iconos diseñados por <a href="https://www.flaticon.es/autores/vitaly-gorbachev" title="Vitaly Gorbachev">Vitaly Gorbachev</a> from <a href="https://www.flaticon.es/" title="Flaticon">www.flaticon.es</a></div>
