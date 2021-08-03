@@ -2,7 +2,6 @@ import next from "next";
 import { useEffect, useState, useRef } from "react";
 import socketIOClient from "socket.io-client";
 import socket from "socket.io-client/lib/socket";
-import url from "socket.io-client/lib/url";
 import { minHeight, width } from "tailwindcss/defaultTheme";
 import { version } from "../package.json"
 
@@ -80,6 +79,20 @@ const Video = () => {
           return body;
         });
       return res;
+    }
+
+    function muteMic(stream){
+      stream.getAudioTracks().forEach(function(track){
+        track.enabled = !track.enabled;
+        document.querySelector("div[id='mute-1']").firstChild.style = track.enabled && "background: url('https://mrpoll0.cf/mic.svg')" || "background: url('https://mrpoll0.cf/mic-1.svg')";
+      });
+    }
+
+    function muteCam(stream){
+      stream.getVideoTracks().forEach(function(track){
+        track.enabled = !track.enabled;
+        document.querySelector("div[id='mute-0']").firstChild.style = track.enabled && "background: url('https://mrpoll0.cf/cam.svg')" || "background: url('https://mrpoll0.cf/cam-1.svg')";
+      });
     }
     
     function distanceSelect(e){
@@ -165,6 +178,14 @@ const Video = () => {
               localStream = undefined;
               socket.emit("next");
             }
+          });
+
+          document.querySelector("div[id='mute-1']").addEventListener("click", function(){
+            muteMic(localStream);
+          });
+
+          document.querySelector("div[id='mute-0']").addEventListener("click", function(){
+            muteCam(localStream);
           });
 
           if(joinedRoom) {
@@ -332,27 +353,6 @@ const Video = () => {
           })
         }
     }, [joinedRoom]);
-
-    /*
-    function setOrientation(){
-      if(window.screen.width < 1024 && window.screen.orientation.type == "landscape" || window.screen.orientation.type == "landscape-primary"){
-        var p = document.createElement("div");
-        p.id = "alert";
-        p.innerHTML = "Please change to portrait!";
-        p.className = "absolute top-1/2 left-1/2 text";
-        var all = document.querySelector("main").firstChild;
-        all.className = all.className + " opacity-25";
-        document.querySelector("button[name='continue']").disabled = true;
-        all.append(p);
-        
-      }else if(window.screen.width < 1024 && document.querySelector("#alert").innerHTML == "Please change to portrait!" && window.screen.orientation.type == "portrait" || window.screen.orientation.type == "portrait-primary"){
-        document.querySelector("#alert").remove();
-        var all = document.querySelector("main").firstChild;
-        all.className = all.className.replace("opacity-25", "");
-        document.querySelector("button[name='continue']").disabled = false;
-        setscreenWidth(window.screen.width);
-      }
-    }*/
 
     function checkInput(step){
       switch(step){
@@ -692,18 +692,22 @@ const Video = () => {
           </footer>
         </div>
     
-        <div style={{ display: show ? "block" : "none"}} id="next" className="flex flex-col">
+        <div style={{ display: show ? "block" : "none"}} className="flex flex-col">
           {UserVideo}
           {RemoteVideo}
-          <div class="w-screen fixed bottom-0 flex mb-3"> 
-            <div class="m-auto flex space-x-2">
-              <div id="cancel" class="w-20 h-20 rounded-full m-auto shadow-xl bg-red-500">
-                <i class="w-14 h-14 bg-auto block absolute ml-3 mt-3" style={{ background: 'url(https://mrpoll0.cf/cancel.svg)' }}></i>
+          <div className="w-screen fixed bottom-0 flex mb-3"> 
+            <div className="m-auto flex space-x-2">
+              <div id="cancel" className="w-20 h-20 rounded-full m-auto shadow-xl bg-red-400 hover:cursor-pointer">
+                <i className="w-12 h-12 bg-auto block absolute ml-4 mt-4" style={{ background: 'url(https://mrpoll0.cf/cancel.svg)' }}></i>
               </div>
-              <div id="mute-0" class="w-20 h-20 bg-gray-400 rounded-full m-auto shadow-xl"></div>
-              <div id="mute-1" class="w-20 h-20 bg-gray-400 rounded-full m-auto shadow-xl"></div>
-              <div id="next" class="w-20 h-20 rounded-full m-auto shadow-xl bg-green-500 hover:cursor-pointer">
-                <i class="w-14 h-14 bg-auto block absolute ml-3 mt-3" style={{ background: 'url(https://mrpoll0.cf/arrow.svg)' }}></i>
+              <div id="mute-0" className="w-20 h-20 bg-gray-400 rounded-full m-auto shadow-xl hover:cursor-pointer">
+                <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3" style={{ background: 'url(https://mrpoll0.cf/video.svg)' }}></i>
+              </div>
+              <div id="mute-1" className="w-20 h-20 bg-gray-400 rounded-full m-auto shadow-xl hover:cursor-pointer">
+                <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3" style={{ background: 'url(https://mrpoll0.cf/mic.svg)' }}></i>
+              </div>
+              <div id="next" className="w-20 h-20 rounded-full m-auto shadow-xl bg-green-400 hover:cursor-pointer">
+                <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3" style={{ background: 'url(https://mrpoll0.cf/next.svg)' }}></i>
               </div>
             </div>
           </div>
@@ -715,4 +719,11 @@ const Video = () => {
 export default Video;
 
 
-// creditos: <div>Iconos diseñados por <a href="https://www.flaticon.es/autores/vitaly-gorbachev" title="Vitaly Gorbachev">Vitaly Gorbachev</a> from <a href="https://www.flaticon.es/" title="Flaticon">www.flaticon.es</a></div>
+/* creditos: 
+<div>Icons made by <a href="https://www.flaticon.com/authors/kiranshastry" title="Kiranshastry">Kiranshastry</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+<div>Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+<div>Icons made by <a href="https://www.flaticon.com/authors/kiranshastry" title="Kiranshastry">Kiranshastry</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+
+
+*/
