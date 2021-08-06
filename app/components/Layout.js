@@ -4,7 +4,7 @@ export default function Layout({ children }) {
     return ( 
         <>
             <Head>
-                <title>E1</title>
+                <title>Vibezz</title>
                 <meta name="theme-color" content="#F87171"/>
             </Head>
             <div className="w-screen h-screen bg-white overflow-hidden">

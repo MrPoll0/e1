@@ -29,7 +29,7 @@ app.post("/name", function(req, res) {
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
   cors: {
-    origin: "https://mrpoll0.cf",
+    origin: "https://vibezz.live",
     methods: ["GET", "POST"]
   }
 });

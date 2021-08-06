@@ -1,12 +1,9 @@
-import next from "next";
 import { useEffect, useState, useRef } from "react";
 import socketIOClient from "socket.io-client";
-import socket from "socket.io-client/lib/socket";
-import { minHeight, width } from "tailwindcss/defaultTheme";
 import { version } from "../package.json"
 
 const Video = () => {
-    const ENDPOINT = "https://api.mrpoll0.cf";
+    const ENDPOINT = "https://api.vibezz.live";
 
     const iceServers = {
         iceServers: [
@@ -15,16 +12,15 @@ const Video = () => {
           { url: 'stun:stun2.l.google.com:19302' },
           { url: 'stun:stun3.l.google.com:19302' },
           { url: 'stun:stun4.l.google.com:19302' },
-          { url: 'stun:turn.mrpoll0.cf' },
+          { url: 'stun:turn.vibezz.live' },
           {
-            url: 'turn:turn.mrpoll0.cf',
+            url: 'turn:turn.vibezz.live',
             credential: 'qwertyuiopasdfghjklñzxcvbnm121;!',
             username: 'admin',
           },
         ],
     }
 
-    let remoteStream;
     let isCaller;
     let rtcPeerConnection; // Connection between the local device and the remote peer.
     let roomId;
@@ -45,10 +41,8 @@ const Video = () => {
     const [peerName, setPeerName] = useState();
     const [date, setDate] = useState("");
     const [description, setDescription] = useState("");
-    const [screenWidth, setscreenWidth] = useState();
     const videoRef = useRef(null);
     const videoRRef = useRef(null);
-
     const isMounted = useRef(false);
 
     function handleName(e) {
@@ -68,7 +62,7 @@ const Video = () => {
     }
 
     async function nameTaken(uName){
-      let res = await fetch(`https://api.mrpoll0.cf/name`, {
+      let res = await fetch(`https://api.vibezz.live/name`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
@@ -84,14 +78,14 @@ const Video = () => {
     function muteMic(stream){
       stream.getAudioTracks().forEach(function(track){
         track.enabled = !track.enabled;
-        document.querySelector("div[id='mute-1']").firstChild.style = track.enabled && "background: url('https://mrpoll0.cf/mic.svg')" || "background: url('https://mrpoll0.cf/mic-1.svg')";
+        document.querySelector("div[id='mute-1']").firstChild.style = track.enabled && "background: url('https://vibezz.live/mic.svg')" || "background: url('https://vibezz.live/mic-1.svg')";
       });
     }
 
     function muteCam(stream){
       stream.getVideoTracks().forEach(function(track){
         track.enabled = !track.enabled;
-        document.querySelector("div[id='mute-0']").firstChild.style = track.enabled && "background: url('https://mrpoll0.cf/cam.svg')" || "background: url('https://mrpoll0.cf/cam-1.svg')";
+        document.querySelector("div[id='mute-0']").firstChild.style = track.enabled && "background: url('https://vibezz.live/cam.svg')" || "background: url('https://vibezz.live/cam-1.svg')";
       });
     }
     
@@ -170,6 +164,7 @@ const Video = () => {
         }else{ 
           const socket = socketIOClient(ENDPOINT);
           let localStream;
+          let remoteStream;
 
           document.querySelector("div[id='next']").addEventListener("click", function(){
             if(localStream){
@@ -199,6 +194,36 @@ const Video = () => {
             console.log("joined")
           }
 
+          async function configureTalking(stream, type){
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const audioContext = new AudioContext();
+            await audioContext.audioWorklet.addModule('https://www.vibezz.live/audioModule.js');
+            let mic = audioContext.createMediaStreamSource(stream);
+            const audio = new AudioWorkletNode(audioContext, 'audioModule');
+
+            let video = document.querySelector(`video[name='${type}']`);
+            const highlightAlt = " border-4 border-blue-300";
+            const highlightStyle = video.className + highlightAlt;
+            const normalStyle = video.className.replace(highlightAlt, "");
+            let volume;
+            
+            audio.port.onmessage = (e) => {
+              if(e.data.volume){
+                let fixedVol = e.data.volume.toFixed(2);
+                volume = (volume !== fixedVol) ? fixedVol : volume;
+                //console.log(volume);
+                if(!(volume == 0) && video.className !== highlightStyle){
+                  video.className = highlightStyle;
+                }else if(volume == 0 && video.className !== normalStyle){
+                  video.className = normalStyle;
+                }
+              }
+            }
+
+            mic.connect(audio);
+            audio.connect(audioContext.destination);
+          }
+
           async function setLocalStream(mediaConstraints) {
             let stream
             try {
@@ -210,6 +235,8 @@ const Video = () => {
             setStreaming(stream)
             localStream = stream
             videoRef.current.srcObject = stream
+
+            configureTalking(localStream, "local");
           }
 
           function addLocalTracks(rtcPeerConnection) {
@@ -255,9 +282,11 @@ const Video = () => {
           }
             
           function setRemoteStream(event) {
-              setRemoting(event.streams[0])
-              videoRRef.current.srcObject = event.streams[0]
-              remoteStream = event.stream
+              setRemoting(event.streams[0]);
+              videoRRef.current.srcObject = event.streams[0];
+              remoteStream = event.streams[0];
+
+              configureTalking(remoteStream, "remote");
           }
             
           function sendIceCandidate(event) {
@@ -283,6 +312,7 @@ const Video = () => {
             setStreaming(false);
             setRemoting(false);
             localStream = undefined;
+            remoteStream = undefined;
             alert("Your mate disconnected. Looking for new people... (with the same options)");
             setTimeout(() => {
               socket.emit("next");
@@ -607,7 +637,6 @@ const Video = () => {
         }
         var mousePosition;
         var offset = [0,0];
-        var div;
         var isDown = false;
         var local = document.querySelector("video[name='local']")
         if(!isMobile){ 
@@ -656,13 +685,31 @@ const Video = () => {
         Waiting for the love of your live...
       </div>
     );
-    if(remoting){  // {peerName}
+    if(remoting){  // {peerName}                  do not forget defaultCamStyle when highlighted
       RemoteVideo = (
-        <div>
-          <video className="absolute h-full w-full" ref={ videoRRef } autoPlay></video>
+        <div className="relative w-screen h-screen">
+          <video name="remote" className="absolute" ref={ videoRRef } autoPlay></video>
         </div>  
       );
     }
+
+    useEffect(() => {
+      if(remoting){
+        var remoteVid = document.querySelector("video[name='remote']");
+        function vidAdjust(){
+          if((screen.width/screen.height) >= (1920/1080)){
+            remoteVid.className = "absolute h-full left-1/2 transform -translate-x-1/2";
+          }else{
+            remoteVid.className = "absolute w-full top-1/2 transform -translate-y-1/2";
+          } 
+        }
+
+        vidAdjust();
+        
+        screen.orientation.addEventListener("change", vidAdjust, true);  
+        return () => screen.orientation.removeEventListener("change", vidAdjust, true);
+      }
+    }, [RemoteVideo]);
 
     return (
       <main>
@@ -698,16 +745,16 @@ const Video = () => {
           <div className="w-screen fixed bottom-0 flex mb-3"> 
             <div className="m-auto flex space-x-2">
               <div id="cancel" className="w-20 h-20 rounded-full m-auto shadow-xl bg-red-400 hover:cursor-pointer">
-                <i className="w-12 h-12 bg-auto block absolute ml-4 mt-4" style={{ background: 'url(https://mrpoll0.cf/cancel.svg)' }}></i>
+                <i className="w-12 h-12 bg-auto block absolute ml-4 mt-4" style={{ background: 'url(https://vibezz.live/cancel.svg)' }}></i>
               </div>
               <div id="mute-0" className="w-20 h-20 bg-gray-400 rounded-full m-auto shadow-xl hover:cursor-pointer">
-                <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3" style={{ background: 'url(https://mrpoll0.cf/video.svg)' }}></i>
+                <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3" style={{ background: 'url(https://vibezz.live/cam.svg)' }}></i>
               </div>
               <div id="mute-1" className="w-20 h-20 bg-gray-400 rounded-full m-auto shadow-xl hover:cursor-pointer">
-                <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3" style={{ background: 'url(https://mrpoll0.cf/mic.svg)' }}></i>
+                <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3" style={{ background: 'url(https://vibezz.live/mic.svg)' }}></i>
               </div>
               <div id="next" className="w-20 h-20 rounded-full m-auto shadow-xl bg-green-400 hover:cursor-pointer">
-                <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3" style={{ background: 'url(https://mrpoll0.cf/next.svg)' }}></i>
+                <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3" style={{ background: 'url(https://vibezz.live/next.svg)' }}></i>
               </div>
             </div>
           </div>
@@ -718,8 +765,10 @@ const Video = () => {
   
 export default Video;
 
+/*
+  
 
-/* creditos: 
+ creditos: 
 <div>Icons made by <a href="https://www.flaticon.com/authors/kiranshastry" title="Kiranshastry">Kiranshastry</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 <div>Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
