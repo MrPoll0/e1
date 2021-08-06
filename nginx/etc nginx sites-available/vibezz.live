@@ -1,9 +1,9 @@
 server {
 
-	root /var/www/mrpoll0.cf/html;
+	root /var/www/vibezz.live/html;
 	index index.html index.htm index.nginx-debian.html;
 
-	server_name mrpoll0.cf www.mrpoll0.cf;
+	server_name vibezz.live www.vibezz.live;
 
 	location / {
 		proxy_pass http://localhost:3000;
@@ -16,8 +16,8 @@ server {
 
     listen [::]:443 ssl ipv6only=on; # managed by Certbot
     listen 443 ssl; # managed by Certbot
-    ssl_certificate /etc/letsencrypt/live/mrpoll0.cf/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/mrpoll0.cf/privkey.pem; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/vibezz.live/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/vibezz.live/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 
@@ -25,7 +25,7 @@ server {
 }
 
 server { 
-	server_name turn.mrpoll0.cf;
+	server_name turn.vibezz.live;
 	location / {
 		proxy_pass http://localhost:3478;
 		proxy_http_version 1.1;
@@ -37,15 +37,15 @@ server {
 	return 404;
 
     listen 443 ssl; # managed by Certbot
-    ssl_certificate /etc/letsencrypt/live/turn.mrpoll0.cf/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/turn.mrpoll0.cf/privkey.pem; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/turn.vibezz.live/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/turn.vibezz.live/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 
 }
 
 server {
-	server_name api.mrpoll0.cf;
+	server_name api.vibezz.live;
 	location / {
 		proxy_pass http://localhost:3080;
 		proxy_http_version 1.1;
@@ -56,20 +56,20 @@ server {
 
 
     listen 443 ssl; # managed by Certbot
-    ssl_certificate /etc/letsencrypt/live/api.mrpoll0.cf/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/api.mrpoll0.cf/privkey.pem; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/api.vibezz.live/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/api.vibezz.live/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 
 }	
 
 server {
-    if ($host = www.mrpoll0.cf) {
+    if ($host = www.vibezz.live) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
 
-    if ($host = mrpoll0.cf) {
+    if ($host = vibezz.live) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
@@ -77,7 +77,7 @@ server {
 	listen 80;
 	listen [::]:80;
 
-	server_name mrpoll0.cf www.mrpoll0.cf;
+	server_name vibezz.live www.vibezz.live;
     return 404; # managed by Certbot
 
 
@@ -87,12 +87,12 @@ server {
 
 
 server {
-    if ($host = turn.mrpoll0.cf) {
+    if ($host = turn.vibezz.live) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
  
-	server_name turn.mrpoll0.cf;
+	server_name turn.vibezz.live;
     listen 80;
     return 404; # managed by Certbot
 
@@ -101,12 +101,12 @@ server {
 
 
 server {
-    if ($host = api.mrpoll0.cf) {
+    if ($host = api.vibezz.live) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
 
-	server_name api.mrpoll0.cf;
+	server_name api.vibezz.live;
     listen 80;
     return 404; # managed by Certbot
 

@@ -27,10 +27,10 @@ https://stackoverflow.com/questions/31161864/how-to-create-stun-turn-server-inst
 https://gyazo.com/282acca705b768d0696d195dff98c9ff
 
 ## Configuring LETSENCRYPT
-We use Letsencrypt for HTTPS. To configure it, you can copy the directory `live` from [`letsencrypt`](https://github.com/MrPoll0/e1/tree/prod/letsencrypt/live) and add it to your own or paste the following commands:
+We use Letsencrypt for HTTPS. To configure it, use the following commands:
 
 	sudo apt install certbot python3-certbot-nginx
-	sudo certbot --nginx -d mrpoll0.cf -d www.mrpoll0.cf -d api.mrpoll0.cf -d turn.mrpoll0.cf
+	sudo certbot --nginx -d vibezz.live -d www.vibezz.live -d api.vibezz.live -d turn.vibezz.live
 
 ## Ports to open
 You will need to open the following ports: (remember too see your ip with `ip a`)
