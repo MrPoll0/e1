@@ -1,19 +1,19 @@
-# Project Eco #1
+# Vibezz
 ## Not compatible with Socket.io 2.4.0 at the moment!
 
-# Getting started
+## Getting started
 To get started, run the following commands:
 
 	git clone https://github.com/MrPoll0/e1.git
 	cd api && npm install
 	cd ../app && npm install
 
-# Configuring NGINX
+## Configuring NGINX
 We use NGINX as a reverse proxy. You can find the configuration in [`nginx`](https://github.com/MrPoll0/e1/tree/prod/nginx).
 
 https://digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-20-04
 
-# Configuring COTURN
+## Configuring COTURN
 You can find the configuration of [COTURN](https://github.com/coturn/coturn) in the directory [`coturn`](https://github.com/MrPoll0/e1/tree/prod/coturn).
 
 To get your own cli-password:
@@ -26,15 +26,13 @@ https://stackoverflow.com/questions/31161864/how-to-create-stun-turn-server-inst
 
 https://gyazo.com/282acca705b768d0696d195dff98c9ff
 
-# Configuring LETSENCRYPT
+## Configuring LETSENCRYPT
 We use Letsencrypt for HTTPS. To configure it, you can copy the directory `live` from [`letsencrypt`](https://github.com/MrPoll0/e1/tree/prod/letsencrypt/live) and add it to your own or paste the following commands:
 
 	sudo apt install certbot python3-certbot-nginx
-	sudo certbot --nginx -d mrpoll0.cf -d www.mrpoll0.cf
-	sudo certbot --nginx -d api.mrpoll0.cf
-	sudo certbot --nginx -d turn.mrpoll0.cf
+	sudo certbot --nginx -d mrpoll0.cf -d www.mrpoll0.cf -d api.mrpoll0.cf -d turn.mrpoll0.cf
 
-# Ports to open
+## Ports to open
 You will need to open the following ports: (remember too see your ip with `ip a`)
 
 `HTTP`: 80
@@ -47,11 +45,11 @@ You will need to open the following ports: (remember too see your ip with `ip a`
 
 `turn2`: 5349
 
-`MySQL`: 3306
+`MySQL`: 3306 (not at the moment)
 
 `SSH`: 22
 
-# Running locally in development mode
+## Running locally in development mode
 To run [`api`](https://github.com/MrPoll0/e1/tree/prod/api) and [`app`](https://github.com/MrPoll0/e1/tree/prod/app), use PM2:
 
 	cd api/src && pm2 start server.js --name api
