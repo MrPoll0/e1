@@ -195,33 +195,48 @@ const Video = () => {
             console.log("joined")
           }
 
-          async function configureTalking(stream, type){
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            const audioContext = new AudioContext();
-            await audioContext.audioWorklet.addModule('https://www.vibezz.live/audioModule.js');
-            let mic = audioContext.createMediaStreamSource(stream);
-            const audio = new AudioWorkletNode(audioContext, 'audioModule');
+          function gethStyle(type, vid){
+            let video = document.querySelector(`video[name='${vid}']`);
+            let highlightAlt = " border-4 border-blue-300";
+            let highlightStyle = video.className + highlightAlt;
+            let normalStyle = video.className.replace(highlightAlt, "");
 
-            let video = document.querySelector(`video[name='${type}']`);
-            const highlightAlt = " border-4 border-blue-300";
-            const highlightStyle = video.className + highlightAlt;
-            const normalStyle = video.className.replace(highlightAlt, "");
-            let volume;
-            
-            audio.port.onmessage = (e) => {
-              if(e.data.volume){
-                let fixedVol = e.data.volume.toFixed(2);
-                volume = (volume !== fixedVol) ? fixedVol : volume;
-                if(!(volume == 0) && video.className !== highlightStyle){
-                  video.className = highlightStyle;
-                }else if(volume == 0 && video.className !== normalStyle){
-                  video.className = normalStyle;
+            if(type === "normal"){
+              return normalStyle;
+            }else if(type === "highlight"){
+              return highlightStyle;
+            }
+          }
+
+          async function configureTalking(stream, type){
+            if(localStream || remoteStream){ 
+              const AudioContext = window.AudioContext || window.webkitAudioContext;
+              const audioContext = new AudioContext();
+              await audioContext.audioWorklet.addModule('https://www.vibezz.live/audioModule.js');
+              let mic = audioContext.createMediaStreamSource(stream);
+              const audio = new AudioWorkletNode(audioContext, 'audioModule');
+              let volume;
+              let video = document.querySelector(`video[name='${type}']`);
+              let highlightAlt = " border-4 border-blue-300";
+              let highlightStyle = video.className + highlightAlt;
+              let normalStyle = video.className.replace(highlightAlt, "");
+              
+              audio.port.onmessage = (e) => {
+                if(e.data.volume && document.querySelector(`video[name='${type}']`)){
+                  video = document.querySelector(`video[name='${type}']`);
+                  let fixedVol = e.data.volume.toFixed(2);
+                  volume = (volume !== fixedVol) ? fixedVol : volume;
+                  if(!(volume == 0) && video.className !== highlightStyle){
+                    video.className = gethStyle("highlight", type);
+                  }else if(volume == 0 && video.className !== normalStyle){
+                    video.className = gethStyle("normal", type);
+                  }
                 }
               }
-            }
 
-            mic.connect(audio);
-            audio.connect(audioContext.destination);
+              mic.connect(audio);
+              audio.connect(audioContext.destination);
+            }
           }
 
           async function setLocalStream(mediaConstraints) {
@@ -685,29 +700,49 @@ const Video = () => {
         Waiting for the love of your live...
       </div>
     );
-    if(remoting){  // {peerName}                  do not forget defaultCamStyle when highlighted
+    if(remoting){
       RemoteVideo = (
-        <div className="relative w-screen h-screen">
-          <video name="remote" className="absolute" ref={ videoRRef } autoPlay></video>
+        <div className="flex w-screen h-screen overflow-hidden">
+          <div id="rCont">
+            <video name="remote" className="absolute z-20" ref={ videoRRef } autoPlay></video>
+            <div className="absolute z-30 text-white top-2 left-1/2 transform -translate-x-1/2 font-bold">{peerName}</div>
+          </div>
         </div>  
       );
     }
 
     useEffect(() => {
       if(remoting){
+        let remoteContainer = document.querySelector("#rCont");
         var remoteVid = document.querySelector("video[name='remote']");
+        var landscapeStyle = "absolute z-20 h-screen left-1/2 transform -translate-x-1/2";
+        var portraitStyle = "absolute z-20 w-screen top-1/2 transform -translate-y-1/2";
+
         function vidAdjust(){
           if((screen.width/screen.height) >= (1920/1080)){
-            remoteVid.className = "absolute h-full left-1/2 transform -translate-x-1/2";
+            remoteContainer.removeAttribute("style");
+            remoteVid.className = landscapeStyle;
           }else{
-            remoteVid.className = "absolute w-full top-1/2 transform -translate-y-1/2";
+            remoteVid.className = portraitStyle;
           } 
         }
-
         vidAdjust();
+
+        const resizeObserver = new ResizeObserver(entries => {
+          if(document.querySelector("video[name='remote']").className.search("border-4 border-blue-300") === -1){ 
+            let width = entries[0].contentRect.width;
+            let height = entries[0].contentRect.height;
+            
+            remoteContainer.setAttribute("style", `width: ${width}px; height: ${height}px; margin: auto; position: relative;`);
+          }
+        });
         
+        resizeObserver.observe(remoteVid);
         screen.orientation.addEventListener("change", vidAdjust, true);  
-        return () => screen.orientation.removeEventListener("change", vidAdjust, true);
+        return () => {
+          resizeObserver.unobserve(remoteVid);
+          screen.orientation.removeEventListener("change", vidAdjust, true);
+        }
       }
     }, [RemoteVideo]);
 
@@ -716,7 +751,7 @@ const Video = () => {
         <div style={{ display: show ? "none" : "block"}}>
           <header className="flex h-20 w-full border-b">
               <div className="flex flex-col text-center m-auto">
-              <span className="text-4xl">🔥</span>
+              <span className="text-4xl text-purple-500 font-sans">VIBEZZ</span>
               </div>
           </header>
 
@@ -742,7 +777,7 @@ const Video = () => {
         <div style={{ display: show ? "block" : "none"}} className="flex flex-col">
           {UserVideo}
           {RemoteVideo}
-          <div className="w-screen fixed bottom-0 flex mb-3"> 
+          <div className="w-screen fixed bottom-0 flex mb-3 z-40"> 
             <div className="m-auto flex space-x-2">
               <div id="cancel" className="w-20 h-20 rounded-full m-auto shadow-xl bg-red-400 hover:cursor-pointer">
                 <i className="w-12 h-12 bg-auto block absolute ml-4 mt-4" style={{ background: 'url(https://vibezz.live/cancel.svg)' }}></i>

@@ -5,7 +5,7 @@ export default function Layout({ children }) {
         <>
             <Head>
                 <title>Vibezz</title>
-                <meta name="theme-color" content="#F87171"/>
+                <meta name="theme-color" content="#a05cf6"/>
             </Head>
             <div className="w-screen h-screen bg-white overflow-hidden">
                 {children}
