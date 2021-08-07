@@ -105,8 +105,8 @@ const Video = () => {
 
     function setButtonStyle(t, s){
       if(t == "p" || t == "g"){ 
-        var defaultStyle = "w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-red-500 focus:text-red-500";
-        var selectedStyle = "w-full text-center border-2  rounded-3xl p-3 border-red-500 text-red-500";
+        var defaultStyle = "w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500";
+        var selectedStyle = "w-full text-center border-2 rounded-3xl p-3 border-purple-500 text-purple-500";
 
         if(s == "male"){
           document.querySelector("#"+t+"male").className = selectedStyle;
@@ -128,7 +128,7 @@ const Video = () => {
         var selectedStyleN = "text-4xl border-2 rounded p-2 border-red-500 text-red-500";
 
         document.querySelector("#"+s).className = (s == "yes" ? selectedStyleY : selectedStyleN);
-        document.querySelector("#"+(s == "yes" ? "no" : "yes")).className = (s == "yes" ? defaultStyleY : defaultStyleN);
+        document.querySelector("#"+(s == "yes" ? "no" : "yes")).className = (s == "yes" ? defaultStyleN : defaultStyleY);
       }
     }
 
@@ -171,7 +171,8 @@ const Video = () => {
               setStreaming(false);
               setRemoting(false);
               localStream = undefined;
-              socket.emit("next");
+              remoteStream = undefined;
+              socket.emit("next"); // Keep muted after next
             }
           });
 
@@ -211,7 +212,6 @@ const Video = () => {
               if(e.data.volume){
                 let fixedVol = e.data.volume.toFixed(2);
                 volume = (volume !== fixedVol) ? fixedVol : volume;
-                //console.log(volume);
                 if(!(volume == 0) && video.className !== highlightStyle){
                   video.className = highlightStyle;
                 }else if(volume == 0 && video.className !== normalStyle){
@@ -439,7 +439,7 @@ const Video = () => {
           input.placeholder ="Name";
           input.ariaLabel = "Name";
           input.onchange = function() { handleName(input.value); };
-          input.className = "focus:border-gray-600 focus:ring-0 mt-4 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-400";
+          input.className = "focus:border-purple-500 focus:ring-0 mt-4 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-400";
           input.type="text";
           input.name = "name";
           input.value = pName;
@@ -452,7 +452,7 @@ const Video = () => {
           
 
           var buttonM = document.createElement("button");
-          buttonM.className = "w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-red-500 focus:text-red-500";
+          buttonM.className = "w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500";
           buttonM.ariaLabel = "gender";
           buttonM.innerHTML = "Dick";
           buttonM.id = "gmale";
@@ -495,7 +495,7 @@ const Video = () => {
           container.className = container.className + " space-y-3 mt-10";
 
           var buttonM = document.createElement("button");
-          buttonM.className = "w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-red-500 focus:text-red-500";
+          buttonM.className = "w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500";
           buttonM.ariaLabel = "sexuality";
           buttonM.innerHTML = "Dicks";
           buttonM.id = "pmale";
@@ -554,7 +554,7 @@ const Video = () => {
           connect.id = "connect";
           connect.innerHTML = "CONNECT";
           connect.onclick = function() { handleClick(); }
-          connect.className = "shadow-md max-w-xs w-screen h-14 bg-gradient-to-r text-white font-semibold from-red-600 via-pink-500 to-yellow-400 rounded-xl mt-10 m-auto px-28"
+          connect.className = "shadow-md max-w-xs w-screen h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-10 m-auto px-28"
 
           var no = document.createElement("button");
           no.innerHTML = "NO";
@@ -720,7 +720,7 @@ const Video = () => {
               </div>
           </header>
 
-          <div id="progress" className="w-1/6 bg-gradient-to-r from-red-400 via-pink-500 to-yellow-400 h-2"></div>
+          <div id="progress" className="w-1/6 bg-gradient-to-r from-blue-200 via-purple-400 to-purple-900 h-2"></div>
     
           <div id="tab1" className="flex flex-col mx-7">
             <div className="w-full h-10">
@@ -728,9 +728,9 @@ const Video = () => {
             </div>
             <h3 id="p1" className="font-semibold font-sans mt-10 text-3xl text-gray-800">My name is</h3>
             <div id="container" className="flex flex-col">
-              <input type="text" name="name" placeholder="Name" aria-label="Name" onChange={ handleName } className="focus:border-gray-600 focus:ring-0 mt-4 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-400"/>
+              <input type="text" name="name" placeholder="Name" aria-label="Name" onChange={ handleName } className="focus:border-purple-500 focus:ring-0 mt-4 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-400"/>
             </div>
-            <button id="n1" name="continue" type="button" onClick={ step } className="shadow-md max-w-xs h-12 bg-gradient-to-r text-white font-semibold from-red-600 via-pink-500 to-yellow-400 rounded-xl mt-10 m-auto px-28">CONTINUE</button>
+            <button id="n1" name="continue" type="button" onClick={ step } className="shadow-md max-w-xs h-12 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-10 m-auto px-28">CONTINUE</button>
           </div>
 
           <footer className="fixed bottom-0 w-screen text-center text-gray-500 text-xs mb-1">
