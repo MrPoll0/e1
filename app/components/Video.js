@@ -195,6 +195,8 @@ const Video = () => {
           const socket = socketIOClient(ENDPOINT);
           let localStream;
           let remoteStream;
+          let micMuted = false;
+          let camMuted = false;
 
           document.querySelector("div[id='next']").addEventListener("click", function(){
             if(localStream){
@@ -202,19 +204,21 @@ const Video = () => {
               setRemoting(false);
               localStream = undefined;
               remoteStream = undefined;
-              socket.emit("next"); // Keep muted after next
+              socket.emit("next");
             }
           });
 
           document.querySelector("div[id='mute-1']").addEventListener("click", function(){
             if(localStream){ 
               muteMic(localStream);
+              micMuted = !micMuted;
             }
           });
 
           document.querySelector("div[id='mute-0']").addEventListener("click", function(){
             if(localStream){ 
               muteCam(localStream);
+              camMuted = !camMuted;
             }
           });
 
@@ -259,6 +263,7 @@ const Video = () => {
                   video = document.querySelector(`video[name='${type}']`);
                   let fixedVol = e.data.volume.toFixed(2);
                   volume = (volume !== fixedVol) ? fixedVol : volume;
+
                   if(!(volume == 0) && video.className !== highlightStyle){
                     video.className = gethStyle("highlight", type);
                   }else if(volume == 0 && video.className !== normalStyle){
@@ -269,6 +274,15 @@ const Video = () => {
 
               mic.connect(audio);
               audio.connect(audioContext.destination);
+            }
+
+            if(localStream){
+              if(micMuted){
+                muteMic(localStream);
+              }
+              if(camMuted){
+                muteCam(localStream);
+              }
             }
           }
 
@@ -746,7 +760,7 @@ const Video = () => {
     );
     if(remoting){ //    name: max 29 chars
       RemoteVideo = (
-        <div className="flex w-screen h-screen overflow-hidden">
+        <div className="flex w-screen h-screen">
           <div id="rCont">
             <video name="remote" ref={ videoRRef } autoPlay></video>
 
@@ -776,7 +790,7 @@ const Video = () => {
         var landscapeStyle = "absolute z-20 h-screen left-1/2 transform -translate-x-1/2";
         var portraitStyle = "absolute z-20 w-screen top-1/2 transform -translate-y-1/2";
 
-        function vidAdjust(resized){ // ADD EASE-IN-OUT TRANSITION FOR INFOCONT, MOUSEOVER IN PC, TOUCHPAD? IN MOBILE
+        function vidAdjust(resized){ // ADD EASE-IN-OUT TRANSITION FOR INFOCONT
           if(resized){
             if((window.outerWidth/window.outerHeight) >= (1920/1080)){
               remoteContainer.removeAttribute("style");
@@ -802,7 +816,7 @@ const Video = () => {
           let width = entries[0].contentRect.width;
           let height = entries[0].contentRect.height;
           
-          remoteContainer.setAttribute("style", `width: ${width}px; height: ${height}px; margin: auto; overflow: hidden; position: relative;`);
+          remoteContainer.setAttribute("style", `width: ${width}px; height: ${height}px; margin: auto; position: relative;`);
         });
         
         remoteContainer.addEventListener("mouseenter", showInfo.bind(this, true));

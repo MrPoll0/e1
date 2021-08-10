@@ -2,6 +2,7 @@ class audioModule extends AudioWorkletProcessor {
   constructor (...args) {
     super(...args)
     this.volume = 0.0;
+    this.timer = 50;
   }
   process (inputs, outputs, parameters) {
     const input = inputs[0];
@@ -14,7 +15,12 @@ class audioModule extends AudioWorkletProcessor {
       }
 
       this.volume = Math.sqrt(sum / samples.length);
-      this.port.postMessage({volume: this.volume})
+      this.timer -= 1;
+
+      if(this.timer <= 0){ 
+        this.port.postMessage({volume: this.volume})
+        this.timer = 50;
+      }
     }
   
     return true;
