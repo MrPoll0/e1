@@ -1,3 +1,4 @@
+import { info } from "autoprefixer";
 import { useEffect, useState, useRef } from "react";
 import socketIOClient from "socket.io-client";
 import { version } from "../package.json"
@@ -39,6 +40,8 @@ const Video = () => {
     const [pref, setPref] = useState();
     const [pos, setPos] = useState([]);
     const [peerName, setPeerName] = useState();
+    const [peerAge, setPeerAge] = useState();
+    const [peerDesc, setPeerDesc] = useState();
     const [date, setDate] = useState("");
     const [description, setDescription] = useState("");
     const videoRef = useRef(null);
@@ -59,6 +62,11 @@ const Video = () => {
 
     function handleDescription(e){
       setDescription(e);
+    }
+
+    function showDescription(){
+      let desc = document.querySelector("#desc");
+      desc.className = (desc.className.search("hidden") !== -1) ? desc.className.replace("hidden", "") : (desc.className + " hidden"); 
     }
 
     async function nameTaken(uName){
@@ -142,19 +150,41 @@ const Video = () => {
       setButtonStyle("p", e);
     }
 
+    function getAge(date){
+      let today = new Date();
+      let bDate = new Date(date);
+      let age = today.getFullYear() - bDate.getFullYear();
+      let m = today.getMonth() - bDate.getMonth();
+
+      if(m < 0 || (m === 0 && today.getDate() < bDate.getDate())){
+        age--;
+      }
+
+      return age;
+    }
+
     async function handleClick(){
       let taken
+      let cAge = getAge(date);
+      console.log(cAge);
       try{
         taken = await nameTaken(pName);
       }catch(err){
         console.log(err);
       }
-      if(!taken){
+      console.log(taken);
+      if(!taken && cAge >= 18 && cAge <= 120){
         setName(pName);
         setJoinedRoom(true);
-      }else{
+      }else if(taken){
         setStep(6, 1);
         alert("Name already taken");
+      }else if(cAge < 18 && cAge > 0){
+        setStep(6, 3);
+        alert("You must be over 18 years old.");
+      }else if(cAge > 120 || cAge < 0){
+        setStep(6, 3);
+        alert("Please, enter a valid birth date.");
       }
     }
 
@@ -177,19 +207,22 @@ const Video = () => {
           });
 
           document.querySelector("div[id='mute-1']").addEventListener("click", function(){
-            muteMic(localStream);
+            if(localStream){ 
+              muteMic(localStream);
+            }
           });
 
           document.querySelector("div[id='mute-0']").addEventListener("click", function(){
-            muteCam(localStream);
+            if(localStream){ 
+              muteCam(localStream);
+            }
           });
 
           if(joinedRoom) {
             if(pos.coords != undefined){ 
-              console.log(pos);
-              socket.emit('join', {"username": name, "gender": gender, "pref": pref, "lat": pos.coords.latitude, "long": pos.coords.longitude});
+              socket.emit('join', {"username": name, "gender": gender, "pref": pref, "age": getAge(date), "desc": description, "lat": pos.coords.latitude, "long": pos.coords.longitude});
             }else{
-              socket.emit('join', {"username": name, "gender": gender, "pref": pref});
+              socket.emit('join', {"username": name, "gender": gender, "pref": pref, "age": getAge(date), "desc": description});
             }
             setShow(true);
             console.log("joined")
@@ -197,7 +230,7 @@ const Video = () => {
 
           function gethStyle(type, vid){
             let video = document.querySelector(`video[name='${vid}']`);
-            let highlightAlt = " border-4 border-blue-300";
+            let highlightAlt = " shadow-highlight";
             let highlightStyle = video.className + highlightAlt;
             let normalStyle = video.className.replace(highlightAlt, "");
 
@@ -217,7 +250,7 @@ const Video = () => {
               const audio = new AudioWorkletNode(audioContext, 'audioModule');
               let volume;
               let video = document.querySelector(`video[name='${type}']`);
-              let highlightAlt = " border-4 border-blue-300";
+              let highlightAlt = " shadow-highlight";
               let highlightStyle = video.className + highlightAlt;
               let normalStyle = video.className.replace(highlightAlt, "");
               
@@ -348,11 +381,15 @@ const Video = () => {
               }
           })
             
-          socket.on('start_call', async (names) => {
-            if(names[0] === name){
-                setPeerName(names[1]);
+          socket.on('start_call', async (info) => {
+            if(info["0"].name === name){
+              setPeerName(info["1"].name);
+              setPeerAge(info["1"].age);
+              setPeerDesc(info["1"].desc);
             }else{
-                setPeerName(names[0]);
+              setPeerName(info["0"].name);
+              setPeerAge(info["0"].age);
+              setPeerDesc(info["0"].desc);
             }
             
             console.log("received start_call");
@@ -495,6 +532,13 @@ const Video = () => {
         case 3:
           document.querySelector("#p"+step).innerHTML = "My birth date is";
           container.className = defaultContainer;
+          
+          var next = document.querySelector("#n"+step);
+          next.className = next.className.replace("hidden", "");
+          next.disabled = false;
+          if(document.querySelector("#connect")){
+            document.querySelector("#connect").remove();
+          }
 
           var input = document.createElement("input");
           input.type = "date";
@@ -700,12 +744,25 @@ const Video = () => {
         Waiting for the love of your live...
       </div>
     );
-    if(remoting){
+    if(remoting){ //    name: max 29 chars
       RemoteVideo = (
         <div className="flex w-screen h-screen overflow-hidden">
           <div id="rCont">
-            <video name="remote" className="absolute z-20" ref={ videoRRef } autoPlay></video>
-            <div className="absolute z-30 text-white top-2 left-1/2 transform -translate-x-1/2 font-bold">{peerName}</div>
+            <video name="remote" ref={ videoRRef } autoPlay></video>
+
+            <div id="infoCont" className="flex flex-col opacity-0 transition-opacity">
+              <div className="absolute z-30 top-2 left-1/2 transform -translate-x-1/2 bg-gray-700 p-2 px-3 rounded-full shadow-lg max-w-screen-mobile whitespace-nowrap">
+                <div className="font-semibold text-white inline-flex">
+                  {peerName}, {peerAge}
+                  <button type="button" onClick={ showDescription } className="font-semibold text-gray-200 text-xl transform -rotate-90 px-2">‹</button>
+                </div>
+              </div>
+              <div id="desc" className="absolute z-30 hidden top-12 left-1/2 transform -translate-x-1/2 bg-gray-700 p-2 px-3 rounded-xl shadow-lg w-mobile">
+                <div className="font-light text-white whitespace-normal">
+                  {peerDesc}
+                </div>
+              </div>
+            </div>
           </div>
         </div>  
       );
@@ -714,34 +771,51 @@ const Video = () => {
     useEffect(() => {
       if(remoting){
         let remoteContainer = document.querySelector("#rCont");
+        var infoCont = document.querySelector("#infoCont");
         var remoteVid = document.querySelector("video[name='remote']");
         var landscapeStyle = "absolute z-20 h-screen left-1/2 transform -translate-x-1/2";
         var portraitStyle = "absolute z-20 w-screen top-1/2 transform -translate-y-1/2";
 
-        function vidAdjust(){
-          if((screen.width/screen.height) >= (1920/1080)){
-            remoteContainer.removeAttribute("style");
-            remoteVid.className = landscapeStyle;
-          }else{
-            remoteVid.className = portraitStyle;
+        function vidAdjust(resized){ // ADD EASE-IN-OUT TRANSITION FOR INFOCONT, MOUSEOVER IN PC, TOUCHPAD? IN MOBILE
+          if(resized){
+            if((window.outerWidth/window.outerHeight) >= (1920/1080)){
+              remoteContainer.removeAttribute("style");
+              remoteVid.className = landscapeStyle;
+            }else{
+              remoteVid.className = portraitStyle;
+            }
+          }else{ 
+            if((screen.width/screen.height) >= (1920/1080)){
+              remoteContainer.removeAttribute("style");
+              remoteVid.className = landscapeStyle;
+            }else{
+              remoteVid.className = portraitStyle;
+            }
           } 
         }
-        vidAdjust();
+
+        function showInfo(entering, e){
+          infoCont.className = (entering) ? infoCont.className.replace("opacity-0", "opacity-100") : infoCont.className.replace("opacity-100", "opacity-0");
+        }
 
         const resizeObserver = new ResizeObserver(entries => {
-          if(document.querySelector("video[name='remote']").className.search("border-4 border-blue-300") === -1){ 
-            let width = entries[0].contentRect.width;
-            let height = entries[0].contentRect.height;
-            
-            remoteContainer.setAttribute("style", `width: ${width}px; height: ${height}px; margin: auto; position: relative;`);
-          }
+          let width = entries[0].contentRect.width;
+          let height = entries[0].contentRect.height;
+          
+          remoteContainer.setAttribute("style", `width: ${width}px; height: ${height}px; margin: auto; overflow: hidden; position: relative;`);
         });
         
+        remoteContainer.addEventListener("mouseenter", showInfo.bind(this, true));
+        remoteContainer.addEventListener("mouseleave", showInfo.bind(this, false));
         resizeObserver.observe(remoteVid);
-        screen.orientation.addEventListener("change", vidAdjust, true);  
+        screen.orientation.addEventListener("change", vidAdjust(false), true);  
+        window.onresize = () => vidAdjust(true);
         return () => {
+          remoteContainer.removeEventListener("mouseenter", showInfo);
+          remoteContainer.removeEventListener("mouseleave", showInfo);
           resizeObserver.unobserve(remoteVid);
-          screen.orientation.removeEventListener("change", vidAdjust, true);
+          screen.orientation.removeEventListener("change", vidAdjust(false), true);
+          window.onresize = undefined;
         }
       }
     }, [RemoteVideo]);
@@ -751,7 +825,7 @@ const Video = () => {
         <div style={{ display: show ? "none" : "block"}}>
           <header className="flex h-20 w-full border-b">
               <div className="flex flex-col text-center m-auto">
-              <span className="text-4xl text-purple-500 font-sans">VIBEZZ</span>
+              <span className="text-4xl text-purple-500 font-sans">VIBEZZ.live</span>
               </div>
           </header>
 
@@ -765,10 +839,10 @@ const Video = () => {
             <div id="container" className="flex flex-col">
               <input type="text" name="name" placeholder="Name" aria-label="Name" onChange={ handleName } className="focus:border-purple-500 focus:ring-0 mt-4 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-400"/>
             </div>
-            <button id="n1" name="continue" type="button" onClick={ step } className="shadow-md max-w-xs h-12 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-10 m-auto px-28">CONTINUE</button>
+            <button id="n1" name="continue" type="button" onClick={ step } className="shadow-md max-w-xs h-12 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-10 m-auto px-28 z-10">CONTINUE</button>
           </div>
 
-          <footer className="fixed bottom-0 w-screen text-center text-gray-500 text-xs mb-1">
+          <footer className="absolute bottom-0 w-screen text-center text-gray-500 text-xs mb-1 z-0">
               <p>&copy; MrPoll0 2021</p>
               <p>Version: {version}</p>
           </footer>

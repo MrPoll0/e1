@@ -43,6 +43,8 @@ var rooms = [];
 var waitingList = [];
 var preferences = [];
 var coords = [];
+var ages = [];
+var descs = [];
 
 function isEmptyObject(obj){
   return !Object.keys(obj).length;
@@ -162,6 +164,8 @@ io.on('connection', (socket) => {
     genders[socket.id] = data.gender;
     preferences[socket.id] = data.pref;
     allUsers[socket.id] = socket;
+    ages[socket.id] = data.age;
+    descs[socket.id] = data.desc;
 
     if(data.lat != undefined && data.long != undefined){
       coords[socket.id] = {"using": true, "lat": data.lat, "long": data.long};
@@ -195,9 +199,20 @@ io.on('connection', (socket) => {
     console.log("receiver is ready");
 
     var peerIds = roomId.split('#');
-    var peerNames = [names[peerIds[0]], names[peerIds[1]]];
+    var peersInfo = {
+      "0": {
+        "name": names[peerIds[0]],
+        "age": ages[peerIds[0]],
+        "desc": descs[peerIds[0]],
+      },
+      "1": {
+        "name": names[peerIds[1]],
+        "age": ages[peerIds[1]],
+        "desc": descs[peerIds[1]],
+      },
+    }
 
-    io.in(roomId).emit('start_call', peerNames);
+    io.in(roomId).emit('start_call', peersInfo);
     
     console.log("start_call broadcasted: " + socket.id);
   });

@@ -15,7 +15,15 @@ module.exports = {
     minHeight: {
       'video': '540px',
       ...defaultTheme.minHeight,
-    }
+    },
+    extend: {
+      width: {
+        'mobile': '360px',
+      },
+    },
+    boxShadow: {
+      'highlight': '0 0 0 4px #60A5FA',
+    },
   },
   variants: {
     extend: {

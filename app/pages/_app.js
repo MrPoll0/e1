@@ -1,5 +1,4 @@
 import '../styles/globals.css'
-import "tailwindcss/tailwind.css"
 import Head from "next/head"
 
 // https://nextjs.org/docs/advanced-features/custom-app
