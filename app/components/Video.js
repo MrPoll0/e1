@@ -1,4 +1,3 @@
-import { info } from "autoprefixer";
 import { useEffect, useState, useRef } from "react";
 import socketIOClient from "socket.io-client";
 import { version } from "../package.json"
@@ -758,7 +757,7 @@ const Video = () => {
         Waiting for the love of your live...
       </div>
     );
-    if(remoting){ //    name: max 29 chars
+    if(remoting){ //    name: max 29 chars; desc: max ? chars
       RemoteVideo = (
         <div className="flex w-screen h-screen">
           <div id="rCont">
@@ -772,8 +771,8 @@ const Video = () => {
                 </div>
               </div>
               <div id="desc" className="absolute z-30 hidden top-12 left-1/2 transform -translate-x-1/2 bg-gray-700 p-2 px-3 rounded-xl shadow-lg w-mobile">
-                <div className="font-light text-white whitespace-normal">
-                  {peerDesc}
+                <div className="font-light text-white whitespace-pre-wrap break-words">
+                  <p>{peerDesc}</p>
                 </div>
               </div>
             </div>
