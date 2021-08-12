@@ -112,8 +112,8 @@ const Video = () => {
 
     function setButtonStyle(t, s){
       if(t == "p" || t == "g"){ 
-        var defaultStyle = "w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500";
-        var selectedStyle = "w-full text-center border-2 rounded-3xl p-3 border-purple-500 text-purple-500";
+        var defaultStyle = "text-lg w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500 hover:font-semibold";
+        var selectedStyle = "text-lg w-full text-center border-2 rounded-3xl p-3 border-purple-500 text-purple-500 font-semibold";
 
         if(s == "male"){
           document.querySelector("#"+t+"male").className = selectedStyle;
@@ -452,7 +452,7 @@ const Video = () => {
     function checkInput(step){
       switch(step){
         case 1:
-          if(pName != ""){
+          if(pName != "" && pName.length < 29){
             return true;
           }
           return false;
@@ -472,7 +472,7 @@ const Video = () => {
           }
           return false;
         case 5:
-          if(description != ""){
+          if(description != "" && description.length < 306 && description.split(/\r\n|\r|\n/).length <= 5){
             return true;
           }
           return false;
@@ -504,7 +504,7 @@ const Video = () => {
           input.placeholder ="Name";
           input.ariaLabel = "Name";
           input.onchange = function() { handleName(input.value); };
-          input.className = "focus:border-purple-500 focus:ring-0 mt-4 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-400";
+          input.className = "focus:border-purple-500 focus:ring-0 mt-10 mx-6 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-400 text-2xl";
           input.type="text";
           input.name = "name";
           input.value = pName;
@@ -517,7 +517,7 @@ const Video = () => {
           
 
           var buttonM = document.createElement("button");
-          buttonM.className = "w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500";
+          buttonM.className = "text-lg w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500 hover:font-semibold";
           buttonM.ariaLabel = "gender";
           buttonM.innerHTML = "Dick";
           buttonM.id = "gmale";
@@ -556,7 +556,7 @@ const Video = () => {
           var input = document.createElement("input");
           input.type = "date";
           input.ariaLabel = "age";
-          input.className = "mt-10 rounded-md";
+          input.className = "mt-10 rounded-md text-2xl";
           input.onchange = function() { handleDate(input.value); }
           input.value = date;
 
@@ -567,7 +567,7 @@ const Video = () => {
           container.className = container.className + " space-y-3 mt-10";
 
           var buttonM = document.createElement("button");
-          buttonM.className = "w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500";
+          buttonM.className = "text-lg w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500 hover:font-semibold";
           buttonM.ariaLabel = "sexuality";
           buttonM.innerHTML = "Dicks";
           buttonM.id = "pmale";
@@ -604,7 +604,7 @@ const Video = () => {
           }
 
           var textarea = document.createElement("textarea");
-          textarea.className = "focus:ring-0 resize-none rounded-xl mt-10";
+          textarea.className = "focus:ring-0 resize-none rounded-xl mt-10 text-lg";
           textarea.ariaLabel = "description";
           textarea.placeholder = "I like...";
           textarea.rows = "5";
@@ -626,7 +626,7 @@ const Video = () => {
           connect.id = "connect";
           connect.innerHTML = "CONNECT";
           connect.onclick = function() { handleClick(); }
-          connect.className = "shadow-md max-w-xs w-screen h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-10 m-auto px-28"
+          connect.className = "shadow-md max-w-xs h-16 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-12 m-auto px-24 z-10 text-2xl tracking-tighter";
 
           var no = document.createElement("button");
           no.innerHTML = "NO";
@@ -683,9 +683,7 @@ const Video = () => {
     }
 
     let UserVideo = (
-      <div className="text-center absolute top-1/2">
-        Connecting...
-      </div>
+      <div></div>
     ); // {name}
     if(streaming){
       UserVideo = (
@@ -753,11 +751,15 @@ const Video = () => {
     }, [streaming]);
 
     let RemoteVideo = (
-      <div className="text-center absolute top-1/2">
-        Waiting for the love of your live...
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-5/6">
+        <div className="flex items-center justify-center">
+          <h1 className="text-5xl font-semibold tracking-tighter text-gray-smooth">
+            Waiting for the love of your live...
+          </h1>
+        </div>
       </div>
     );
-    if(remoting){ //    name: max 29 chars; desc: max ? chars
+    if(remoting){
       RemoteVideo = (
         <div className="flex w-screen h-screen">
           <div id="rCont">
@@ -838,7 +840,7 @@ const Video = () => {
         <div style={{ display: show ? "none" : "block"}}>
           <header className="flex h-20 w-full border-b">
               <div className="flex flex-col text-center m-auto">
-              <span className="text-4xl text-purple-500 font-sans">VIBEZZ.live</span>
+              <span className="text-4xl tracking-normal font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-900 via-purple-400 to-blue-300"><span className="italic tracking-widest">v</span><span className="tracking-wide">i</span>bezz<span className="tracking-widest">.</span><span className="tracking-wide">l</span><span className="tracking-wide">i</span>ve</span>
               </div>
           </header>
 
@@ -848,11 +850,11 @@ const Video = () => {
             <div className="w-full h-10">
               <button id="b1" type="button" onClick={ step } className="font-semibold text-gray-500 text-6xl opacity-50 disabled:opacity-50">‹</button>
             </div>
-            <h3 id="p1" className="font-semibold font-sans mt-10 text-3xl text-gray-800">My name is</h3>
+            <h3 id="p1" className="font-semibold mt-10 text-5xl text-gray-smooth tracking-tighter">My name is</h3>
             <div id="container" className="flex flex-col">
-              <input type="text" name="name" placeholder="Name" aria-label="Name" onChange={ handleName } className="focus:border-purple-500 focus:ring-0 mt-4 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-400"/>
+              <input type="text" name="name" placeholder="Name" aria-label="Name" onChange={ handleName } className="focus:border-purple-500 focus:ring-0 mt-10 mx-6 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-400 text-2xl"/>
             </div>
-            <button id="n1" name="continue" type="button" onClick={ step } className="shadow-md max-w-xs h-12 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-10 m-auto px-28 z-10">CONTINUE</button>
+            <button id="n1" name="continue" type="button" onClick={ step } className="shadow-md max-w-xs h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-12 m-auto px-28 z-10 text-xl tracking-tighter">CONTINUE</button>
           </div>
 
           <footer className="absolute bottom-0 w-screen text-center text-gray-500 text-xs mb-1 z-0">
@@ -886,6 +888,19 @@ const Video = () => {
 } 
   
 export default Video;
+/*
+logo:
+
+<did className="m-10 flex">
+  <div className="bg-gradient-to-r from-purple-900 via-purple-400 to-blue-300 rounded-full w-44 h-44 flex">
+    <div className="m-auto w-36 h-36 bg-white rounded-full relative">
+      <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pb-7 pl-1 text-9xl tracking-normal font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-900 via-purple-400 to-blue-300"><span className="italic tracking-widest">v</span></span>
+    </div>
+  </div>
+</div>
+*/
+
+
 
 /*
   

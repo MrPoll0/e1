@@ -20,6 +20,9 @@ module.exports = {
       width: {
         'mobile': '360px',
       },
+      colors: {
+        'gray-smooth': '#292929',
+      }
     },
     boxShadow: {
       'highlight': '0 0 0 4px #60A5FA',
@@ -28,6 +31,7 @@ module.exports = {
   variants: {
     extend: {
       cursor: ['hover', 'responsive'],
+      fontWeight: ['hover', 'focus'],
     },
     outline: ["focus"],
     opacity: ["disabled"],
