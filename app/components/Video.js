@@ -840,7 +840,7 @@ const Video = () => {
         <div style={{ display: show ? "none" : "block"}}>
           <header className="flex h-20 w-full border-b">
               <div className="flex flex-col text-center m-auto">
-              <span className="text-4xl tracking-normal font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-900 via-purple-400 to-blue-300"><span className="italic tracking-widest">v</span><span className="tracking-wide">i</span>bezz<span className="tracking-widest">.</span><span className="tracking-wide">l</span><span className="tracking-wide">i</span>ve</span>
+              <span className="text-4xl tracking-normal font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-900 via-purple-400 to-blue-300"><span className="italic tracking-widest">v</span><span className="tracking-wide">i</span>bezz<span className="tracking-widest">.</span><span className="italic"><span className="tracking-wide">l</span><span className="tracking-wide">i</span>ve</span></span>
               </div>
           </header>
 
