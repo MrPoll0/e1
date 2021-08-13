@@ -165,13 +165,11 @@ const Video = () => {
     async function handleClick(){
       let taken
       let cAge = getAge(date);
-      console.log(cAge);
       try{
         taken = await nameTaken(pName);
       }catch(err){
         console.log(err);
       }
-      console.log(taken);
       if(!taken && cAge >= 18 && cAge <= 120){
         setName(pName);
         setJoinedRoom(true);
@@ -223,9 +221,9 @@ const Video = () => {
 
           if(joinedRoom) {
             if(pos.coords != undefined){ 
-              socket.emit('join', {"username": name, "gender": gender, "pref": pref, "age": getAge(date), "desc": description, "lat": pos.coords.latitude, "long": pos.coords.longitude});
+              socket.emit('join', {"name": name, "gender": gender, "pref": pref, "age": getAge(date), "desc": description, "using": true,"lat": pos.coords.latitude, "long": pos.coords.longitude});
             }else{
-              socket.emit('join', {"username": name, "gender": gender, "pref": pref, "age": getAge(date), "desc": description});
+              socket.emit('join', {"name": name, "gender": gender, "pref": pref, "age": getAge(date), "desc": description, "using": false});
             }
             setShow(true);
             console.log("joined")
@@ -754,7 +752,7 @@ const Video = () => {
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-5/6">
         <div className="flex items-center justify-center">
           <h1 className="text-5xl font-semibold tracking-tighter text-gray-smooth">
-            Waiting for the love of your live...
+            Waiting for the love of your life..
           </h1>
         </div>
       </div>

@@ -19,7 +19,7 @@ app.get("*", function(req, res) {
 })
 
 app.post("/name", function(req, res) {
-  if(Object.keys(names).find(key => names[key].toLowerCase() === req.body.name.toLowerCase())){
+  if(Object.keys(users).find(key => users[key].name.toLowerCase() === req.body.name.toLowerCase())){
     res.send(true);
   }else{
     res.send(false);
@@ -36,15 +36,22 @@ const io = require('socket.io')(server, {
 
 
 var queue = [];
+var rooms = [];
+var waitingList = [];
+var users = [];
+/*
 var allUsers = [];
 var names = [];
 var genders = [];
-var rooms = [];
-var waitingList = [];
 var preferences = [];
 var coords = [];
 var ages = [];
 var descs = [];
+*/
+
+
+
+
 
 function isEmptyObject(obj){
   return !Object.keys(obj).length;
@@ -84,7 +91,7 @@ function connectPeers(socket, peer){
   socket.join(room);
   rooms[peer.id] = room;
   rooms[socket.id] = room;
-  console.log(names[socket.id] + " and " + names[peer.id] + " joined the room: " + room);
+  console.log(users[socket.id].name + " and " + users[peer.id].name + " joined the room: " + room);
 
   waitingList[socket.id] = peer;
   socket.emit('room_joined', true, room);
@@ -92,16 +99,16 @@ function connectPeers(socket, peer){
 
 function queueSocket(socket){
     if(!isEmptyObject(queue)){
-      var filtered = queue.filter(element => genders[element.id] === preferences[socket.id] && preferences[element.id] === genders[socket.id] && coords[element.id].using === coords[socket.id].using);
+      var filtered = queue.filter(element => users[element.id].gender === users[socket.id].pref && users[element.id].pref === users[socket.id].gender && users[element.id].using === users[socket.id].using);
       if(isEmptyObject(filtered)){
         queue.push(socket);
-        console.log(names[socket.id] + " joined the queue");
+        console.log(users[socket.id].name + " joined the queue");
       }else{ 
-        if(coords[socket.id].using){ 
+        if(users[socket.id].using){ 
           let d = [];
           let minDist;
           for(let i=0; i < filtered.length; i++){
-            let dist = (getDistanceFromLatLonInKm(coords[socket.id].lat, coords[socket.id].long, coords[filtered[i].id].lat, coords[filtered[i].id].long));
+            let dist = (getDistanceFromLatLonInKm(users[socket.id].lat, users[socket.id].long, users[filtered[i].id].lat, users[filtered[i].id].long));
               
             console.log(dist);
             console.log(":" + i);
@@ -115,7 +122,7 @@ function queueSocket(socket){
             connectPeers(socket, peer);
           }else{
             queue.push(socket);
-            console.log(names[socket.id] + " joined the queue");
+            console.log(users[socket.id].name + " joined the queue");
           }
         }else{ 
           var peer = filtered[Math.floor(Math.random()*filtered.length)];
@@ -124,13 +131,13 @@ function queueSocket(socket){
             connectPeers(socket, peer);
           }else{
             queue.push(socket);
-            console.log(names[socket.id] + " joined the queue");
+            console.log(users[socket.id].name + " joined the queue");
           }
         }
       }
     }else{
       queue.push(socket);
-      console.log(names[socket.id] + " joined the queue");
+      console.log(users[socket.id].name + " joined the queue");
     }
 }
 
@@ -139,11 +146,14 @@ io.on('connection', (socket) => {
   console.log("Socket connected: " + socket.id);
 
   socket.on('disconnect', () => {
+    delete users[socket.id];
+    /*
     delete names[socket.id];
     delete genders[socket.id];
     delete preferences[socket.id];
     delete allUsers[socket.id];
     delete coords[socket.id];
+    */
     if(waitingList[socket.id]){ delete waitingList[socket.id]; }
     var index = queue.indexOf(socket);
     if(index != -1){ queue.splice(index, 1); }
@@ -159,7 +169,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('join', (data) => {
-    console.log(data.username + " joined");
+    console.log(data.name + " joined");
+    data.socket = socket;
+    users[socket.id] = data;
+    /*
     names[socket.id] = data.username;
     genders[socket.id] = data.gender;
     preferences[socket.id] = data.pref;
@@ -172,7 +185,7 @@ io.on('connection', (socket) => {
     }else{
       coords[socket.id] = {"using": false};
     }
-
+    */
     queueSocket(socket);
   })
 
@@ -201,14 +214,14 @@ io.on('connection', (socket) => {
     var peerIds = roomId.split('#');
     var peersInfo = {
       "0": {
-        "name": names[peerIds[0]],
-        "age": ages[peerIds[0]],
-        "desc": descs[peerIds[0]],
+        "name": users[peerIds[0]].name,
+        "age": users[peerIds[0]].age,
+        "desc": users[peerIds[0]].desc,
       },
       "1": {
-        "name": names[peerIds[1]],
-        "age": ages[peerIds[1]],
-        "desc": descs[peerIds[1]],
+        "name": users[peerIds[1]].name,
+        "age": users[peerIds[1]].age,
+        "desc": users[peerIds[1]].desc,
       },
     }
 
