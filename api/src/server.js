@@ -34,24 +34,10 @@ const io = require('socket.io')(server, {
   }
 });
 
-
 var queue = [];
 var rooms = [];
 var waitingList = [];
 var users = [];
-/*
-var allUsers = [];
-var names = [];
-var genders = [];
-var preferences = [];
-var coords = [];
-var ages = [];
-var descs = [];
-*/
-
-
-
-
 
 function isEmptyObject(obj){
   return !Object.keys(obj).length;
@@ -147,13 +133,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     delete users[socket.id];
-    /*
-    delete names[socket.id];
-    delete genders[socket.id];
-    delete preferences[socket.id];
-    delete allUsers[socket.id];
-    delete coords[socket.id];
-    */
+
     if(waitingList[socket.id]){ delete waitingList[socket.id]; }
     var index = queue.indexOf(socket);
     if(index != -1){ queue.splice(index, 1); }
@@ -172,20 +152,7 @@ io.on('connection', (socket) => {
     console.log(data.name + " joined");
     data.socket = socket;
     users[socket.id] = data;
-    /*
-    names[socket.id] = data.username;
-    genders[socket.id] = data.gender;
-    preferences[socket.id] = data.pref;
-    allUsers[socket.id] = socket;
-    ages[socket.id] = data.age;
-    descs[socket.id] = data.desc;
 
-    if(data.lat != undefined && data.long != undefined){
-      coords[socket.id] = {"using": true, "lat": data.lat, "long": data.long};
-    }else{
-      coords[socket.id] = {"using": false};
-    }
-    */
     queueSocket(socket);
   })
 
