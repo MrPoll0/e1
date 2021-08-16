@@ -1,6 +1,6 @@
 import { useEffect, useRef, useContext } from "react";
 import socketIOClient from "socket.io-client";
-import { version } from "../package.json"
+import packageInfo from "../package.json"
 import Image from "next/image";
 
 import NameContext from "../contexts/input/name";
@@ -752,7 +752,7 @@ const Video = () => {
 
           <footer className="absolute bottom-0 w-screen text-center text-gray-500 text-xs mb-1 z-0">
               <p>&copy; MrPoll0 2021</p>
-              <p>Version: {version}</p>
+              <p>Version: {packageInfo.version}</p>
           </footer>
         </div>
     
