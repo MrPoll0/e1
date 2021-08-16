@@ -1,3 +1,7 @@
 module.exports = {
-    poweredByHeader: false
+    poweredByHeader: false,
+    i18n: {
+        locales: ["en", "es", "fr"],
+        defaultLocale: "en",
+    },
 }

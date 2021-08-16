@@ -2,6 +2,11 @@ import { useEffect, useRef, useContext } from "react";
 import socketIOClient from "socket.io-client";
 import packageInfo from "../package.json"
 import Image from "next/image";
+import { useRouter } from "next/router";
+import en from "../locales/en";
+import es from "../locales/es";
+import fr from "../locales/fr";
+import LanguageSelector from "./LanguageSelector";
 
 import NameContext from "../contexts/input/name";
 import GenderContext from "../contexts/input/gender";
@@ -31,6 +36,21 @@ import next from "../public/next.svg";
 import setButtonStyle from "./input/setButtonStyle.js";
 
 const Video = () => {
+    const router = useRouter();
+    const { locale } = router;
+    let t;
+    switch(locale){
+      case "en":
+        t = en;
+        break;
+      case "es":
+        t = es;
+        break;
+      case "fr":
+        t = fr;
+        break;
+    }
+
     const ENDPOINT = "https://api.vibezz.live";
 
     const iceServers = {
@@ -372,7 +392,7 @@ const Video = () => {
       const defaultContainer = "flex flex-col";
       switch(step){
         case 1:
-          document.querySelector("#p"+step).innerHTML = "My name is";
+          document.querySelector("#p"+step).innerHTML = t.name_title;
           container.className = defaultContainer;
 
           var next = document.querySelector("#n"+step);
@@ -384,8 +404,8 @@ const Video = () => {
 
           var input = document.createElement("input");
           input.type ="text";
-          input.placeholder ="Name";
-          input.ariaLabel = "Name";
+          input.placeholder = t.name_placeholder;
+          input.ariaLabel = t.name_placeholder;
           input.onchange = function() { handleName(input.value); };
           input.className = "focus:border-purple-500 focus:ring-0 mt-10 mx-6 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-400 text-2xl";
           input.type="text";
@@ -395,28 +415,28 @@ const Video = () => {
           container.append(input);
           break;
         case 2:
-          document.querySelector("#p"+step).innerHTML = "I'm a";
+          document.querySelector("#p"+step).innerHTML = t.gender_title;
           container.className = container.className + " space-y-3 mt-10";
           
 
           var buttonM = document.createElement("button");
           buttonM.className = "text-lg w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500 hover:font-semibold";
           buttonM.ariaLabel = "gender";
-          buttonM.innerHTML = "Male";
+          buttonM.innerHTML = t.gender_male;
           buttonM.id = "gmale";
           buttonM.onclick = function() { handleGender("male"); }
 
           var buttonF = document.createElement("button");
           buttonF.className = buttonM.className;
           buttonF.ariaLabel = "gender";
-          buttonF.innerHTML = "Female";
+          buttonF.innerHTML = t.gender_female;
           buttonF.id = "gfemale";
           buttonF.onclick = function() { handleGender("female"); }
 
           var buttonO = document.createElement("button");
           buttonO.className = buttonM.className;
           buttonO.ariaLabel = "gender";
-          buttonO.innerHTML = "Other";
+          buttonO.innerHTML = t.gender_other;
           buttonO.id = "gother";
           buttonO.onclick = function() { handleGender("other"); }
 
@@ -426,7 +446,7 @@ const Video = () => {
           setButtonStyle("g", gender);
           break;
         case 3:
-          document.querySelector("#p"+step).innerHTML = "My birth date is";
+          document.querySelector("#p"+step).innerHTML = t.bdate_title;
           container.className = defaultContainer;
           
           var next = document.querySelector("#n"+step);
@@ -438,7 +458,7 @@ const Video = () => {
 
           var input = document.createElement("input");
           input.type = "date";
-          input.ariaLabel = "age";
+          input.ariaLabel = t.bdate_age;
           input.className = "mt-10 rounded-md text-2xl";
           input.onchange = function() { handleDate(input.value); }
           input.value = date;
@@ -446,34 +466,34 @@ const Video = () => {
           container.append(input);
           break;
         case 4:
-          document.querySelector("#p"+step).innerHTML = "I'm sexually attracted to";
+          document.querySelector("#p"+step).innerHTML = t.sexorient_title;
           container.className = container.className + " space-y-3 mt-10";
 
           var buttonM = document.createElement("button");
           buttonM.className = "sm:text-lg text-base w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500 hover:font-semibold";
-          buttonM.ariaLabel = "sexuality";
-          buttonM.innerHTML = "Men";
+          buttonM.ariaLabel = t.sexorient_aria;
+          buttonM.innerHTML = t.sexorient_men;
           buttonM.id = "pmale";
           buttonM.onclick = function() { handlePref("male"); }
 
           var buttonF = document.createElement("button");
           buttonF.className = buttonM.className;
-          buttonF.ariaLabel = "sexuality";
-          buttonF.innerHTML = "Women";
+          buttonF.ariaLabel = t.sexorient_aria;
+          buttonF.innerHTML = t.sexorient_women;
           buttonF.id = "pfemale";
           buttonF.onclick = function() { handlePref("female"); }
 
           var buttonB = document.createElement("button");
           buttonB.className = buttonM.className;
-          buttonB.ariaLabel = "sexuality";
-          buttonB.innerHTML = "Both";
+          buttonB.ariaLabel = t.sexorient_aria;
+          buttonB.innerHTML = t.sexorient_both;
           buttonB.id = "pboth";
           buttonB.onclick = function() { handlePref("both"); }
 
           var buttonO = document.createElement("button");
           buttonO.className = buttonM.className;
-          buttonO.ariaLabel = "sexuality";
-          buttonO.innerHTML = "Other";
+          buttonO.ariaLabel = t.sexorient_aria;
+          buttonO.innerHTML = t.sexorient_other;
           buttonO.id = "pother";
           buttonO.onclick = function() { handlePref("other"); }
 
@@ -484,7 +504,7 @@ const Video = () => {
           setButtonStyle("p", pref);
           break;
         case 5:
-          document.querySelector("#p"+step).innerHTML = "I'm interested in";
+          document.querySelector("#p"+step).innerHTML = t.description_title;
           container.className = defaultContainer;
 
           var next = document.querySelector("#n"+step);
@@ -496,8 +516,8 @@ const Video = () => {
 
           var textarea = document.createElement("textarea");
           textarea.className = "focus:ring-0 resize-none rounded-xl mt-10 text-lg";
-          textarea.ariaLabel = "description";
-          textarea.placeholder = "I like...";
+          textarea.ariaLabel = t.description_aria;
+          textarea.placeholder = t.description_placeholder;
           textarea.rows = "5";
           textarea.onchange = function() { handleDescription(textarea.value); }
           textarea.value = description;
@@ -505,7 +525,7 @@ const Video = () => {
           container.append(textarea);
           break;
         case 6:
-          document.querySelector("#p"+step).innerHTML = "Do you wanna look for people near you?";
+          document.querySelector("#p"+step).innerHTML = t.pos_title;
           container.className = "inline-flex space-x-10 mt-10 m-auto";
 
           var next = document.querySelector("#n"+step);
@@ -515,25 +535,25 @@ const Video = () => {
 
           var connect = document.createElement("button");
           connect.id = "connect";
-          connect.innerHTML = "CONNECT";
+          connect.innerHTML = t.connect;
           connect.onclick = function() { handleClick(); }
-          connect.className = "shadow-md max-w-xs h-16 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-12 m-auto px-24 z-10 text-2xl tracking-tighter";
+          connect.className = "uppercase shadow-md max-w-xs h-16 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-12 m-auto px-24 z-10 text-2xl tracking-tighter";
 
           var no = document.createElement("button");
-          no.innerHTML = "NO";
+          no.innerHTML = t.pos_no;
           no.id = "no";
-          no.ariaLabel = "location";
-          no.className = "text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-red-400 hover:text-red-400 focus:border-red-500 focus:text-red-500";
+          no.ariaLabel = t.pos_aria;
+          no.className = "uppercase text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-red-400 hover:text-red-400 focus:border-red-500 focus:text-red-500";
           no.onclick = async () => { 
             const distanceSelect = (await import("./input/distanceSelect")).default;
             distanceSelect("no", handlePos); 
           }
 
           var yes = document.createElement("button");
-          yes.innerHTML = "YES";
+          yes.innerHTML = t.pos_yes;
           yes.id = "yes";
-          yes.ariaLabel = "location";
-          yes.className = "text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-green-400 hover:text-green-400 focus:border-green-500 focus:text-green-500";
+          yes.ariaLabel = t.pos_aria;
+          yes.className = "uppercase text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-green-400 hover:text-green-400 focus:border-green-500 focus:text-green-500";
           yes.onclick = async () => { 
             const distanceSelect = (await import("./input/distanceSelect")).default;
             distanceSelect("yes", handlePos); 
@@ -647,7 +667,7 @@ const Video = () => {
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-5/6">
         <div className="flex items-center justify-center">
           <h1 className="text-5xl font-semibold tracking-tighter text-gray-smooth">
-            Waiting for the love of your life..
+            {t.waiting}
           </h1>
         </div>
       </div>
@@ -743,14 +763,15 @@ const Video = () => {
             <div className="w-full h-10">
               <button id="b1" type="button" onClick={ step } className="font-semibold text-gray-500 text-6xl opacity-50 disabled:opacity-50">‹</button>
             </div>
-            <h3 id="p1" className="font-semibold mt-10 text-5xl text-gray-smooth tracking-tighter">My name is</h3>
+            <h3 id="p1" className="font-semibold mt-10 text-5xl text-gray-smooth tracking-tighter">{t.name_title}</h3>
             <div id="container" className="flex flex-col">
-              <input type="text" name="name" placeholder="Name" aria-label="Name" onChange={ handleName } className="focus:border-purple-500 focus:ring-0 mt-10 mx-6 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-400 text-2xl"/>
+              <input type="text" name="name" placeholder={t.name_placeholder} aria-label="Name" onChange={ handleName } className="focus:border-purple-500 focus:ring-0 mt-10 mx-6 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-400 text-2xl"/>
             </div>
-            <button id="n1" name="continue" type="button" onClick={ step } className="shadow-md max-w-xs h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl sm:mt-12 mt-6 m-auto px-28 z-10 text-xl tracking-tighter">CONTINUE</button>
+            <button id="n1" name="continue" type="button" onClick={ step } className="uppercase shadow-md max-w-xs h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl sm:mt-12 mt-6 m-auto px-28 z-10 text-xl tracking-tighter">{t.continue}</button>
           </div>
 
           <footer className="absolute bottom-0 w-screen text-center text-gray-500 text-xs mb-1 z-0">
+              <LanguageSelector />
               <p>&copy; MrPoll0 2021</p>
               <p>Version: {packageInfo.version}</p>
           </footer>

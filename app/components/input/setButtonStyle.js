@@ -33,10 +33,10 @@ const setButtonStyle = (t, s) => {
         document.querySelector("#"+t+"female").className = defaultStyle;
         }
     }else{
-        var defaultStyleY = "text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-green-400 hover:text-green-400 focus:border-green-500 focus:text-green-500";
-        var selectedStyleY = "text-4xl border-2 rounded p-2 border-green-500 text-green-500";
-        var defaultStyleN = "text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-red-400 hover:text-red-400 focus:border-red-500 focus:text-red-500";
-        var selectedStyleN = "text-4xl border-2 rounded p-2 border-red-500 text-red-500";
+        var defaultStyleY = "uppercase text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-green-400 hover:text-green-400 focus:border-green-500 focus:text-green-500";
+        var selectedStyleY = "uppercase text-4xl border-2 rounded p-2 border-green-500 text-green-500";
+        var defaultStyleN = "uppercase text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-red-400 hover:text-red-400 focus:border-red-500 focus:text-red-500";
+        var selectedStyleN = "uppercase text-4xl border-2 rounded p-2 border-red-500 text-red-500";
 
         document.querySelector("#"+s).className = (s == "yes" ? selectedStyleY : selectedStyleN);
         document.querySelector("#"+(s == "yes" ? "no" : "yes")).className = (s == "yes" ? defaultStyleN : defaultStyleY);
