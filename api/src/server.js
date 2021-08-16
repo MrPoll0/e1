@@ -84,7 +84,7 @@ function connectPeers(socket, peer){
 }
 
 function queueSocket(socket){
-    if(!isEmptyObject(queue)){
+    if(!isEmptyObject(queue)){ // add both pref case
       var filtered = queue.filter(element => users[element.id].gender === users[socket.id].pref && users[element.id].pref === users[socket.id].gender && users[element.id].using === users[socket.id].using);
       if(isEmptyObject(filtered)){
         queue.push(socket);

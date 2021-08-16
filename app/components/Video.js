@@ -1,6 +1,35 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useContext } from "react";
 import socketIOClient from "socket.io-client";
 import { version } from "../package.json"
+import Image from "next/image";
+
+import NameContext from "../contexts/input/name";
+import GenderContext from "../contexts/input/gender";
+import PrefContext from "../contexts/input/pref";
+import DateContext from "../contexts/input/date";
+import DescriptionContext from "../contexts/input/description";
+import PosContext from "../contexts/input/pos";
+import JoinedRoomContext from "../contexts/joinedRoom";
+import StreamingContext from "../contexts/input/streaming";
+import RemotingContext from "../contexts/input/remoting";
+
+import LocalVidRefContext from "../contexts/video/localVidRef";
+import RemoteVidRefContext from "../contexts/video/remoteVidRef";
+import PeerNameContext from "../contexts/video/peerName";
+import PeerAgeContext from "../contexts/video/peerAge";
+import PeerDescContext from "../contexts/video/peerDesc";
+import CamIStatusContext from "../contexts/video/camIStatus";
+import MicIStatusContext from "../contexts/video/micIStatus";
+
+import Logotype from "../public/logotype.png";
+import cancel from "../public/cancel.svg";
+import next from "../public/next.svg";
+
+
+
+// temp
+import setButtonStyle from "./input/setButtonStyle.js";
+
 
 const Video = () => {
     const ENDPOINT = "https://api.vibezz.live";
@@ -29,39 +58,25 @@ const Video = () => {
         audio: true,
         video: true,
     }
-    const [pName, setpName] = useState("");
-    const [show, setShow] = useState("");
-    const [joinedRoom, setJoinedRoom] = useState("");
-    const [name, setName] = useState("");
-    const [streaming, setStreaming] = useState(false);
-    const [remoting, setRemoting] = useState();
-    const [gender, setGender] = useState();
-    const [pref, setPref] = useState();
-    const [pos, setPos] = useState([]);
-    const [peerName, setPeerName] = useState();
-    const [peerAge, setPeerAge] = useState();
-    const [peerDesc, setPeerDesc] = useState();
-    const [date, setDate] = useState("");
-    const [description, setDescription] = useState("");
-    const videoRef = useRef(null);
-    const videoRRef = useRef(null);
     const isMounted = useRef(false);
 
-    function handleName(e) {
-      if(e.target != undefined){
-        setpName(e.target.value);
-      }else{
-        setpName(e);
-      }
-    }
+    const [name, handleName] = useContext(NameContext);
+    const [gender, handleGender] = useContext(GenderContext);
+    const [pref, handlePref] = useContext(PrefContext);
+    const [date, handleDate] = useContext(DateContext);
+    const [description, handleDescription] = useContext(DescriptionContext);
+    const [pos, handlePos] = useContext(PosContext);
+    const [joinedRoom, handleJoinedRoom] = useContext(JoinedRoomContext);
+    const [streaming, handleStreaming] = useContext(StreamingContext);
+    const [remoting, handleRemoting] = useContext(RemotingContext);
 
-    function handleDate(e){
-      setDate(e);
-    }
-
-    function handleDescription(e){
-      setDescription(e);
-    }
+    const localVidRef = useContext(LocalVidRefContext);
+    const remoteVidRef = useContext(RemoteVidRefContext);
+    const [peerName, handlePeerName] = useContext(PeerNameContext);
+    const [peerAge, handlePeerAge] = useContext(PeerAgeContext);
+    const [peerDesc, handlePeerDesc] = useContext(PeerDescContext);
+    const [camIStatus, handleCamIStatus] = useContext(CamIStatusContext);
+    const [micIStatus, handleMicIStatus] = useContext(MicIStatusContext);
 
     function showDescription(){
       let desc = document.querySelector("#desc");
@@ -81,72 +96,32 @@ const Video = () => {
         });
       return res;
     }
-
-    function muteMic(stream){
-      stream.getAudioTracks().forEach(function(track){
-        track.enabled = !track.enabled;
-        document.querySelector("div[id='mute-1']").firstChild.style = track.enabled && "background: url('https://vibezz.live/mic.svg')" || "background: url('https://vibezz.live/mic-1.svg')";
-      });
-    }
-
-    function muteCam(stream){
-      stream.getVideoTracks().forEach(function(track){
-        track.enabled = !track.enabled;
-        document.querySelector("div[id='mute-0']").firstChild.style = track.enabled && "background: url('https://vibezz.live/cam.svg')" || "background: url('https://vibezz.live/cam-1.svg')";
-      });
-    }
     
     function distanceSelect(e){
       if(e === "yes"){
         if(window.navigator.geolocation){
-          window.navigator.geolocation.getCurrentPosition(setPos);
+          window.navigator.geolocation.getCurrentPosition(handlePos);
           setButtonStyle("d", "yes");
         }else{
           alert("Distance not available");
         }
       }else if(e === "no"){
-        setPos([]);
+        handlePos([]);
         setButtonStyle("d", "no");
       }
     }
 
-    function setButtonStyle(t, s){
-      if(t == "p" || t == "g"){ 
-        var defaultStyle = "text-lg w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500 hover:font-semibold";
-        var selectedStyle = "text-lg w-full text-center border-2 rounded-3xl p-3 border-purple-500 text-purple-500 font-semibold";
+    function gethStyle(type, vid){
+      let video = document.querySelector(`video[name='${vid}']`);
+      let highlightAlt = " shadow-highlight";
+      let highlightStyle = video.className + highlightAlt;
+      let normalStyle = video.className.replace(highlightAlt, "");
 
-        if(s == "male"){
-          document.querySelector("#"+t+"male").className = selectedStyle;
-          document.querySelector("#"+t+"female").className = defaultStyle;
-          document.querySelector("#"+t+"both").className = defaultStyle;
-        }else if(s == "female"){
-          document.querySelector("#"+t+"female").className = selectedStyle;
-          document.querySelector("#"+t+"male").className = defaultStyle;
-          document.querySelector("#"+t+"both").className = defaultStyle;
-        }else if(s == "both"){
-          document.querySelector("#"+t+"both").className = selectedStyle;
-          document.querySelector("#"+t+"male").className = defaultStyle;
-          document.querySelector("#"+t+"female").className = defaultStyle;
-        }
-      }else{
-        var defaultStyleY = "text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-green-400 hover:text-green-400 focus:border-green-500 focus:text-green-500";
-        var selectedStyleY = "text-4xl border-2 rounded p-2 border-green-500 text-green-500";
-        var defaultStyleN = "text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-red-400 hover:text-red-400 focus:border-red-500 focus:text-red-500";
-        var selectedStyleN = "text-4xl border-2 rounded p-2 border-red-500 text-red-500";
-
-        document.querySelector("#"+s).className = (s == "yes" ? selectedStyleY : selectedStyleN);
-        document.querySelector("#"+(s == "yes" ? "no" : "yes")).className = (s == "yes" ? defaultStyleN : defaultStyleY);
+      if(type === "normal"){
+        return normalStyle;
+      }else if(type === "highlight"){
+        return highlightStyle;
       }
-    }
-
-    function genderSelect(e){
-      setGender(e);
-      setButtonStyle("g", e);
-    }
-
-    function prefSelect(e){
-      setPref(e);
-      setButtonStyle("p", e);
     }
 
     function getAge(date){
@@ -166,13 +141,12 @@ const Video = () => {
       let taken
       let cAge = getAge(date);
       try{
-        taken = await nameTaken(pName);
+        taken = await nameTaken(name);
       }catch(err){
         console.log(err);
       }
       if(!taken && cAge >= 18 && cAge <= 120){
-        setName(pName);
-        setJoinedRoom(true);
+        handleJoinedRoom(true);
       }else if(taken){
         setStep(6, 1);
         alert("Name already taken");
@@ -194,27 +168,36 @@ const Video = () => {
           let remoteStream;
           let micMuted = false;
           let camMuted = false;
+          let muteCam, muteMic;
 
           document.querySelector("div[id='next']").addEventListener("click", function(){
             if(localStream){
-              setStreaming(false);
-              setRemoting(false);
+              handleStreaming(false);
+              handleRemoting(false);
               localStream = undefined;
               remoteStream = undefined;
               socket.emit("next");
             }
           });
 
-          document.querySelector("div[id='mute-1']").addEventListener("click", function(){
+          document.querySelector("div[id='mute-1']").addEventListener("click", async function(){
             if(localStream){ 
-              muteMic(localStream);
+              if(muteMic == undefined){ 
+                muteMic = (await import("./video/muteMic")).default;
+              }
+
+              muteMic(localStream, handleMicIStatus);
               micMuted = !micMuted;
             }
           });
 
-          document.querySelector("div[id='mute-0']").addEventListener("click", function(){
+          document.querySelector("div[id='mute-0']").addEventListener("click", async function(){
             if(localStream){ 
-              muteCam(localStream);
+              if(muteCam == undefined){ 
+                muteCam = (await import("./video/muteCam")).default;
+              }
+
+              muteCam(localStream, handleCamIStatus);
               camMuted = !camMuted;
             }
           });
@@ -225,21 +208,7 @@ const Video = () => {
             }else{
               socket.emit('join', {"name": name, "gender": gender, "pref": pref, "age": getAge(date), "desc": description, "using": false});
             }
-            setShow(true);
             console.log("joined")
-          }
-
-          function gethStyle(type, vid){
-            let video = document.querySelector(`video[name='${vid}']`);
-            let highlightAlt = " shadow-highlight";
-            let highlightStyle = video.className + highlightAlt;
-            let normalStyle = video.className.replace(highlightAlt, "");
-
-            if(type === "normal"){
-              return normalStyle;
-            }else if(type === "highlight"){
-              return highlightStyle;
-            }
           }
 
           async function configureTalking(stream, type){
@@ -275,10 +244,10 @@ const Video = () => {
 
             if(localStream){
               if(micMuted){
-                muteMic(localStream);
+                muteMic(localStream, handleMicIStatus);
               }
               if(camMuted){
-                muteCam(localStream);
+                muteCam(localStream, handleCamIStatus);
               }
             }
           }
@@ -291,9 +260,9 @@ const Video = () => {
               console.error('Could not get user media', error)
             }
             
-            setStreaming(stream)
+            handleStreaming(stream)
             localStream = stream
-            videoRef.current.srcObject = stream
+            localVidRef.current.srcObject = stream
 
             configureTalking(localStream, "local");
           }
@@ -341,8 +310,8 @@ const Video = () => {
           }
             
           function setRemoteStream(event) {
-              setRemoting(event.streams[0]);
-              videoRRef.current.srcObject = event.streams[0];
+              handleRemoting(event.streams[0]);
+              remoteVidRef.current.srcObject = event.streams[0];
               remoteStream = event.streams[0];
 
               configureTalking(remoteStream, "remote");
@@ -368,8 +337,8 @@ const Video = () => {
           });
 
           socket.on("peer_disconnected", () => {
-            setStreaming(false);
-            setRemoting(false);
+            handleStreaming(false);
+            handleRemoting(false);
             localStream = undefined;
             remoteStream = undefined;
             alert("Your mate disconnected. Looking for new people... (with the same options)");
@@ -394,13 +363,13 @@ const Video = () => {
             
           socket.on('start_call', async (info) => {
             if(info["0"].name === name){
-              setPeerName(info["1"].name);
-              setPeerAge(info["1"].age);
-              setPeerDesc(info["1"].desc);
+              handlePeerName(info["1"].name);
+              handlePeerAge(info["1"].age);
+              handlePeerDesc(info["1"].desc);
             }else{
-              setPeerName(info["0"].name);
-              setPeerAge(info["0"].age);
-              setPeerDesc(info["0"].desc);
+              handlePeerName(info["0"].name);
+              handlePeerAge(info["0"].age);
+              handlePeerDesc(info["0"].desc);
             }
             
             console.log("received start_call");
@@ -450,7 +419,7 @@ const Video = () => {
     function checkInput(step){
       switch(step){
         case 1:
-          if(pName != "" && pName.length < 29){
+          if(name != "" && name.length < 29){
             return true;
           }
           return false;
@@ -460,7 +429,8 @@ const Video = () => {
           }
           return false;
         case 3:
-          if(date != ""){
+          let cAge = getAge(date);
+          if(date != "" && cAge >= 18 && cAge > 0 && cAge <= 120){
             return true;
           }
           return false;
@@ -505,39 +475,39 @@ const Video = () => {
           input.className = "focus:border-purple-500 focus:ring-0 mt-10 mx-6 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-400 text-2xl";
           input.type="text";
           input.name = "name";
-          input.value = pName;
+          input.value = name;
 
           container.append(input);
           break;
         case 2:
-          document.querySelector("#p"+step).innerHTML = "I have";
+          document.querySelector("#p"+step).innerHTML = "I'm a";
           container.className = container.className + " space-y-3 mt-10";
           
 
           var buttonM = document.createElement("button");
           buttonM.className = "text-lg w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500 hover:font-semibold";
           buttonM.ariaLabel = "gender";
-          buttonM.innerHTML = "Dick";
+          buttonM.innerHTML = "Male";
           buttonM.id = "gmale";
-          buttonM.onclick = function() { genderSelect("male"); }
+          buttonM.onclick = function() { handleGender("male"); }
 
           var buttonF = document.createElement("button");
           buttonF.className = buttonM.className;
           buttonF.ariaLabel = "gender";
-          buttonF.innerHTML = "Vagina";
+          buttonF.innerHTML = "Female";
           buttonF.id = "gfemale";
-          buttonF.onclick = function() { genderSelect("female"); }
+          buttonF.onclick = function() { handleGender("female"); }
 
-          var buttonB = document.createElement("button");
-          buttonB.className = buttonM.className;
-          buttonB.ariaLabel = "gender";
-          buttonB.innerHTML = "Both";
-          buttonB.id = "gboth";
-          buttonB.onclick = function() { genderSelect("both"); }
+          var buttonO = document.createElement("button");
+          buttonO.className = buttonM.className;
+          buttonO.ariaLabel = "gender";
+          buttonO.innerHTML = "Other";
+          buttonO.id = "gother";
+          buttonO.onclick = function() { handleGender("other"); }
 
           container.append(buttonM);
           container.append(buttonF);
-          container.append(buttonB);
+          container.append(buttonO);
           setButtonStyle("g", gender);
           break;
         case 3:
@@ -565,29 +535,37 @@ const Video = () => {
           container.className = container.className + " space-y-3 mt-10";
 
           var buttonM = document.createElement("button");
-          buttonM.className = "text-lg w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500 hover:font-semibold";
+          buttonM.className = "sm:text-lg text-base w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500 hover:font-semibold";
           buttonM.ariaLabel = "sexuality";
-          buttonM.innerHTML = "Dicks";
+          buttonM.innerHTML = "Men";
           buttonM.id = "pmale";
-          buttonM.onclick = function() { prefSelect("male"); }
+          buttonM.onclick = function() { handlePref("male"); }
 
           var buttonF = document.createElement("button");
           buttonF.className = buttonM.className;
           buttonF.ariaLabel = "sexuality";
-          buttonF.innerHTML = "Vaginas";
+          buttonF.innerHTML = "Women";
           buttonF.id = "pfemale";
-          buttonF.onclick = function() { prefSelect("female"); }
+          buttonF.onclick = function() { handlePref("female"); }
 
           var buttonB = document.createElement("button");
           buttonB.className = buttonM.className;
           buttonB.ariaLabel = "sexuality";
           buttonB.innerHTML = "Both";
           buttonB.id = "pboth";
-          buttonB.onclick = function() { prefSelect("both"); }
+          buttonB.onclick = function() { handlePref("both"); }
+
+          var buttonO = document.createElement("button");
+          buttonO.className = buttonM.className;
+          buttonO.ariaLabel = "sexuality";
+          buttonO.innerHTML = "Other";
+          buttonO.id = "pother";
+          buttonO.onclick = function() { handlePref("other"); }
 
           container.append(buttonM);
           container.append(buttonF);
           container.append(buttonB);
+          container.append(buttonO);
           setButtonStyle("p", pref);
           break;
         case 5:
@@ -686,17 +664,13 @@ const Video = () => {
     if(streaming){
       UserVideo = (
         <div>
-          <video name="local" className="h-1/4 rounded-xl shadow-md absolute z-50" ref={ videoRef } autoPlay muted></video>
+          <video name="local" className="h-1/4 rounded-xl shadow-md absolute z-50" ref={ localVidRef } autoPlay muted></video>
         </div>
       );
     }
 
     useEffect(() => {
-      if(streaming && UserVideo !== (
-        <div className="text-center absolute top-1/2">
-          Connecting...
-        </div>
-      )){ 
+      if(streaming){ 
         var isMobile = false;
 
         if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) 
@@ -761,7 +735,7 @@ const Video = () => {
       RemoteVideo = (
         <div className="flex w-screen h-screen">
           <div id="rCont">
-            <video name="remote" ref={ videoRRef } autoPlay></video>
+            <video name="remote" ref={ remoteVidRef } autoPlay></video>
 
             <div id="infoCont" className="flex flex-col opacity-0 transition-opacity">
               <div className="absolute z-30 top-2 left-1/2 transform -translate-x-1/2 bg-gray-700 p-2 px-3 rounded-full shadow-lg max-w-screen-mobile whitespace-nowrap">
@@ -770,7 +744,7 @@ const Video = () => {
                   <button type="button" onClick={ showDescription } className="font-semibold text-gray-200 text-xl transform -rotate-90 px-2">‹</button>
                 </div>
               </div>
-              <div id="desc" className="absolute z-30 hidden top-12 left-1/2 transform -translate-x-1/2 bg-gray-700 p-2 px-3 rounded-xl shadow-lg w-mobile">
+              <div id="desc" className="absolute z-30 hidden top-12 left-1/2 transform -translate-x-1/2 bg-gray-700 p-2 px-3 rounded-xl shadow-lg w-mobileW">
                 <div className="font-light text-white whitespace-pre-wrap break-words">
                   <p>{peerDesc}</p>
                 </div>
@@ -835,10 +809,10 @@ const Video = () => {
 
     return (
       <main>
-        <div style={{ display: show ? "none" : "block"}}>
-          <header className="flex h-20 w-full border-b">
-              <div className="flex flex-col text-center m-auto">
-              <span className="text-4xl tracking-normal font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-900 via-purple-400 to-blue-300"><span className="italic tracking-widest">v</span><span className="tracking-wide">i</span>bezz<span className="tracking-widest">.</span><span className="italic"><span className="tracking-wide">l</span><span className="tracking-wide">i</span>ve</span></span>
+        <div style={{ display: joinedRoom ? "none" : "block"}}>
+          <header className="flex w-full border-b">
+              <div className="m-auto -mb-4">
+                <Image src={Logotype} alt="Logotype" width="409" height="109" quality="100"></Image>
               </div>
           </header>
 
@@ -852,7 +826,7 @@ const Video = () => {
             <div id="container" className="flex flex-col">
               <input type="text" name="name" placeholder="Name" aria-label="Name" onChange={ handleName } className="focus:border-purple-500 focus:ring-0 mt-10 mx-6 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-400 text-2xl"/>
             </div>
-            <button id="n1" name="continue" type="button" onClick={ step } className="shadow-md max-w-xs h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-12 m-auto px-28 z-10 text-xl tracking-tighter">CONTINUE</button>
+            <button id="n1" name="continue" type="button" onClick={ step } className="shadow-md max-w-xs h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl sm:mt-12 mt-6 m-auto px-28 z-10 text-xl tracking-tighter">CONTINUE</button>
           </div>
 
           <footer className="absolute bottom-0 w-screen text-center text-gray-500 text-xs mb-1 z-0">
@@ -861,22 +835,30 @@ const Video = () => {
           </footer>
         </div>
     
-        <div style={{ display: show ? "block" : "none"}} className="flex flex-col">
+        <div style={{ display: joinedRoom ? "block" : "none"}} className="flex flex-col">
           {UserVideo}
           {RemoteVideo}
           <div className="w-screen fixed bottom-0 flex mb-3 z-40"> 
             <div className="m-auto flex space-x-2">
               <div id="cancel" className="w-20 h-20 rounded-full m-auto shadow-xl bg-red-400 hover:cursor-pointer">
-                <i className="w-12 h-12 bg-auto block absolute ml-4 mt-4" style={{ background: 'url(https://vibezz.live/cancel.svg)' }}></i>
+                <i className="w-12 h-12 bg-auto block absolute ml-4 mt-4">
+                  <Image src={cancel} alt="Cancel" layout="fill" objectFit="cover"></Image>
+                </i>
               </div>
               <div id="mute-0" className="w-20 h-20 bg-gray-400 rounded-full m-auto shadow-xl hover:cursor-pointer">
-                <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3" style={{ background: 'url(https://vibezz.live/cam.svg)' }}></i>
+                <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3">
+                  <Image src={camIStatus} alt="Cancel" layout="fill" objectFit="cover"></Image>
+                </i>
               </div>
               <div id="mute-1" className="w-20 h-20 bg-gray-400 rounded-full m-auto shadow-xl hover:cursor-pointer">
-                <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3" style={{ background: 'url(https://vibezz.live/mic.svg)' }}></i>
+                <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3">
+                  <Image src={micIStatus} alt="Cancel" layout="fill" objectFit="cover"></Image>
+                </i>
               </div>
               <div id="next" className="w-20 h-20 rounded-full m-auto shadow-xl bg-green-400 hover:cursor-pointer">
-                <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3" style={{ background: 'url(https://vibezz.live/next.svg)' }}></i>
+                <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3">
+                <Image src={next} alt="Cancel" layout="fill" objectFit="cover"></Image>
+                </i>
               </div>
             </div>
           </div>
@@ -886,19 +868,6 @@ const Video = () => {
 } 
   
 export default Video;
-/*
-logo:
-
-<did className="m-10 flex">
-  <div className="bg-gradient-to-r from-purple-900 via-purple-400 to-blue-300 rounded-full w-44 h-44 flex">
-    <div className="m-auto w-36 h-36 bg-white rounded-full relative">
-      <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pb-7 pl-1 text-9xl tracking-normal font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-900 via-purple-400 to-blue-300"><span className="italic tracking-widest">v</span></span>
-    </div>
-  </div>
-</div>
-*/
-
-
 
 /*
   

@@ -1,5 +1,5 @@
 import '../styles/globals.css'
-import Head from "next/head"
+import { Providers } from "../contexts/main.js";
 
 // https://nextjs.org/docs/advanced-features/custom-app
 
@@ -8,13 +8,10 @@ export function reportWebVitals(metric){
 }
 
 function MyApp({ Component, pageProps }) {
-  const { session } = pageProps
   return (
-    <>
-      <Head>
-      </Head>
+    <Providers>
       <Component {...pageProps} />
-    </>
+    </Providers>
   )
 }
 

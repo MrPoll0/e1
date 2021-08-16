@@ -22,7 +22,7 @@ module.exports = {
       },
       colors: {
         'gray-smooth': '#292929',
-      }
+      },
     },
     boxShadow: {
       'highlight': '0 0 0 4px #60A5FA',
