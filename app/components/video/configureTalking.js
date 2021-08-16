@@ -7,7 +7,7 @@ const configureTalking = async (stream, type, micMuted, camMuted, handleMicIStat
     if(stream){ 
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       const audioContext = new AudioContext();
-      await audioContext.audioWorklet.addModule('https://www.vibezz.live/audioModule.js');
+      await audioContext.audioWorklet.addModule('../audioModule.js');
       let mic = audioContext.createMediaStreamSource(stream);
       const audio = new AudioWorkletNode(audioContext, 'audioModule');
       let volume;
