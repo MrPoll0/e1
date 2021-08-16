@@ -30,7 +30,6 @@ import next from "../public/next.svg";
 // temp
 import setButtonStyle from "./input/setButtonStyle.js";
 
-
 const Video = () => {
     const ENDPOINT = "https://api.vibezz.live";
 
@@ -83,47 +82,6 @@ const Video = () => {
       desc.className = (desc.className.search("hidden") !== -1) ? desc.className.replace("hidden", "") : (desc.className + " hidden"); 
     }
 
-    async function nameTaken(uName){
-      let res = await fetch(`https://api.vibezz.live/name`, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({name: uName})
-      }).then(response => response.json())
-        .then((body) => {
-          return body;
-        });
-      return res;
-    }
-    
-    function distanceSelect(e){
-      if(e === "yes"){
-        if(window.navigator.geolocation){
-          window.navigator.geolocation.getCurrentPosition(handlePos);
-          setButtonStyle("d", "yes");
-        }else{
-          alert("Distance not available");
-        }
-      }else if(e === "no"){
-        handlePos([]);
-        setButtonStyle("d", "no");
-      }
-    }
-
-    function gethStyle(type, vid){
-      let video = document.querySelector(`video[name='${vid}']`);
-      let highlightAlt = " shadow-highlight";
-      let highlightStyle = video.className + highlightAlt;
-      let normalStyle = video.className.replace(highlightAlt, "");
-
-      if(type === "normal"){
-        return normalStyle;
-      }else if(type === "highlight"){
-        return highlightStyle;
-      }
-    }
-
     function getAge(date){
       let today = new Date();
       let bDate = new Date(date);
@@ -138,6 +96,7 @@ const Video = () => {
     }
 
     async function handleClick(){
+      const nameTaken = (await import("./input/nameTaken")).default;
       let taken
       let cAge = getAge(date);
       try{
@@ -168,7 +127,6 @@ const Video = () => {
           let remoteStream;
           let micMuted = false;
           let camMuted = false;
-          let muteCam, muteMic;
 
           document.querySelector("div[id='next']").addEventListener("click", function(){
             if(localStream){
@@ -182,9 +140,7 @@ const Video = () => {
 
           document.querySelector("div[id='mute-1']").addEventListener("click", async function(){
             if(localStream){ 
-              if(muteMic == undefined){ 
-                muteMic = (await import("./video/muteMic")).default;
-              }
+              const muteMic = (await import("./video/muteMic")).default;
 
               muteMic(localStream, handleMicIStatus);
               micMuted = !micMuted;
@@ -193,9 +149,7 @@ const Video = () => {
 
           document.querySelector("div[id='mute-0']").addEventListener("click", async function(){
             if(localStream){ 
-              if(muteCam == undefined){ 
-                muteCam = (await import("./video/muteCam")).default;
-              }
+              const muteCam = (await import("./video/muteCam")).default;
 
               muteCam(localStream, handleCamIStatus);
               camMuted = !camMuted;
@@ -211,47 +165,6 @@ const Video = () => {
             console.log("joined")
           }
 
-          async function configureTalking(stream, type){
-            if(localStream || remoteStream){ 
-              const AudioContext = window.AudioContext || window.webkitAudioContext;
-              const audioContext = new AudioContext();
-              await audioContext.audioWorklet.addModule('https://www.vibezz.live/audioModule.js');
-              let mic = audioContext.createMediaStreamSource(stream);
-              const audio = new AudioWorkletNode(audioContext, 'audioModule');
-              let volume;
-              let video = document.querySelector(`video[name='${type}']`);
-              let highlightAlt = " shadow-highlight";
-              let highlightStyle = video.className + highlightAlt;
-              let normalStyle = video.className.replace(highlightAlt, "");
-              
-              audio.port.onmessage = (e) => {
-                if(e.data.volume && document.querySelector(`video[name='${type}']`)){
-                  video = document.querySelector(`video[name='${type}']`);
-                  let fixedVol = e.data.volume.toFixed(2);
-                  volume = (volume !== fixedVol) ? fixedVol : volume;
-
-                  if(!(volume == 0) && video.className !== highlightStyle){
-                    video.className = gethStyle("highlight", type);
-                  }else if(volume == 0 && video.className !== normalStyle){
-                    video.className = gethStyle("normal", type);
-                  }
-                }
-              }
-
-              mic.connect(audio);
-              audio.connect(audioContext.destination);
-            }
-
-            if(localStream){
-              if(micMuted){
-                muteMic(localStream, handleMicIStatus);
-              }
-              if(camMuted){
-                muteCam(localStream, handleCamIStatus);
-              }
-            }
-          }
-
           async function setLocalStream(mediaConstraints) {
             let stream
             try {
@@ -264,7 +177,8 @@ const Video = () => {
             localStream = stream
             localVidRef.current.srcObject = stream
 
-            configureTalking(localStream, "local");
+            const configureTalking = (await import ("./video/configureTalking")).default;
+            configureTalking(localStream, "local", micMuted, camMuted, handleMicIStatus, handleCamIStatus);
           }
 
           function addLocalTracks(rtcPeerConnection) {
@@ -309,11 +223,12 @@ const Video = () => {
               })
           }
             
-          function setRemoteStream(event) {
+          async function setRemoteStream(event) {
               handleRemoting(event.streams[0]);
               remoteVidRef.current.srcObject = event.streams[0];
               remoteStream = event.streams[0];
 
+              const configureTalking = (await import ("./video/configureTalking")).default;
               configureTalking(remoteStream, "remote");
           }
             
@@ -609,14 +524,20 @@ const Video = () => {
           no.id = "no";
           no.ariaLabel = "location";
           no.className = "text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-red-400 hover:text-red-400 focus:border-red-500 focus:text-red-500";
-          no.onclick = function() { distanceSelect("no"); }
+          no.onclick = async () => { 
+            const distanceSelect = (await import("./input/distanceSelect")).default;
+            distanceSelect("no", handlePos); 
+          }
 
           var yes = document.createElement("button");
           yes.innerHTML = "YES";
           yes.id = "yes";
           yes.ariaLabel = "location";
           yes.className = "text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-green-400 hover:text-green-400 focus:border-green-500 focus:text-green-500";
-          yes.onclick = function() { distanceSelect("yes"); }
+          yes.onclick = async () => { 
+            const distanceSelect = (await import("./input/distanceSelect")).default;
+            distanceSelect("yes", handlePos); 
+          }
 
           container.append(no);
           container.append(yes);
