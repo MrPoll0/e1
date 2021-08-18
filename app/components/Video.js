@@ -467,15 +467,13 @@ const Video = () => {
           <header className="flex w-full border-b">
               <div className="m-auto -mb-4">
                 <Image src={Logotype} alt="Logotype" width="409" height="109" quality="100"></Image>
+                <LanguageSelector/>
               </div>
           </header>
-
-          <div id="progress" className="w-1/6 bg-gradient-to-r from-blue-200 via-purple-400 to-purple-900 h-2"></div>
     
           <Form/>
 
           <footer className="absolute bottom-0 w-screen text-center text-gray-500 text-xs mb-1 z-0">
-              <LanguageSelector />
               <p>&copy; MrPoll0 2021</p>
               <p>Version: {packageInfo.version}</p>
           </footer>

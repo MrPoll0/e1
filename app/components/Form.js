@@ -208,12 +208,16 @@ export default function Form(){
     }, [step]);
 
     return (
+        <>
+        <div id="progress" className={`w-${step}/6 bg-gradient-to-r from-blue-200 via-purple-400 to-purple-900 h-2`}></div>
+
         <div className="flex flex-col mx-7">
-        <div className="w-full h-10">
-          <button name="back" type="button" onClick={ () => changeStep(0) } className={step == 1 ? "font-semibold text-gray-500 text-6xl opacity-50 disabled:opacity-50 cursor-not-allowed" : "font-semibold text-gray-500 text-6xl disabled:opacity-50"}>‹</button>
+            <div className="w-full h-10">
+            <button name="back" type="button" onClick={ () => changeStep(0) } className={step == 1 ? "font-semibold text-gray-500 text-6xl opacity-50 disabled:opacity-50 cursor-not-allowed" : "font-semibold text-gray-500 text-6xl disabled:opacity-50"}>‹</button>
+            </div>
+            <h3 className="font-semibold mt-10 text-5xl text-gray-smooth tracking-tighter">{title}</h3>
+            {input}
         </div>
-        <h3 className="font-semibold mt-10 text-5xl text-gray-smooth tracking-tighter">{title}</h3>
-        {input}
-      </div>
+        </>
     )
 }
