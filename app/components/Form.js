@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import setButtonStyle from "./input/setButtonStyle";
 
 import DateContext from "../contexts/input/date";
 import DescriptionContext from "../contexts/input/description";
@@ -8,7 +9,6 @@ import NameContext from "../contexts/input/name";
 import PosContext from "../contexts/input/pos";
 import PrefContext from "../contexts/input/pref";
 import JoinedRoomContext from "../contexts/joinedRoom";
-import setButtonStyle from "./input/setButtonStyle";
 
 import en from "../locales/en";
 import es from "../locales/es";

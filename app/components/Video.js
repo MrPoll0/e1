@@ -7,6 +7,8 @@ import en from "../locales/en";
 import es from "../locales/es";
 import fr from "../locales/fr";
 import LanguageSelector from "./LanguageSelector";
+import Form from "./Form";
+import getAge from "./input/getAge";
 
 import NameContext from "../contexts/input/name";
 import GenderContext from "../contexts/input/gender";
@@ -29,9 +31,6 @@ import MicIStatusContext from "../contexts/video/micIStatus";
 import Logotype from "../public/logotype.png";
 import cancel from "../public/cancel.svg";
 import next from "../public/next.svg";
-
-import Form from "./Form";
-import getAge from "./input/getAge";
 
 const Video = () => {
     const router = useRouter();
