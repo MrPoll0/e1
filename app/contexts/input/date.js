@@ -5,7 +5,7 @@ const DateContext = createContext();
 export const DateProvider = ({ children }) => {
     const [date, setDate] = useState("");
     const handleDate = (e) => {
-        setDate(e);
+        setDate(e.target.value);
     }
     return (
     <DateContext.Provider value={[date, handleDate]}>

@@ -5,7 +5,7 @@ const DescriptionContext = createContext();
 export const DescriptionProvider = ({ children }) => {
     const [description, setDescription] = useState("");
     const handleDescription = (e) => {
-        setDescription(e);
+        setDescription(e.target.value);
     }
     return (
     <DescriptionContext.Provider value={[description, handleDescription]}>

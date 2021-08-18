@@ -10,6 +10,7 @@ export const NameProvider = ({ children }) => {
                 setName(e.target.value);
             }
         }else{
+            console.log(e);
             setName(e);
         }
     }

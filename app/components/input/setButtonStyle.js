@@ -6,33 +6,33 @@ const setButtonStyle = (t, s) => {
         let both = document.querySelector("#"+t+"both");
 
         if(s == "male"){
-        document.querySelector("#"+t+"male").className = selectedStyle;
-        document.querySelector("#"+t+"female").className = defaultStyle;
-        document.querySelector("#"+t+"other").className = defaultStyle;
+            document.querySelector("#"+t+"male").className = selectedStyle;
+            document.querySelector("#"+t+"female").className = defaultStyle;
+            document.querySelector("#"+t+"other").className = defaultStyle;
         if(both){
             both.className = defaultStyle;
         }
         }else if(s == "female"){
-        document.querySelector("#"+t+"female").className = selectedStyle;
-        document.querySelector("#"+t+"male").className = defaultStyle;
-        document.querySelector("#"+t+"other").className = defaultStyle;
+            document.querySelector("#"+t+"female").className = selectedStyle;
+            document.querySelector("#"+t+"male").className = defaultStyle;
+            document.querySelector("#"+t+"other").className = defaultStyle;
         if(both){
             both.className = defaultStyle;
         }
         }else if(s == "other"){
-        document.querySelector("#"+t+"other").className = selectedStyle;
-        document.querySelector("#"+t+"male").className = defaultStyle;
-        document.querySelector("#"+t+"female").className = defaultStyle;
+            document.querySelector("#"+t+"other").className = selectedStyle;
+            document.querySelector("#"+t+"male").className = defaultStyle;
+            document.querySelector("#"+t+"female").className = defaultStyle;
         if(both){
             both.className = defaultStyle;
         }
         }else if(both && s == "both"){
-        both.className = selectedStyle;
-        document.querySelector("#"+t+"other").className = defaultStyle;
-        document.querySelector("#"+t+"male").className = defaultStyle;
-        document.querySelector("#"+t+"female").className = defaultStyle;
+            both.className = selectedStyle;
+            document.querySelector("#"+t+"other").className = defaultStyle;
+            document.querySelector("#"+t+"male").className = defaultStyle;
+            document.querySelector("#"+t+"female").className = defaultStyle;
         }
-    }else{
+    }else if(t == "d"){
         var defaultStyleY = "uppercase text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-green-400 hover:text-green-400 focus:border-green-500 focus:text-green-500";
         var selectedStyleY = "uppercase text-4xl border-2 rounded p-2 border-green-500 text-green-500";
         var defaultStyleN = "uppercase text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-red-400 hover:text-red-400 focus:border-red-500 focus:text-red-500";
