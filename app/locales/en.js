@@ -8,7 +8,7 @@ export default {
     gender_other: "Other",
     bdate_title: `My birth date is`,
     bdate_age: "Age",
-    sexorient_title: `I'm sexually attracted to`,
+    sexorient_title: `I'm interested in meeting`,
     sexorient_men: "Men",
     sexorient_women: "Women",
     sexorient_both: "Both",

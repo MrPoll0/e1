@@ -11,5 +11,3 @@ export default function Header() {
         </header>
     )
 }
-
-// NOT IN USE

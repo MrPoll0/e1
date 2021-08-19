@@ -463,7 +463,7 @@ const Video = () => {
  // <LanguageSelector/>
     return (
       <main>
-        {!joinedRoom && <div>
+        {!joinedRoom && <div className="flex flex-col h-screen">
           <Header/>
           <Form/>
           <Footer/>
