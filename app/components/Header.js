@@ -1,8 +1,12 @@
+import Image from "next/image";
+import Logotype from "../public/logotype.png";
+
 export default function Header() {
     return (
-        <header className="flex h-20 w-full border-b">
-            <div className="flex flex-col text-center m-auto">
-            <span className="text-4xl">🔥</span>
+        <header className="flex w-full border-b">
+            <div className="m-auto -mb-4">
+            <Image src={Logotype} alt="Logotype" width="409" height="109" quality="100"></Image>
+            
             </div>
         </header>
     )

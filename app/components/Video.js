@@ -1,6 +1,5 @@
 import { useEffect, useRef, useContext } from "react";
 import socketIOClient from "socket.io-client";
-import packageInfo from "../package.json"
 import Image from "next/image";
 import { useRouter } from "next/router";
 import en from "../locales/en";
@@ -9,6 +8,8 @@ import fr from "../locales/fr";
 import LanguageSelector from "./LanguageSelector";
 import Form from "./Form";
 import getAge from "./input/getAge";
+import Header from "./Header";
+import Footer from "./Footer";
 
 import NameContext from "../contexts/input/name";
 import GenderContext from "../contexts/input/gender";
@@ -28,7 +29,6 @@ import PeerDescContext from "../contexts/video/peerDesc";
 import CamIStatusContext from "../contexts/video/camIStatus";
 import MicIStatusContext from "../contexts/video/micIStatus";
 
-import Logotype from "../public/logotype.png";
 import cancel from "../public/cancel.svg";
 import next from "../public/next.svg";
 
@@ -460,26 +460,17 @@ const Video = () => {
         }
       }
     }, [RemoteVideo]);
-
+ // <LanguageSelector/>
     return (
       <main>
-        <div style={{ display: joinedRoom ? "none" : "block"}}>
-          <header className="flex w-full border-b">
-              <div className="m-auto -mb-4">
-                <Image src={Logotype} alt="Logotype" width="409" height="109" quality="100"></Image>
-                <LanguageSelector/>
-              </div>
-          </header>
-    
+        {!joinedRoom && <div>
+          <Header/>
           <Form/>
-
-          <footer className="absolute bottom-0 w-screen text-center text-gray-500 text-xs mb-1 z-0">
-              <p>&copy; MrPoll0 2021</p>
-              <p>Version: {packageInfo.version}</p>
-          </footer>
+          <Footer/>
         </div>
+        }
     
-        <div style={{ display: joinedRoom ? "block" : "none"}} className="flex flex-col">
+        {joinedRoom && <div className="flex flex-col">
           {UserVideo}
           {RemoteVideo}
           <div className="w-screen fixed bottom-0 flex mb-3 z-40"> 
@@ -507,6 +498,7 @@ const Video = () => {
             </div>
           </div>
         </div>
+        }
       </main>
     )
 } 

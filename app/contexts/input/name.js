@@ -7,10 +7,9 @@ export const NameProvider = ({ children }) => {
     const handleName = (e) => {
         if(e.target){
             if(e.target.value){ 
-                setName(e.target.value);
+                let str = e.target.value.replace(/^\s+/, '');
+                setName(str);
             }
-        }else{
-            setName(e);
         }
     }
     return (

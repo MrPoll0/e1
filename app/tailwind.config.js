@@ -24,6 +24,7 @@ module.exports = {
       },
       colors: {
         'gray-smooth': '#292929',
+        'black-smooth': '#181818',
       },
     },
     boxShadow: {

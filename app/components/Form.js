@@ -99,6 +99,8 @@ export default function Form(){
     let title;
     let input;
 
+    let continueClass = "uppercase shadow-md max-w-xs h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl sm:mt-12 mt-6 m-auto px-28 z-10 text-xl tracking-tighter";
+
     switch(step){
         case 0:
             
@@ -110,7 +112,7 @@ export default function Form(){
                 <div id="container" className="flex flex-col">
                     <input value={name} type="text" name="name" placeholder={t.name_placeholder} aria-label={t.name_placeholder} onChange={ handleName } className="focus:border-purple-500 focus:ring-0 mt-10 mx-6 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-400 text-2xl"/>
                 </div>
-                <button name="continue" type="button" onClick={ () => changeStep(1) } className="uppercase shadow-md max-w-xs h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl sm:mt-12 mt-6 m-auto px-28 z-10 text-xl tracking-tighter">{t.continue}</button>
+                <button name="continue" type="button" onClick={ () => changeStep(1) } className={continueClass}>{t.continue}</button>
                 </>
             );
             break;
@@ -125,7 +127,7 @@ export default function Form(){
                     <button onClick={ () => handleGender("female") } id="gfemale" aria-label={t.gender_female} className={genderclassN}>{t.gender_female}</button>
                     <button onClick={ () => handleGender("other") } id="gother" aria-label={t.gender_other} className={genderclassN}>{t.gender_other}</button>
                 </div>
-                <button name="continue" type="button" onClick={ () => changeStep(1) } className="uppercase shadow-md max-w-xs h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl sm:mt-12 mt-6 m-auto px-28 z-10 text-xl tracking-tighter">{t.continue}</button>
+                <button name="continue" type="button" onClick={ () => changeStep(1) } className={continueClass}>{t.continue}</button>
                 </>
             );
             break;
@@ -136,7 +138,7 @@ export default function Form(){
                 <div id="container" className="flex flex-col">
                     <input type="date" value={date} aria-label={t.bdate_age} className="mt-10 rounded-md text-2xl" onChange={ handleDate }></input>
                 </div>
-                <button name="continue" type="button" onClick={ () => changeStep(1) } className="uppercase shadow-md max-w-xs h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl sm:mt-12 mt-6 m-auto px-28 z-10 text-xl tracking-tighter">{t.continue}</button>
+                <button name="continue" type="button" onClick={ () => changeStep(1) } className={continueClass}>{t.continue}</button>
                 </>
             );
             break;
@@ -152,7 +154,7 @@ export default function Form(){
                     <button onClick={ () => handlePref("both") } id="pother" aria-label={t.sexorient_aria} className={prefclassN}>{t.sexorient_both}</button>
                     <button onClick={ () => handlePref("other") } id="pother" aria-label={t.sexorient_aria} className={prefclassN}>{t.sexorient_other}</button>
                 </div>
-                <button name="continue" type="button" onClick={ () => changeStep(1) } className="uppercase shadow-md max-w-xs h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl sm:mt-12 mt-6 m-auto px-28 z-10 text-xl tracking-tighter">{t.continue}</button>
+                <button name="continue" type="button" onClick={ () => changeStep(1) } className={continueClass}>{t.continue}</button>
                 </>
             );
             break;
@@ -163,7 +165,7 @@ export default function Form(){
                 <div id="container" className="flex flex-col">
                     <textarea onChange={ handleDescription } value={description} placeholder={t.description_placeholder} aria-label={t.description_aria} className="focus:ring-0 resize-non rounded-xl mt-10 text-lg" rows="5"></textarea>
                 </div>
-                <button name="continue" type="button" onClick={ () => changeStep(1) } className="uppercase shadow-md max-w-xs h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl sm:mt-12 mt-6 m-auto px-28 z-10 text-xl tracking-tighter">{t.continue}</button>
+                <button name="continue" type="button" onClick={ () => changeStep(1) } className={continueClass}>{t.continue}</button>
                 </>
             );
             break;
@@ -207,11 +209,25 @@ export default function Form(){
         }
     }, [step]);
 
+    function preventKeyboardResize(){
+        var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+        var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        document.body.setAttribute("style", `width: ${w}px; height: ${h}px;`);
+    }
+
+    useEffect(() => {
+        window.onresize = () => preventKeyboardResize();
+
+        return () => {
+            window.onresize = undefined;
+        }
+    }, [])
+
     return (
         <>
         <div id="progress" className={`w-${step}/6 bg-gradient-to-r from-blue-200 via-purple-400 to-purple-900 h-2`}></div>
 
-        <div className="flex flex-col mx-7">
+        <div className="flex flex-col mx-7 h-3/4">
             <div className="w-full h-10">
             <button name="back" type="button" onClick={ () => changeStep(0) } className={step == 1 ? "font-semibold text-gray-500 text-6xl opacity-50 disabled:opacity-50 cursor-not-allowed" : "font-semibold text-gray-500 text-6xl disabled:opacity-50"}>‹</button>
             </div>
