@@ -22,5 +22,5 @@ export default {
     pos_yes: "Oui",
     pos_aria: "Lieu",
     connect: "Relier",
-    waiting: `En attendant votre âme soeur...`,
+    waiting: `Politique de Confidentialité`,
 }
