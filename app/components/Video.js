@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import en from "../locales/en";
 import es from "../locales/es";
 import fr from "../locales/fr";
-import LanguageSelector from "./LanguageSelector";
 import Form from "./Form";
 import getAge from "./input/getAge";
 import Header from "./Header";
@@ -395,14 +394,14 @@ const Video = () => {
               <div className="absolute z-30 top-2 left-1/2 transform -translate-x-1/2 bg-gray-700 p-2 px-3 rounded-full shadow-lg max-w-screen-mobile whitespace-nowrap">
                 <div className="font-semibold text-white inline-flex">
                   {peerName}, {peerAge}
-                  <button type="button" onClick={ showDescription } className="font-semibold text-gray-200 text-xl transform -rotate-90 px-2">‹</button>
+                  {peerDesc && <button type="button" onClick={ showDescription } className="font-semibold text-gray-200 text-xl transform -rotate-90 px-2">‹</button>}
                 </div>
               </div>
-              <div id="desc" className="absolute z-30 hidden top-12 left-1/2 transform -translate-x-1/2 bg-gray-700 p-2 px-3 rounded-xl shadow-lg w-mobileW">
+              {peerDesc && <div id="desc" className="absolute z-30 hidden top-12 left-1/2 transform -translate-x-1/2 bg-gray-700 p-2 px-3 rounded-xl shadow-lg w-mobileW">
                 <div className="font-light text-white whitespace-pre-wrap break-words">
                   <p>{peerDesc}</p>
                 </div>
-              </div>
+              </div> }
             </div>
           </div>
         </div>  
@@ -482,17 +481,17 @@ const Video = () => {
               </div>
               <div id="mute-0" className="w-20 h-20 bg-gray-400 rounded-full m-auto shadow-xl hover:cursor-pointer">
                 <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3">
-                  <Image src={camIStatus} alt="Cancel" layout="fill" objectFit="cover"></Image>
+                  <Image src={camIStatus} alt="Mute mic" layout="fill" objectFit="cover"></Image>
                 </i>
               </div>
               <div id="mute-1" className="w-20 h-20 bg-gray-400 rounded-full m-auto shadow-xl hover:cursor-pointer">
                 <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3">
-                  <Image src={micIStatus} alt="Cancel" layout="fill" objectFit="cover"></Image>
+                  <Image src={micIStatus} alt="Mute cam" layout="fill" objectFit="cover"></Image>
                 </i>
               </div>
               <div id="next" className="w-20 h-20 rounded-full m-auto shadow-xl bg-green-400 hover:cursor-pointer">
                 <i className="w-14 h-14 bg-auto block absolute ml-3 mt-3">
-                <Image src={next} alt="Cancel" layout="fill" objectFit="cover"></Image>
+                <Image src={next} alt="Next" layout="fill" objectFit="cover"></Image>
                 </i>
               </div>
             </div>

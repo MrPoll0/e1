@@ -14,6 +14,7 @@ import en from "../locales/en";
 import es from "../locales/es";
 import fr from "../locales/fr";
 import getAge from "./input/getAge";
+import RedAlert from "./RedAlert";
 
 export default function Form(){
     const router = useRouter();
@@ -40,6 +41,7 @@ export default function Form(){
     const [joinedRoom, handleJoinedRoom] = useContext(JoinedRoomContext);
 
     const [step, setStep] = useState(1);
+    const [error, setError] = useState(false);
 
     async function handleClick(){
         const nameTaken = (await import("./input/nameTaken")).default;
@@ -67,31 +69,57 @@ export default function Form(){
     function checkInput(step){
         switch(step){
           case 1:
-            if(name != "" && name.length < 29){
+            let nmaxLength = 29;
+            let ncond1 = name != "";
+            let ncond2 = name.length < nmaxLength;
+
+            if(ncond1 && ncond2){
               return true;
+            }else if(!ncond1){
+              return t.error_name_empty;
+            }else if(!ncond2){
+              return t.error_name_length + " " + nmaxLength;
             }
-            return false;
           case 2:
             if(gender != undefined){
               return true;
             }
-            return false;
+            return t.error_gender;
           case 3:
             let cAge = getAge(date);
-            if(date != "" && cAge >= 18 && cAge > 0 && cAge <= 120){
+            let acond1 = date != "";
+            let acond2 = cAge > 0 && cAge <= 120;
+            let acond3 = cAge >= 18;
+            if(acond1 && acond2 && acond3){
               return true;
+            }else if(!acond1){
+              return t.error_age_empty
+            }else if(!acond2){
+              return t.error_age_invalid; 
+            }else if(!acond3){
+              return t.error_age_18;
             }
-            return false;
           case 4:
             if(pref != undefined){
               return true;
             }
-            return false;
+            return t.error_pref;
           case 5:
-            if(description != "" && description.length < 306 && description.split(/\r\n|\r|\n/).length <= 5){
+            let dmaxLength = 306;
+            let dmaxRows = 5;
+
+            //let dcond1 = description != "";
+            let dcond2 = description.length < dmaxLength;
+            let dcond3 = description.split(/\r\n|\r|\n/).length <= dmaxRows;
+            if(dcond2 && dcond3){
               return true;
+            /*}else if(!dcond1){
+              return t.error_description_empty;*/
+            }else if(!dcond2){
+              return t.error_description_length + " " + dmaxLength;
+            }else if(!dcond3){
+              return t.error_description_rows + " " + dmaxRows;
             }
-            return false;
           case 6:
         }
     }
@@ -184,15 +212,22 @@ export default function Form(){
     }
 
     const changeStep = (e) => { // change default step to 0 when landing page
-        if(e == 0){
-            if(step > 1){ 
-                setStep(step - 1);
-            }
-        }else if(e == 1){
-            if(step <= 6 && checkInput(step)){ 
-                setStep(step + 1);
-            }
+      if(e == 0){
+        if(step > 1){ 
+          setStep(step - 1);
+          setError(false);
         }
+      }else if(e == 1){
+        if(step <= 6){
+          let check = checkInput(step);
+          if(check == true){ 
+            setStep(step + 1);
+            setError(false);
+          }else{
+            setError(check);
+          }
+        }
+      }
     }
 
     useEffect(() => {
@@ -226,14 +261,17 @@ export default function Form(){
     return (
         <>
         <div id="progress" className={`w-${step}/6 bg-gradient-to-r from-blue-200 via-purple-400 to-purple-900 h-2`}></div>
-
+        
         <div className="flex flex-col mx-7 flex-grow">
             <div className="w-full h-10">
-            <button name="back" type="button" onClick={ () => changeStep(0) } className={step == 1 ? "font-semibold text-gray-500 text-6xl opacity-50 disabled:opacity-50 cursor-not-allowed" : "font-semibold text-gray-500 text-6xl disabled:opacity-50"}>‹</button>
+              <button name="back" type="button" onClick={ () => changeStep(0) } className={step == 1 ? "font-semibold text-gray-500 text-6xl opacity-50 disabled:opacity-50 cursor-not-allowed" : "font-semibold text-gray-500 text-6xl disabled:opacity-50"}>‹</button>
             </div>
-            <h3 className="font-semibold mt-10 text-5xl text-gray-smooth tracking-tighter">{title}</h3>
+            <h3 className="font-semibold mt-10 text-5xl text-gray-smooth tracking-tighter mb-10">{title}</h3>
+            {error !== false && <RedAlert title={t.error} message={error}/>}
             {input}
         </div>
         </>
     )
 }
+
+// 

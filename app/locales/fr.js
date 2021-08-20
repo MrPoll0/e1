@@ -1,26 +1,44 @@
 export default {
     name_title: `Mon nom est`,
     name_placeholder: "Nom",
-    continue: "Continuez",
+    
     gender_title: `Je suis`,
     gender_male: "Mâle",
     gender_female: "Femelle",
     gender_other: "Autre",
+
     bdate_title: `Ma date de naissance est`,
     bdate_age: "Àge",
+
     sexorient_title: `Je suis intéressé à reconter`,
     sexorient_men: "Hommes",
     sexorient_women: "Femmes",
     sexorient_both: "Tous les deux",
     sexorient_other: "Autre",
     sexorient_aria: "Orientation sexuelle",
-    description_title: `Dans mon temps libre`,
+
+    description_title: `Dans mon temps libre (optionnel)`,
     description_placeholder: "J'ai l'habitude de faire...",
-    çdescription_aria: "Description",
+    description_aria: "Description",
+
     pos_title: `Voulez-vous rechercher des personnes prés de chez vous?`,
     pos_no: "Non",
     pos_yes: "Oui",
     pos_aria: "Lieu",
+
+    continue: "Continuez",
     connect: "Relier",
     waiting: `Politique de Confidentialité`,
+
+    error: "Quelque chose d'horrible est arrivé",
+    error_name_empty: "Le nom ne peut pas être vide",
+    error_name_length: "Les caractères maximum du nom sont: ",
+    error_gender: "Vous devez sélectionner votre sexe",
+    error_age_empty: "La date de naissance ne peut pas être vide",
+    error_age_18: "Vous devez avoir plus de 18 ans",
+    error_age_invalid: "Vous devez avoir plus de 18 ans",
+    error_pref: "Vous debez sélectionner votre préférence",
+    error_description_empty: "La description ne peut pas être vide",
+    error_description_length: "Les caractères maximum de la description sont: ",
+    error_description_rows: "Les lignes maximales de la description sont: ",
 }

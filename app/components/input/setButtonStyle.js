@@ -1,7 +1,7 @@
 const setButtonStyle = (t, s) => {
     if(t == "p" || t == "g"){ 
-        var defaultStyle = "sm:text-lg text-base w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500 hover:font-semibold";
-        var selectedStyle = "sm:text-lg text-base w-full text-center border-2 rounded-3xl p-3 border-purple-500 text-purple-500 font-semibold";
+        var defaultStyle = "text-lg w-full text-center border-2 border-gray-700 rounded-3xl p-3 text-gray-700 hover:border-gray-900 hover:text-gray-900 focus:border-purple-500 focus:text-purple-500 hover:font-semibold";
+        var selectedStyle = "text-lg w-full text-center border-2 rounded-3xl p-3 border-purple-500 text-purple-500 font-semibold";
 
         let both = document.querySelector("#"+t+"both");
 

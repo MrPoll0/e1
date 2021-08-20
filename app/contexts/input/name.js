@@ -5,12 +5,8 @@ const NameContext = createContext();
 export const NameProvider = ({ children }) => {
     const [name, setName] = useState("");
     const handleName = (e) => {
-        if(e.target){
-            if(e.target.value){ 
-                let str = e.target.value.replace(/^\s+/, '');
-                setName(str);
-            }
-        }
+        let str = e.target.value.replace(/^\s+/, '');
+        setName(str);
     }
     return (
     <NameContext.Provider value={[name, handleName]}>
