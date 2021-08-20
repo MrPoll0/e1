@@ -41,4 +41,14 @@ export default {
     error_description_empty: "The description can't be empty",
     error_description_length: "Description maximum characters are: ",
     error_description_rows: "Description maximum rows are: ",
+
+    landing_1: `Hey!`,
+    landing_2: `Welcome to VIBEZZ 👋`,
+    landing_3: `Here you can interact with people through video calls, whether they are from anywhere in the world or those closest to you.`,
+    landing_4: `In addition, you will be able to select your personal preferences when it comes to match you with someone.`,
+    landing_5: `No matter what your goal is: just chat or something else, everyone has an opportunity on the platform.`,
+    landing_6: `We hope you find a great person in your path here. 😃`,
+    landing_7: `PS: Remember to respect everyone.🚨`,
+    landing_8: `Yours Sincerely,`,
+    landing_9: `Management Team of VIBEZZ`,
 }

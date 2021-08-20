@@ -41,4 +41,14 @@ export default {
     error_description_empty: "La description ne peut pas être vide",
     error_description_length: "Les caractères maximum de la description sont: ",
     error_description_rows: "Les lignes maximales de la description sont: ",
+
+    landing_1: `Hey!`,
+    landing_2: `Bienvenue à VIBEZZ 👋`,
+    landing_3: `Ici, vous pouvez interagir avec des personnes par le biais d'appels vidéo, qu'elles se trouvent n'importe où dans le monde ou qu'elles soient proches de vous.`,
+    landing_4: `En outre, vous pourrez sélectionner vos préférences personnelles lors de la mise en relation avec quelqu'un.`,
+    landing_5: `Quel que soit votre objectif : simplement chatter ou quelque chose de plus, chacun a sa place sur la plateforme.`,
+    landing_6: `Nous espérons que vous trouverez une personne formidable pendant votre séjour ici. 😃`,
+    landing_7: `PS: N'oubliez pas de respecter tout le monde. 🚨`,
+    landing_8: `Cordialement,`,
+    landing_9: `L'équipe de VIBEZZ`,
 }
