@@ -9,6 +9,7 @@ export default function Footer() {
                 <a target="_blank" href="/privacy-policy.html" className="text-base underline">Privacy Policy</a>
             </div>
             <p>&copy; MrPoll0 2021</p>
+            <p><a target="_blank" href="/credits.html" className="underline">Credits</a></p>
             <p>Version: {packageInfo.version}</p>
         </footer>
     )
