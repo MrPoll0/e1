@@ -272,7 +272,7 @@ export default function Form(){
       }
     }, [])
 
-    return (
+    return ( // If added more steps, remember to add the width to the safelist in tailwind.config.js
         <>
         <div id="progress" className={`${step === 0 ? "w-0" : `w-${step}/6` } bg-gradient-to-r from-blue-200 via-purple-400 to-purple-900 h-2`}></div>
         
