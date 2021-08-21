@@ -46,23 +46,16 @@ export default function Form(){
     async function handleClick(){
         const nameTaken = (await import("./input/nameTaken")).default;
         let taken
-        let cAge = getAge(date);
         try{
           taken = await nameTaken(name);
         }catch(err){
           console.log(err);
         }
-        if(!taken && cAge >= 18 && cAge <= 120){
+        if(!taken){
           handleJoinedRoom(true);
-        }else if(taken){
+        }else{
           setStep(1);
-          alert("Name already taken");
-        }else if(cAge < 18 && cAge > 0){ // already checked
-          setStep(3);
-          alert("You must be over 18 years old."); // already checked
-        }else if(cAge > 120 || cAge < 0){
-          setStep(3);
-          alert("Please, enter a valid birth date.");
+          setError(t.error_name_taken);
         }
     }
 

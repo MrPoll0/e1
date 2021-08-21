@@ -33,6 +33,7 @@ export default {
     error: "Algo ruím aconteceu",
     error_name_empty: "El nombre no puede estar vacío",
     error_name_length: "Os caracteres máximos do nome são: ",
+    error_name_taken: "Nome não disponível",
     error_gender: "Você deve selecionar um gênero",
     error_age_empty: "A data de nascimento não pode estar vazia",
     error_age_18: "Você tem que ter mais de 18 anos",

@@ -33,6 +33,7 @@ export default {
     error: "Quelque chose d'horrible est arrivé",
     error_name_empty: "Le nom ne peut pas être vide",
     error_name_length: "Les caractères maximum du nom sont: ",
+    error_name_taken: "Nom non disponible",
     error_gender: "Vous devez sélectionner votre sexe",
     error_age_empty: "La date de naissance ne peut pas être vide",
     error_age_18: "Vous devez avoir plus de 18 ans",

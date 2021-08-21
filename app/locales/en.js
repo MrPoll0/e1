@@ -33,6 +33,7 @@ export default {
     error: "Something bad happened",
     error_name_empty: "The name can't be empty",
     error_name_length: "Name maximum characters are: ",
+    error_name_taken: "Name not available",
     error_gender: "You must select your gender",
     error_age_empty: "The datebirth can't be empty",
     error_age_18: "You must be over 18 years old",
