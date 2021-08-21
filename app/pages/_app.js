@@ -1,20 +1,17 @@
-// import '../styles/globals.css'
-import "tailwindcss/tailwind.css"
-import { Provider } from "next-auth/client"
-import Head from "next/head"
+import '../styles/globals.css'
+import { Providers } from "../contexts/main.js";
+
+// https://nextjs.org/docs/advanced-features/custom-app
+
+export function reportWebVitals(metric){
+  console.log(metric);
+}
 
 function MyApp({ Component, pageProps }) {
-  const { session } = pageProps
   return (
-    <Provider session={session}>
-      <Head>
-        <link
-        href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" 
-        rel="stylesheet"
-        />
-      </Head>
+    <Providers>
       <Component {...pageProps} />
-    </Provider>
+    </Providers>
   )
 }
 

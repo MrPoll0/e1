@@ -1,20 +1,19 @@
-import Header from "./Header"
-import Footer from "./Footer"
-import Head from "next/head"
+import Head from "next/head";
+import { useRouter } from "next/router";
 
 export default function Layout({ children }) {
+    const router = useRouter();
+    const { locale } = router;
+
     return ( 
         <>
-        <Head>
-            <title>E1</title>
-        </Head>
-        <Header />
-        <br />
-        <main>
+            <Head>
+                <title>Vibezz</title>
+                <meta name="theme-color" content="#a05cf6"/>
+                <meta hrefLang={locale}/>
+                <meta rel="canonical" href="https://vibezz.live"/>
+            </Head>
             {children}
-        </main>
-        <br />
-        <Footer />
         </>
     )
 }
