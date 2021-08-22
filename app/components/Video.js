@@ -56,14 +56,23 @@ const Video = () => {
           { url: 'stun:stun2.l.google.com:19302' },
           { url: 'stun:stun3.l.google.com:19302' },
           { url: 'stun:stun4.l.google.com:19302' },
-          { url: 'stun:turn.vibezz.live' },
+          { url: "stun:numb.viagenie.ca" },
+          {
+            url: "turn:numb.viagenie.ca",
+            credential: "ProyectoEco121!",
+            username: "mrp0ollo@gmail.com",
+          }
+        ],
+    }
+
+    /*
+              { url: 'stun:turn.vibezz.live' },
           {
             url: 'turn:turn.vibezz.live',
             credential: 'qwertyuiopasdfghjklñzxcvbnm121;!',
             username: 'admin',
           },
-        ],
-    }
+    */
 
     let isCaller;
     let rtcPeerConnection; // Connection between the local device and the remote peer.
