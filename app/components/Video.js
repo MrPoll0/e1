@@ -416,7 +416,7 @@ const Video = () => {
         var landscapeStyle = "absolute z-20 h-screen left-1/2 transform -translate-x-1/2";
         var portraitStyle = "absolute z-20 w-screen top-1/2 transform -translate-y-1/2";
 
-        function vidAdjust(resized){ // ADD EASE-IN-OUT TRANSITION FOR INFOCONT
+        function vidAdjust(resized){
           if(resized){
             if((window.outerWidth/window.outerHeight) >= (1920/1080)){
               remoteContainer.removeAttribute("style");
