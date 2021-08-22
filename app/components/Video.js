@@ -56,23 +56,14 @@ const Video = () => {
           { url: 'stun:stun2.l.google.com:19302' },
           { url: 'stun:stun3.l.google.com:19302' },
           { url: 'stun:stun4.l.google.com:19302' },
-          { url: "stun:numb.viagenie.ca" },
-          {
-            url: "turn:numb.viagenie.ca",
-            credential: "ProyectoEco121!",
-            username: "mrp0ollo@gmail.com",
-          }
-        ],
-    }
-
-    /*
-              { url: 'stun:turn.vibezz.live' },
+          { url: 'stun:turn.vibezz.live' },
           {
             url: 'turn:turn.vibezz.live',
             credential: 'qwertyuiopasdfghjklñzxcvbnm121;!',
             username: 'admin',
           },
-    */
+        ],
+    }
 
     let isCaller;
     let rtcPeerConnection; // Connection between the local device and the remote peer.
@@ -425,7 +416,7 @@ const Video = () => {
         var landscapeStyle = "absolute z-20 h-screen left-1/2 transform -translate-x-1/2";
         var portraitStyle = "absolute z-20 w-screen top-1/2 transform -translate-y-1/2";
 
-        function vidAdjust(resized){
+        function vidAdjust(resized){ // ADD EASE-IN-OUT TRANSITION FOR INFOCONT
           if(resized){
             if((window.outerWidth/window.outerHeight) >= (1920/1080)){
               remoteContainer.removeAttribute("style");
