@@ -16,7 +16,7 @@ import fr from "../locales/fr";
 import getAge from "./input/getAge";
 import RedAlert from "./RedAlert";
 
-export default function Form(){
+export default function Form({ endpoint }){
     const router = useRouter();
     const { locale } = router;
     let t;
@@ -47,7 +47,7 @@ export default function Form(){
         const nameTaken = (await import("./input/nameTaken")).default;
         let taken
         try{
-          taken = await nameTaken(name);
+          taken = await nameTaken(name, endpoint);
         }catch(err){
           console.log(err);
         }

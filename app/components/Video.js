@@ -47,7 +47,7 @@ const Video = () => {
         break;
     }
 
-    const ENDPOINT = "https://api.vibezz.live";
+    const ENDPOINT = "https://e1-api.herokuapp.com";
 
     const iceServers = {
         iceServers: [
@@ -464,7 +464,7 @@ const Video = () => {
       <main>
         {!joinedRoom && <div className="flex flex-col h-screen">
           <Header/>
-          <Form/>
+          <Form endpoint={ENDPOINT}/>
           <Footer/>
         </div>
         }
