@@ -212,7 +212,7 @@ export default function Form({ endpoint }){
                 <div id="container" className="flex flex-col space-y-3 mt-10">
                     <button onClick={ () => handlePref("male") } id="pmale" aria-label={t.sexorient_aria} className={prefclassN}>{t.sexorient_men}</button>
                     <button onClick={ () => handlePref("female") } id="pfemale" aria-label={t.sexorient_aria} className={prefclassN}>{t.sexorient_women}</button>
-                    <button onClick={ () => handlePref("both") } id="pother" aria-label={t.sexorient_aria} className={prefclassN}>{t.sexorient_both}</button>
+                    <button onClick={ () => handlePref("both") } id="pboth" aria-label={t.sexorient_aria} className={prefclassN}>{t.sexorient_both}</button>
                     <button onClick={ () => handlePref("other") } id="pother" aria-label={t.sexorient_aria} className={prefclassN}>{t.sexorient_other}</button>
                 </div>
                 <button name="continue" type="button" onClick={ () => changeStep(1) } className={continueClass}>{t.continue}</button>
@@ -270,13 +270,13 @@ export default function Form({ endpoint }){
     useEffect(() => {
       if(step == 2){
         if(gender){
-            setButtonStyle("g", gender);
+          setButtonStyle("g", gender);
         }
       }
 
       if(step == 4){
         if(pref){
-            setButtonStyle("p", pref);
+          setButtonStyle("p", pref);
         }
       }
     }, [step]);

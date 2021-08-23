@@ -87,7 +87,7 @@ function filterQueue(q, socket){
   let ar = [];
   if(users[socket.id].pref === "both"){
     for(let el=0; el<q.length; el++){
-      if(users[q[el].id].pref === users[socket.id].gender && users[q[el].id].using === users[socket.id].using){
+      if((users[q[el].id].pref === users[socket.id].gender || users[q[el].id].pref === "both") && users[q[el].id].using === users[socket.id].using){
         ar.push(q[el]); 
       }
     }
