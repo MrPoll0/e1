@@ -45,7 +45,7 @@ export default {
 
     landing_h1: `Conoce a gente `,
     landing_h1_2: `increíble`,
-    landing_h2: `Podrás hablar con millones de personas, hacer amigos nuevos o encontrar pareja.`,
+    landing_h2: `Podrás hablar con diferentes personas, hacer amigos nuevos o encontrar pareja.`,
     landing_go: `Adelante`,
     landing_caract1: `¡No pierdas el timepo con nadie!`,
     landing_caract1_desc: `Elige tus preferencias personales para encontrar tu match ideal.`,

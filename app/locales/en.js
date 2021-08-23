@@ -46,7 +46,7 @@ export default {
     landing_h1: `Meet `,
     landing_h1_2: `amazing`,
     landing_h1_3: ` people`,
-    landing_h2: `You can talk to millions of people, make new friends or find a partner.`,
+    landing_h2: `You can talk to different people, make new friends or find a partner.`,
     landing_go: `Go`,
     landing_caract1: `Don't waste time with anyone!`,
     landing_caract1_desc: `Choose your personal preferences to find your perfect match.`,

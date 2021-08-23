@@ -45,7 +45,7 @@ export default {
 
     landing_h1: `Rencontrer des gens `,
     landing_h1_2: `incroyables`,
-    landing_h2: `Vous pouvez parler à des millions de personnes, vous faire de nouveaux amis ou trouver un partenaire.`,
+    landing_h2: `Vous pourrez parler à différentes personnes, vous faire de nouveaux amis ou trouver un partenaire.`,
     landing_go: `Avant`,
     landing_caract1: `Ne perdez de temps avec personne !`,
     landing_caract1_desc: `Choisissez vos préférences personnelles pour trouver votre match idéal.`,
