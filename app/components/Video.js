@@ -236,7 +236,6 @@ const Video = () => {
             handleRemoting(false);
             localStream = undefined;
             remoteStream = undefined;
-            alert("Your mate disconnected. Looking for new people... (with the same options)");
             setTimeout(() => {
               socket.emit("next");
             }, 3000)
