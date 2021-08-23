@@ -11,7 +11,6 @@ export default function Layout({ children }) {
                 <title>Vibezz</title>
                 <meta name="theme-color" content="#a05cf6"/>
                 <meta hrefLang={locale}/>
-                <meta rel="canonical" href="https://vibezz.live"/>
             </Head>
             {children}
         </>

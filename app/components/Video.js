@@ -1,10 +1,11 @@
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useRef, useContext, useState } from "react";
 import socketIOClient from "socket.io-client";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import en from "../locales/en";
 import es from "../locales/es";
 import fr from "../locales/fr";
+import pt from "../locales/pt";
 import Form from "./Form";
 import getAge from "./input/getAge";
 import Header from "./Header";
@@ -45,9 +46,12 @@ const Video = () => {
       case "fr":
         t = fr;
         break;
+      case "pt":
+        t = pt;
+        break;
     }
-
-    const ENDPOINT = "https://e1-api.herokuapp.com";
+      // https://e1-api.herokuapp.com
+    const ENDPOINT = "https://api.vibezz.live";
 
     const iceServers = {
         iceServers: [
@@ -458,7 +462,7 @@ const Video = () => {
         }
       }
     }, [RemoteVideo]);
- // <LanguageSelector/>
+
     return (
       <main>
         {!joinedRoom && <div className="flex flex-col h-screen">

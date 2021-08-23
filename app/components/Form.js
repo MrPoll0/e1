@@ -1,6 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import setButtonStyle from "./input/setButtonStyle";
+import getAge from "./input/getAge";
+import RedAlert from "./RedAlert";
+import Image from "next/image";
+
+import image1 from "../public/image1.svg";
+import image2 from "../public/image2.svg";
 
 import DateContext from "../contexts/input/date";
 import DescriptionContext from "../contexts/input/description";
@@ -13,8 +19,7 @@ import JoinedRoomContext from "../contexts/joinedRoom";
 import en from "../locales/en";
 import es from "../locales/es";
 import fr from "../locales/fr";
-import getAge from "./input/getAge";
-import RedAlert from "./RedAlert";
+import pt from "../locales/pt";
 
 export default function Form({ endpoint }){
     const router = useRouter();
@@ -30,6 +35,9 @@ export default function Form({ endpoint }){
       case "fr":
         t = fr;
         break;
+      case "pt":
+        t = pt;
+        break;
     }
 
     const [name, handleName] = useContext(NameContext);
@@ -40,7 +48,7 @@ export default function Form({ endpoint }){
     const [pos, handlePos] = useContext(PosContext);
     const [joinedRoom, handleJoinedRoom] = useContext(JoinedRoomContext);
 
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(0);
     const [error, setError] = useState(false);
 
     async function handleClick(){
@@ -120,24 +128,42 @@ export default function Form({ endpoint }){
     let title;
     let content;
 
-    let continueClass = "uppercase shadow-md max-w-xs h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl sm:mt-12 mt-6 m-auto px-28 z-10 text-xl tracking-tighter";
+    let continueClass = "uppercase shadow-md max-w-xs h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl sm:mt-12 mt-6 m-auto mb-0 px-28 z-10 text-xl tracking-tighter";
 
     switch(step){
         case 0:
             content = (
-              <div className="text-center text-sm border-2">
-                <p><strong>{t.landing_1}</strong></p>
-                <br/>
-                <p>{t.landing_2}</p>
-                <p>{t.landing_3}</p>
-                <p>{t.landing_4}</p>
-                <p>{t.landing_5}</p>
-                <p>{t.landing_6}</p>
-                <p>{t.landing_7}</p>
-                <br/>
-                <p>{t.landing_8}</p>
-                <p>{t.landing_9}</p>
-              </div>
+              <>
+              {locale === "en" ? 
+                <h1 className="text-4xl mobile2:text-5xl tablet2:text-6xl 2xl:text-8xl filter drop-shadow-lg font-bold tracking-tighter text-center mt-4">{t.landing_h1}<span className="text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-purple-900">{t.landing_h1_2}</span>{t.landing_h1_3}</h1>
+              :
+                <h1 className="text-4xl mobile2:text-5xl tablet2:text-6xl 2xl:text-8xl filter drop-shadow-lg font-bold tracking-tighter text-center mt-4">{t.landing_h1}<span className="text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-purple-900">{t.landing_h1_2}</span></h1>
+              }
+              <h2 className="text-xl mobile2:text-2xl tablet2:text-3xl 2xl:text-5xl font-thin text-center mt-2">{t.landing_h2}</h2>
+              <button onClick={() => changeStep(1)} type="button" className="uppercase shadow-md max-w-xs 2xl:max-w-md h-14 2xl:h-20 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-12 m-auto mb-0 px-28 z-10 text-xl 2xl:text-4xl tracking-tighter">{t.landing_go}</button>
+
+              <section className="mt-20">
+                <div className="inline-flex space-x-5">
+                  <div style={{width: "40%"}}>
+                    <Image src={image1} alt={t.landing_caract1_alt}className="filter drop-shadow-lg"></Image>
+                  </div>
+                  <div style={{width: "50%"}}>
+                    <p className="text-xl mobile2:text-2xl tablet2:text-3xl 2xl:text-5xl font-bold filter drop-shadow-lg tracking-tighter text-transparent bg-clip-text bg-gradient-to-tr from-blue-300 via-purple-400 to-purple-900">{t.landing_caract1}</p>
+                    <p className="text-sm mobile2:text-base tablet2:text-lg 2xl:text-2xl mt-3 font-thin">{t.landing_caract1_desc}</p>
+                  </div>
+                </div>
+              </section>
+
+              <section className="mt-5 2xl:mt-10">
+                <div className="inline-flex space-x-5">
+                  <div style={{width: "50%"}}>
+                    <p className="text-xl mobile2:text-2xl tablet2:text-3xl 2xl:text-5xl font-bold filter drop-shadow-lg tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-purple-900 via-purple-400 to-blue-300">{t.landing_caract2}</p>
+                    <p className="text-sm mobile2:text-base tablet2:text-lg 2xl:text-2xl mt-3 font-thin">{t.landing_caract2_desc}</p>
+                  </div>
+                  <Image src={image2} alt={t.landing_caract2_alt} className="filter drop-shadow-lg"></Image>
+                </div>
+              </section>
+              </>
             );
             break;
         case 1:
@@ -218,7 +244,7 @@ export default function Form({ endpoint }){
             break;
     }
 
-    const changeStep = (e) => { // change default step to 0 when landing page
+    const changeStep = (e) => {
       if(e == 0){
         if(step > 1){ 
           setStep(step - 1);
@@ -226,12 +252,16 @@ export default function Form({ endpoint }){
         }
       }else if(e == 1){
         if(step <= 6){
-          let check = checkInput(step);
-          if(check == true){ 
-            setStep(step + 1);
-            setError(false);
+          if(step > 0){ 
+            let check = checkInput(step);
+            if(check == true){ 
+              setStep(step + 1);
+              setError(false);
+            }else{
+              setError(check);
+            }
           }else{
-            setError(check);
+            setStep(step + 1);
           }
         }
       }
@@ -269,24 +299,20 @@ export default function Form({ endpoint }){
         <>
         <div id="progress" className={`${step === 0 ? "w-0" : `w-${step}/6` } bg-gradient-to-r from-blue-200 via-purple-400 to-purple-900 h-2`}></div>
         
-        <div className="flex flex-col mx-7 flex-grow">
-          {step !== 0 ? 
-          <>
+        {step !== 0 ? 
+          <div className="flex flex-col mx-7 flex-grow"> 
             <div className="w-full h-10">
               <button name="back" type="button" onClick={ () => changeStep(0) } className={step == 1 ? "font-semibold text-gray-500 text-6xl opacity-50 disabled:opacity-50 cursor-not-allowed" : "font-semibold text-gray-500 text-6xl disabled:opacity-50"}>‹</button>
             </div>
             <h3 className="font-semibold mt-10 text-5xl text-gray-smooth tracking-tighter mb-10">{title}</h3>
             {error !== false && <RedAlert title={t.error} message={error}/>}
             {content}
-          </>
-          : 
-          <>
+          </div>
+        :
+          <div className="flex flex-col mx-7 tablet:mx-24 laptop:mx-64 desktop:mx-80 2xl:mx-desktop2 flex-grow">
             {content}
-          </>
-          }
-        </div>
+          </div>
+        }
         </>
     )
 }
-
-// 
