@@ -140,6 +140,10 @@ const Video = () => {
             }
           });
 
+          document.querySelector("div[id='cancel']").addEventListener("click", async function(){
+            window.location.reload();
+          });
+
           if(joinedRoom) {
             if(pos.coords != undefined){ 
               socket.emit('join', {"name": name, "gender": gender, "pref": pref, "age": getAge(date), "desc": description, "using": true,"lat": pos.coords.latitude, "long": pos.coords.longitude});
