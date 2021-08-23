@@ -47,7 +47,7 @@ export default {
     landing_h1_2: `increíble`,
     landing_h2: `Podrás hablar con diferentes personas, hacer amigos nuevos o encontrar pareja.`,
     landing_go: `Adelante`,
-    landing_caract1: `¡No pierdas el timepo con nadie!`,
+    landing_caract1: `¡No pierdas el tiempo con nadie!`,
     landing_caract1_desc: `Elige tus preferencias personales para encontrar tu match ideal.`,
     landing_caract1_alt: `Chica seleccionando sus preferencias`,
     landing_caract2: `Eres libre de hacer lo que quieras`,
