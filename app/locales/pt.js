@@ -43,6 +43,10 @@ export default {
     error_description_length: "Os caracteres máximos da descrição são: ",
     error_description_rows: "As linhas máximas da descrição são: ",
 
+    consent_title: `Eu revi e concordo com a `,
+    consent_privacy: "política de privacidade",
+    consent_error: `Sem o consentimento, não podemos processar suas informações e, portanto, você não pode se conectar ao serviço.`,
+
     landing_h1: `Conhecer pessoas `,
     landing_h1_2: `incríveis`,
     landing_h2: `Você pode conversar com pessoas diferentes, fazer novos amigos ou encontrar um parceiro.`,

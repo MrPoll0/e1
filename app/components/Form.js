@@ -53,19 +53,23 @@ export default function Form({ endpoint }){
     const [error, setError] = useState(false);
 
     async function handleClick(){
-        const nameTaken = (await import("./input/nameTaken")).default;
-        let taken
-        try{
-          taken = await nameTaken(name, endpoint);
-        }catch(err){
-          console.log(err);
-        }
+      const nameTaken = (await import("./input/nameTaken")).default;
+      let taken
+      try{
+        taken = await nameTaken(name, endpoint);
+      }catch(err){
+        console.log(err);
+      }
+      if(document.querySelector("input[name='consent-privacy']").checked){ 
         if(!taken){
           handleJoinedRoom(true);
         }else{
           setStep(1);
           setError(t.error_name_taken);
         }
+      }else{
+        setError(t.consent_error)
+      }
     }
 
     function checkInput(step){
@@ -249,11 +253,18 @@ export default function Form({ endpoint }){
             title = t.pos_title;
             content = (
                 <>
-                <div id="container" className="inline-flex space-x-10 mt-10 m-auto">
+                <div id="container" className="inline-flex space-x-10 mt-10 m-auto mb-12">
                     <button id="no" aria-label={t.pos_aria} onClick={ async () => {{  const distanceSelect = (await import("./input/distanceSelect")).default; distanceSelect("no", handlePos) } }} className="uppercase text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-red-400 hover:text-red-400 focus:border-red-500 focus:text-red-500">{t.pos_no}</button>
                     <button id="yes" aria-label={t.pos_aria} onClick={ async () => {{  const distanceSelect = (await import("./input/distanceSelect")).default; distanceSelect("yes", handlePos) } }} className="uppercase text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-green-400 hover:text-green-400 focus:border-green-500 focus:text-green-500">{t.pos_yes}</button>
                 </div>
-                <button id="connect" onClick={ handleClick } className="uppercase shadow-md max-w-xs h-16 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-12 m-auto px-24 z-10 text-2xl tracking-tighter">{t.connect}</button>
+
+                <div className="m-auto space-x-2 flex flex-col my-0">
+                  <div className="inline-flex items-center">                
+                    <input name="consent-privacy" type="checkbox"></input>
+                    <span className="ml-2 text-gray-800">{t.consent_title}<a className="underline" href="https://vibezz.live/privacy-policy.html" target="_blank">{t.consent_privacy}</a></span>
+                  </div>
+                </div>
+                <button id="connect" onClick={ handleClick } className="uppercase shadow-md max-w-xs h-16 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-5 m-auto mb-1 px-24 z-10 text-2xl tracking-tighter">{t.connect}</button>
                 </>
             );
             break;
@@ -294,11 +305,23 @@ export default function Form({ endpoint }){
           setButtonStyle("p", pref);
         }
       }
+
+      if(step >= 1 && step < 6){ // Change if steps change
+        let input = document.querySelector("input");
+        if(input){ 
+          input.addEventListener("keyup", function(e){
+            if(e.key === "Enter"){
+              e.preventDefault();
+              document.querySelector("button[name='continue']").click();
+            }
+          });
+        }
+      }
     }, [step]);
 
     function preventKeyboardResize(){
-      var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-      var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+      var w = document.documentElement.clientWidth;
+      var h = document.documentElement.clientHeight;
       document.body.setAttribute("style", `width: ${w}px; height: ${h}px;`);
     }
 

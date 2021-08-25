@@ -43,6 +43,10 @@ export default {
     error_description_length: "Description maximum characters are: ",
     error_description_rows: "Description maximum rows are: ",
 
+    consent_title: `I have reviewed and agree to the `,
+    consent_privacy: "privacy policy",
+    consent_error: `Without the consent, we cannot process your information and therefore, you are unable to connect to the service.`,
+
     landing_h1: `Meet `,
     landing_h1_2: `amazing`,
     landing_h1_3: ` people`,

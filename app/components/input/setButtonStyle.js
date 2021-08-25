@@ -6,7 +6,6 @@ const setButtonStyle = (t, s) => {
         let both = document.querySelector("#"+t+"both");
 
         if(s == "male"){
-            console.log("male");
             document.querySelector("#"+t+"male").className = selectedStyle;
             document.querySelector("#"+t+"female").className = defaultStyle;
             document.querySelector("#"+t+"other").className = defaultStyle;
@@ -14,7 +13,6 @@ const setButtonStyle = (t, s) => {
                 both.className = defaultStyle;
             }
         }else if(s == "female"){
-            console.log("female");
             document.querySelector("#"+t+"female").className = selectedStyle;
             document.querySelector("#"+t+"male").className = defaultStyle;
             document.querySelector("#"+t+"other").className = defaultStyle;
@@ -22,7 +20,6 @@ const setButtonStyle = (t, s) => {
                 both.className = defaultStyle;
             }
         }else if(s == "other"){
-            console.log("other");
             document.querySelector("#"+t+"other").className = selectedStyle;
             document.querySelector("#"+t+"male").className = defaultStyle;
             document.querySelector("#"+t+"female").className = defaultStyle;
@@ -30,7 +27,6 @@ const setButtonStyle = (t, s) => {
                 both.className = defaultStyle;
             }
         }else if(both && s == "both"){
-            console.log("both");
             both.className = selectedStyle;
             document.querySelector("#"+t+"other").className = defaultStyle;
             document.querySelector("#"+t+"male").className = defaultStyle;
