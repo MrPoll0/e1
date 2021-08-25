@@ -17,7 +17,9 @@ module.exports = {
   theme: {
     screens: {
       'mobile': '360px',
+      'mobile2': '500px',
       'tablet': '600px',
+      'tablet2': '800px',
       'laptop': '1024px',
       'desktop': '1280px',
       'video': '960px',
@@ -35,9 +37,13 @@ module.exports = {
         'gray-smooth': '#292929',
         'black-smooth': '#181818',
       },
+      margin: {
+        'desktop2': '28rem',
+      },
     },
     boxShadow: {
       'highlight': '0 0 0 4px #60A5FA',
+      ...defaultTheme.boxShadow,
     },
   },
   variants: {

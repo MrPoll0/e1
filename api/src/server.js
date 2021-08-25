@@ -14,6 +14,8 @@ app.use(cors());
 // Enable pre-flight
 app.options("*", cors());
 
+app.disable("x-powered-by");
+
 app.get("*", function(req, res) {
   res.send("So... you're a spy, huh?")
 })
@@ -83,9 +85,29 @@ function connectPeers(socket, peer){
   socket.emit('room_joined', true, room);
 }
 
+function filterQueue(q, socket){
+  let ar = [];
+  if(users[socket.id].pref === "both"){
+    for(let el=0; el<q.length; el++){
+      if((users[q[el].id].pref === users[socket.id].gender || users[q[el].id].pref === "both") && users[q[el].id].using === users[socket.id].using){
+        ar.push(q[el]); 
+      }
+    }
+  }else{
+    for(let el=0; el<q.length; el++){
+      if(users[q[el].id].gender === users[socket.id].pref && users[q[el].id].pref === users[socket.id].gender && users[q[el].id].using === users[socket.id].using){
+        ar.push(q[el]); 
+      }
+    }
+  }
+
+  return ar;
+}
+
 function queueSocket(socket){
-    if(!isEmptyObject(queue)){ // add both pref case
-      var filtered = queue.filter(element => users[element.id].gender === users[socket.id].pref && users[element.id].pref === users[socket.id].gender && users[element.id].using === users[socket.id].using);
+    if(!isEmptyObject(queue)){ 
+      var filtered = filterQueue(queue, socket);
+
       if(isEmptyObject(filtered)){
         queue.push(socket);
         console.log(users[socket.id].name + " joined the queue");

@@ -1,5 +1,5 @@
-const nameTaken = async (uName) => {
-    let res = await fetch(`https://api.vibezz.live/name`, {
+const nameTaken = async (uName, endpoint) => {
+    let res = await fetch(`${endpoint}/name`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'

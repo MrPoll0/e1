@@ -1,6 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import setButtonStyle from "./input/setButtonStyle";
+import getAge from "./input/getAge";
+import RedAlert from "./RedAlert";
+import Image from "next/image";
+
+import image1 from "../public/image1.svg";
+import image2 from "../public/image2.svg";
+import image3 from "../public/image3.svg";
 
 import DateContext from "../contexts/input/date";
 import DescriptionContext from "../contexts/input/description";
@@ -13,10 +20,9 @@ import JoinedRoomContext from "../contexts/joinedRoom";
 import en from "../locales/en";
 import es from "../locales/es";
 import fr from "../locales/fr";
-import getAge from "./input/getAge";
-import RedAlert from "./RedAlert";
+import pt from "../locales/pt";
 
-export default function Form(){
+export default function Form({ endpoint }){
     const router = useRouter();
     const { locale } = router;
     let t;
@@ -30,6 +36,9 @@ export default function Form(){
       case "fr":
         t = fr;
         break;
+      case "pt":
+        t = pt;
+        break;
     }
 
     const [name, handleName] = useContext(NameContext);
@@ -40,23 +49,27 @@ export default function Form(){
     const [pos, handlePos] = useContext(PosContext);
     const [joinedRoom, handleJoinedRoom] = useContext(JoinedRoomContext);
 
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(0);
     const [error, setError] = useState(false);
 
     async function handleClick(){
-        const nameTaken = (await import("./input/nameTaken")).default;
-        let taken
-        try{
-          taken = await nameTaken(name);
-        }catch(err){
-          console.log(err);
-        }
+      const nameTaken = (await import("./input/nameTaken")).default;
+      let taken
+      try{
+        taken = await nameTaken(name, endpoint);
+      }catch(err){
+        console.log(err);
+      }
+      if(document.querySelector("input[name='consent-privacy']").checked){ 
         if(!taken){
           handleJoinedRoom(true);
         }else{
           setStep(1);
           setError(t.error_name_taken);
         }
+      }else{
+        setError(t.consent_error)
+      }
     }
 
     function checkInput(step){
@@ -101,13 +114,10 @@ export default function Form(){
             let dmaxLength = 306;
             let dmaxRows = 5;
 
-            //let dcond1 = description != "";
             let dcond2 = description.length < dmaxLength;
             let dcond3 = description.split(/\r\n|\r|\n/).length <= dmaxRows;
             if(dcond2 && dcond3){
               return true;
-            /*}else if(!dcond1){
-              return t.error_description_empty;*/
             }else if(!dcond2){
               return t.error_description_length + " " + dmaxLength;
             }else if(!dcond3){
@@ -120,24 +130,56 @@ export default function Form(){
     let title;
     let content;
 
-    let continueClass = "uppercase shadow-md max-w-xs h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl sm:mt-12 mt-6 m-auto px-28 z-10 text-xl tracking-tighter";
+    let continueClass = "uppercase shadow-md max-w-xs h-14 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl sm:mt-12 mt-6 m-auto mb-0 px-28 z-10 text-xl tracking-tighter";
 
     switch(step){
         case 0:
             content = (
-              <div className="text-center text-sm border-2">
-                <p><strong>{t.landing_1}</strong></p>
-                <br/>
-                <p>{t.landing_2}</p>
-                <p>{t.landing_3}</p>
-                <p>{t.landing_4}</p>
-                <p>{t.landing_5}</p>
-                <p>{t.landing_6}</p>
-                <p>{t.landing_7}</p>
-                <br/>
-                <p>{t.landing_8}</p>
-                <p>{t.landing_9}</p>
-              </div>
+              <>
+              {locale === "en" ? 
+                <h1 className="text-4xl mobile2:text-5xl tablet2:text-6xl 2xl:text-8xl filter drop-shadow-lg font-bold tracking-tighter text-center mt-4">{t.landing_h1}<span className="text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-purple-900">{t.landing_h1_2}</span>{t.landing_h1_3}</h1>
+              :
+                <h1 className="text-4xl mobile2:text-5xl tablet2:text-6xl 2xl:text-8xl filter drop-shadow-lg font-bold tracking-tighter text-center mt-4">{t.landing_h1}<span className="text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-purple-900">{t.landing_h1_2}</span></h1>
+              }
+              <h2 className="text-xl mobile2:text-2xl tablet2:text-3xl 2xl:text-5xl font-thin text-center mt-2">{t.landing_h2}</h2>
+              <button onClick={() => changeStep(1)} type="button" className="uppercase shadow-md max-w-xs 2xl:max-w-md h-14 2xl:h-20 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-12 m-auto mb-0 px-28 z-10 text-xl 2xl:text-4xl tracking-tighter">{t.landing_go}</button>
+
+              <section className="mt-20">
+                <div className="inline-flex space-x-5">
+                  <div style={{width: "40%"}}>
+                    <Image src={image1} alt={t.landing_caract1_alt} className="filter drop-shadow-lg"></Image>
+                  </div>
+                  <div style={{width: "50%"}}>
+                    <p className="text-xl mobile2:text-2xl tablet2:text-3xl 2xl:text-5xl font-bold filter drop-shadow-lg tracking-tighter text-transparent bg-clip-text bg-gradient-to-tr from-blue-300 via-purple-400 to-purple-900">{t.landing_caract1}</p>
+                    <p className="text-sm mobile2:text-base tablet2:text-lg 2xl:text-2xl mt-3 font-thin">{t.landing_caract1_desc}</p>
+                  </div>
+                </div>
+              </section>
+
+              <section className="mt-5 2xl:mt-10">
+                <div className="inline-flex space-x-5">
+                  <div style={{width: "50%"}}>
+                    <p className="text-xl mobile2:text-2xl tablet2:text-3xl 2xl:text-5xl font-bold filter drop-shadow-lg tracking-tighter text-transparent bg-clip-text bg-gradient-to-tr from-blue-300 via-purple-400 to-purple-900">{t.landing_caract2}</p>
+                    <p className="text-sm mobile2:text-base tablet2:text-lg 2xl:text-2xl mt-3 font-thin">{t.landing_caract2_desc}</p>
+                  </div>
+                  <div style={{width: "40%"}}>
+                    <Image src={image2} alt={t.landing_caract2_alt} className="filter drop-shadow-lg"></Image>
+                  </div>
+                </div>
+              </section>
+
+              <section className="mt-5 2xl:mt-10">
+                <div className="inline-flex space-x-5">
+                  <div style={{width: "40%"}}>
+                    <Image src={image3} alt={t.landing_caract3_alt} className="filter drop-shadow-lg"></Image>
+                  </div>
+                  <div style={{width: "50%"}}>
+                    <p className="text-xl mobile2:text-2xl tablet2:text-3xl 2xl:text-5xl font-bold filter drop-shadow-lg tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-purple-900 via-purple-400 to-blue-300">{t.landing_caract3}</p>
+                    <p className="text-sm mobile2:text-base tablet2:text-lg 2xl:text-2xl mt-3 font-thin">{t.landing_caract3_desc}</p>
+                  </div>
+                </div>
+              </section>
+              </>
             );
             break;
         case 1:
@@ -186,7 +228,7 @@ export default function Form(){
                 <div id="container" className="flex flex-col space-y-3 mt-10">
                     <button onClick={ () => handlePref("male") } id="pmale" aria-label={t.sexorient_aria} className={prefclassN}>{t.sexorient_men}</button>
                     <button onClick={ () => handlePref("female") } id="pfemale" aria-label={t.sexorient_aria} className={prefclassN}>{t.sexorient_women}</button>
-                    <button onClick={ () => handlePref("both") } id="pother" aria-label={t.sexorient_aria} className={prefclassN}>{t.sexorient_both}</button>
+                    <button onClick={ () => handlePref("both") } id="pboth" aria-label={t.sexorient_aria} className={prefclassN}>{t.sexorient_both}</button>
                     <button onClick={ () => handlePref("other") } id="pother" aria-label={t.sexorient_aria} className={prefclassN}>{t.sexorient_other}</button>
                 </div>
                 <button name="continue" type="button" onClick={ () => changeStep(1) } className={continueClass}>{t.continue}</button>
@@ -208,17 +250,24 @@ export default function Form(){
             title = t.pos_title;
             content = (
                 <>
-                <div id="container" className="inline-flex space-x-10 mt-10 m-auto">
+                <div id="container" className="inline-flex space-x-10 mt-10 m-auto mb-12">
                     <button id="no" aria-label={t.pos_aria} onClick={ async () => {{  const distanceSelect = (await import("./input/distanceSelect")).default; distanceSelect("no", handlePos) } }} className="uppercase text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-red-400 hover:text-red-400 focus:border-red-500 focus:text-red-500">{t.pos_no}</button>
                     <button id="yes" aria-label={t.pos_aria} onClick={ async () => {{  const distanceSelect = (await import("./input/distanceSelect")).default; distanceSelect("yes", handlePos) } }} className="uppercase text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-green-400 hover:text-green-400 focus:border-green-500 focus:text-green-500">{t.pos_yes}</button>
                 </div>
-                <button id="connect" onClick={ handleClick } className="uppercase shadow-md max-w-xs h-16 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-12 m-auto px-24 z-10 text-2xl tracking-tighter">{t.connect}</button>
+
+                <div className="m-auto space-x-2 flex flex-col my-0">
+                  <div className="inline-flex items-center">                
+                    <input name="consent-privacy" type="checkbox" className="text-purple-500"></input>
+                    <span className="ml-2 text-gray-800">{t.consent_title}<a className="underline" href="https://vibezz.live/privacy-policy.html" target="_blank">{t.consent_privacy}</a></span>
+                  </div>
+                </div>
+                <button id="connect" onClick={ handleClick } className="uppercase shadow-md max-w-xs h-16 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-5 m-auto mb-1 px-24 z-10 text-2xl tracking-tighter">{t.connect}</button>
                 </>
             );
             break;
     }
 
-    const changeStep = (e) => { // change default step to 0 when landing page
+    const changeStep = (e) => {
       if(e == 0){
         if(step > 1){ 
           setStep(step - 1);
@@ -226,12 +275,16 @@ export default function Form(){
         }
       }else if(e == 1){
         if(step <= 6){
-          let check = checkInput(step);
-          if(check == true){ 
-            setStep(step + 1);
-            setError(false);
+          if(step > 0){ 
+            let check = checkInput(step);
+            if(check == true){ 
+              setStep(step + 1);
+              setError(false);
+            }else{
+              setError(check);
+            }
           }else{
-            setError(check);
+            setStep(step + 1);
           }
         }
       }
@@ -240,20 +293,32 @@ export default function Form(){
     useEffect(() => {
       if(step == 2){
         if(gender){
-            setButtonStyle("g", gender);
+          setButtonStyle("g", gender);
         }
       }
 
       if(step == 4){
         if(pref){
-            setButtonStyle("p", pref);
+          setButtonStyle("p", pref);
+        }
+      }
+
+      if(step >= 1 && step < 6){ // Change if steps change
+        let input = document.querySelector("input");
+        if(input){ 
+          input.addEventListener("keyup", function(e){
+            if(e.key === "Enter"){
+              e.preventDefault();
+              document.querySelector("button[name='continue']").click();
+            }
+          });
         }
       }
     }, [step]);
 
     function preventKeyboardResize(){
-      var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-      var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+      var w = document.documentElement.clientWidth;
+      var h = document.documentElement.clientHeight;
       document.body.setAttribute("style", `width: ${w}px; height: ${h}px;`);
     }
 
@@ -269,24 +334,20 @@ export default function Form(){
         <>
         <div id="progress" className={`${step === 0 ? "w-0" : `w-${step}/6` } bg-gradient-to-r from-blue-200 via-purple-400 to-purple-900 h-2`}></div>
         
-        <div className="flex flex-col mx-7 flex-grow">
-          {step !== 0 ? 
-          <>
+        {step !== 0 ? 
+          <div className="flex flex-col mx-7 flex-grow"> 
             <div className="w-full h-10">
               <button name="back" type="button" onClick={ () => changeStep(0) } className={step == 1 ? "font-semibold text-gray-500 text-6xl opacity-50 disabled:opacity-50 cursor-not-allowed" : "font-semibold text-gray-500 text-6xl disabled:opacity-50"}>‹</button>
             </div>
             <h3 className="font-semibold mt-10 text-5xl text-gray-smooth tracking-tighter mb-10">{title}</h3>
             {error !== false && <RedAlert title={t.error} message={error}/>}
             {content}
-          </>
-          : 
-          <>
+          </div>
+        :
+          <div className="flex flex-col mx-7 tablet:mx-24 laptop:mx-64 desktop:mx-80 2xl:mx-desktop2 flex-grow">
             {content}
-          </>
-          }
-        </div>
+          </div>
+        }
         </>
     )
 }
-
-// 

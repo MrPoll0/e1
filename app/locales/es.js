@@ -1,4 +1,7 @@
 export default {
+    meta_title: `Amor, amistad o lo que surja | Vibezz.live`,
+    meta_description: `En Vibezz.live podrás conocer a las personas que realmente te interesan y charlar con ellas. ¡Sin rodeos ni largas esperas!`,
+
     name_title: `Mi nombre es`,
     name_placeholder: "Nombre",
 
@@ -43,13 +46,21 @@ export default {
     error_description_length: "Los caracteres máximos de la descripción son: ",
     error_description_rows: "Las filas máximas de la descripción son: ",
 
-    landing_1: `¡Hey!`,
-    landing_2: `Bienvenida/o a VIBEZZ 👋`,
-    landing_3: `Aquí podrás relacionarte con personas a través de videollamadas, ya sean de cualquier parte del mundo o las que se encuentren más cerca de ti. `,
-    landing_4: `Además, podrás seleccionar tus preferencias personales a la hora de emparejarte con alguien.`,
-    landing_5: `Da igual cual sea tu objetivo: simplemente charlar o algo más, cualquiera tiene un hueco en la plataforma.`,
-    landing_6: `Esperamos que encuentres una gran persona en tu paso por aquí. 😃`,
-    landing_7: `PD: Recuerda respetar a todos/as. 🚨`,
-    landing_8: `Cordialmente,`,
-    landing_9: `El equipo de VIBEZZ`,
+    consent_title: `He revisado y acepto la `,
+    consent_privacy: "política de privacidad",
+    consent_error: ` Sin el consentimiento, no podemos procesar tu información y por lo tanto, no te puedes conectar al servicio.`,
+
+    landing_h1: `Conoce a gente `,
+    landing_h1_2: `increíble`,
+    landing_h2: `Podrás hablar con diferentes personas, hacer amigos nuevos o encontrar pareja.`,
+    landing_go: `Adelante`,
+    landing_caract1: `Descubre tu zona o ve más allá`,
+    landing_caract1_desc: `Encuentra a personas que estén cerca o lejos de ti, tú decides!`,
+    landing_caract1_alt: `Mapa`,
+    landing_caract2: `¡No pierdas el tiempo con nadie!`,
+    landing_caract2_desc: `Elige tus preferencias personales para encontrar tu match ideal.`,
+    landing_caract2_alt: `Chica seleccionando sus preferencias`,
+    landing_caract3: `Eres libre de hacer lo que quieras`,
+    landing_caract3_desc: `Cambia de conversación siempre que así lo desees y conoce a nuevas personas.`,
+    landing_caract3_alt: `Chico y chica corriendo felizmente`,
 }

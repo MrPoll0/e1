@@ -1,10 +1,11 @@
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useRef, useContext, useState } from "react";
 import socketIOClient from "socket.io-client";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import en from "../locales/en";
 import es from "../locales/es";
 import fr from "../locales/fr";
+import pt from "../locales/pt";
 import Form from "./Form";
 import getAge from "./input/getAge";
 import Header from "./Header";
@@ -45,8 +46,11 @@ const Video = () => {
       case "fr":
         t = fr;
         break;
+      case "pt":
+        t = pt;
+        break;
     }
-
+      // https://e1-api.herokuapp.com
     const ENDPOINT = "https://api.vibezz.live";
 
     const iceServers = {
@@ -134,6 +138,10 @@ const Video = () => {
               muteCam(localStream, handleCamIStatus);
               camMuted = !camMuted;
             }
+          });
+
+          document.querySelector("div[id='cancel']").addEventListener("click", async function(){
+            window.location.reload();
           });
 
           if(joinedRoom) {
@@ -236,24 +244,24 @@ const Video = () => {
             handleRemoting(false);
             localStream = undefined;
             remoteStream = undefined;
-            alert("Your mate disconnected. Looking for new people... (with the same options)");
             setTimeout(() => {
               socket.emit("next");
-            }, 3000)
+            }, 1000)
           });
 
           socket.on('room_joined', async (bool, room) => {
-              await setLocalStream(mediaConstraints);
-              isCaller = bool;
-              roomId = room;
+            await setLocalStream(mediaConstraints);
 
-              console.log("room_joined --> " + isCaller);
+            isCaller = bool;
+            roomId = room;
 
-              if(isCaller){
-                socket.emit('caller_ready', room);
-              }else{
-                socket.emit('receiver_ready', room);
-              }
+            console.log("room_joined --> " + isCaller);
+
+            if(isCaller){
+              socket.emit('caller_ready', room);
+            }else{
+              socket.emit('receiver_ready', room);
+            }
           })
             
           socket.on('start_call', async (info) => {
@@ -459,12 +467,12 @@ const Video = () => {
         }
       }
     }, [RemoteVideo]);
- // <LanguageSelector/>
+
     return (
       <main>
         {!joinedRoom && <div className="flex flex-col h-screen">
           <Header/>
-          <Form/>
+          <Form endpoint={ENDPOINT}/>
           <Footer/>
         </div>
         }

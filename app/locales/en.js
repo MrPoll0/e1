@@ -1,4 +1,7 @@
 export default {
+    meta_title: `Love, friendship or whatever arises | Vibezz.live`,
+    meta_description: `In Vibezz.live you can meet the people that really interest you and chat with them. No detours or long waits!`,
+
     name_title: `My name is`,
     name_placeholder: "Name",
 
@@ -43,13 +46,22 @@ export default {
     error_description_length: "Description maximum characters are: ",
     error_description_rows: "Description maximum rows are: ",
 
-    landing_1: `Hey!`,
-    landing_2: `Welcome to VIBEZZ 👋`,
-    landing_3: `Here you can interact with people through video calls, whether they are from anywhere in the world or those closest to you.`,
-    landing_4: `In addition, you will be able to select your personal preferences when it comes to match you with someone.`,
-    landing_5: `No matter what your goal is: just chat or something else, everyone has an opportunity on the platform.`,
-    landing_6: `We hope you find a great person in your path here. 😃`,
-    landing_7: `PS: Remember to respect everyone.🚨`,
-    landing_8: `Yours Sincerely,`,
-    landing_9: `Management Team of VIBEZZ`,
+    consent_title: `I have reviewed and agree to the `,
+    consent_privacy: "privacy policy",
+    consent_error: `Without the consent, we cannot process your information and therefore, you are unable to connect to the service.`,
+
+    landing_h1: `Meet `,
+    landing_h1_2: `amazing`,
+    landing_h1_3: ` people`,
+    landing_h2: `You can talk to different people, make new friends or find a partner.`,
+    landing_go: `Go`,
+    landing_caract1: `Discover your area or go further`,
+    landing_caract1_desc: `Find people who are near or far from you, you decide!`,
+    landing_caract1_alt: `Map`,
+    landing_caract2: `Don't waste time with anyone!`,
+    landing_caract2_desc: `Choose your personal preferences to find your perfect match.`,
+    landing_caract2_alt: `Girl selecting her preferences`,
+    landing_caract3: `You're free to do whatever you want`,
+    landing_caract3_desc: `Change of conversation whenever you want and meet new people.`,
+    landing_caract3_alt: `Boy and girl running happily`,
 }

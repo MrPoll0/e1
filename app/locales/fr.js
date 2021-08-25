@@ -1,4 +1,7 @@
 export default {
+    meta_title: `Amour, amitié ou quoi que ce soit d'autre | Vibezz.live`,
+    meta_description: `Sur Vibezz.live, vous pouvez rencontrer les personnes qui vous intéressent vraiment et discuter avec elles. Pas de détours ni de longues attentes!`,
+
     name_title: `Mon nom est`,
     name_placeholder: "Nom",
     
@@ -43,13 +46,21 @@ export default {
     error_description_length: "Les caractères maximum de la description sont: ",
     error_description_rows: "Les lignes maximales de la description sont: ",
 
-    landing_1: `Hey!`,
-    landing_2: `Bienvenue à VIBEZZ 👋`,
-    landing_3: `Ici, vous pouvez interagir avec des personnes par le biais d'appels vidéo, qu'elles se trouvent n'importe où dans le monde ou qu'elles soient proches de vous.`,
-    landing_4: `En outre, vous pourrez sélectionner vos préférences personnelles lors de la mise en relation avec quelqu'un.`,
-    landing_5: `Quel que soit votre objectif : simplement chatter ou quelque chose de plus, chacun a sa place sur la plateforme.`,
-    landing_6: `Nous espérons que vous trouverez une personne formidable pendant votre séjour ici. 😃`,
-    landing_7: `PS: N'oubliez pas de respecter tout le monde. 🚨`,
-    landing_8: `Cordialement,`,
-    landing_9: `L'équipe de VIBEZZ`,
+    consent_title: `J'ai lu et j'accepte la `,
+    consent_privacy: "politique de confidentialité",
+    consent_error: `Sans le consentement, nous ne pouvons pas traiter vos informations et par conséquent, vous ne pouvez pas vous connecter au service.`,
+
+    landing_h1: `Rencontrer des gens `,
+    landing_h1_2: `incroyables`,
+    landing_h2: `Vous pourrez parler à différentes personnes, vous faire de nouveaux amis ou trouver un partenaire.`,
+    landing_go: `Avant`,
+    landing_caract1: `Découvrez votre région ou allez plus loin`,
+    landing_caract1_desc: `Trouvez des personnes proches ou éloignées de vous, c'est vous qui décidez!`,
+    landing_caract1_alt: `Carte`,
+    landing_caract2: `Ne perdez de temps avec personne !`,
+    landing_caract2_desc: `Choisissez vos préférences personnelles pour trouver votre match idéal.`,
+    landing_caract2_alt: `Fille sélectionnant ses préférences`,
+    landing_caract3: `Vous êtes libre de faire ce que vous voulez`,
+    landing_caract3_desc: `Changez de conversation quand vous le souhaitez et rencontrez de nouvelles personnes.`,
+    landing_caract3_alt: `Garçon et fille courir joyeusement`,
 }
