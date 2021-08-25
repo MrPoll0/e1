@@ -1,5 +1,5 @@
 export default {
-    meta_title: `Amor, amizade ou o que quer que surja | Vibezz.live`,
+    meta_title: `Amor, amizade ou o que quer que surja`,
     meta_description: `No Vibezz.live você pode conhecer pessoas que realmente lhe interessam e bater um papo com elas. Sem desvios ou longas esperas!`,
     
     name_title: `Meu nome é`,
