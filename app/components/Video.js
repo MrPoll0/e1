@@ -239,6 +239,10 @@ const Video = () => {
             console.log("Socket disconnected: " + socket.id);
           });
 
+          socket.on("connect_error", (err) => {
+            console.log("Error code: " + err);
+          });
+
           socket.on("peer_disconnected", () => {
             handleStreaming(false);
             handleRemoting(false);
