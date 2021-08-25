@@ -7,6 +7,7 @@ import Image from "next/image";
 
 import image1 from "../public/image1.svg";
 import image2 from "../public/image2.svg";
+import image3 from "../public/image3.svg";
 
 import DateContext from "../contexts/input/date";
 import DescriptionContext from "../contexts/input/description";
@@ -145,7 +146,7 @@ export default function Form({ endpoint }){
               <section className="mt-20">
                 <div className="inline-flex space-x-5">
                   <div style={{width: "40%"}}>
-                    <Image src={image1} alt={t.landing_caract1_alt}className="filter drop-shadow-lg"></Image>
+                    <Image src={image1} alt={t.landing_caract1_alt} className="filter drop-shadow-lg"></Image>
                   </div>
                   <div style={{width: "50%"}}>
                     <p className="text-xl mobile2:text-2xl tablet2:text-3xl 2xl:text-5xl font-bold filter drop-shadow-lg tracking-tighter text-transparent bg-clip-text bg-gradient-to-tr from-blue-300 via-purple-400 to-purple-900">{t.landing_caract1}</p>
@@ -157,10 +158,24 @@ export default function Form({ endpoint }){
               <section className="mt-5 2xl:mt-10">
                 <div className="inline-flex space-x-5">
                   <div style={{width: "50%"}}>
-                    <p className="text-xl mobile2:text-2xl tablet2:text-3xl 2xl:text-5xl font-bold filter drop-shadow-lg tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-purple-900 via-purple-400 to-blue-300">{t.landing_caract2}</p>
+                    <p className="text-xl mobile2:text-2xl tablet2:text-3xl 2xl:text-5xl font-bold filter drop-shadow-lg tracking-tighter text-transparent bg-clip-text bg-gradient-to-tr from-blue-300 via-purple-400 to-purple-900">{t.landing_caract2}</p>
                     <p className="text-sm mobile2:text-base tablet2:text-lg 2xl:text-2xl mt-3 font-thin">{t.landing_caract2_desc}</p>
                   </div>
-                  <Image src={image2} alt={t.landing_caract2_alt} className="filter drop-shadow-lg"></Image>
+                  <div style={{width: "40%"}}>
+                    <Image src={image2} alt={t.landing_caract2_alt} className="filter drop-shadow-lg"></Image>
+                  </div>
+                </div>
+              </section>
+
+              <section className="mt-5 2xl:mt-10">
+                <div className="inline-flex space-x-5">
+                  <div style={{width: "40%"}}>
+                    <Image src={image3} alt={t.landing_caract3_alt} className="filter drop-shadow-lg"></Image>
+                  </div>
+                  <div style={{width: "50%"}}>
+                    <p className="text-xl mobile2:text-2xl tablet2:text-3xl 2xl:text-5xl font-bold filter drop-shadow-lg tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-purple-900 via-purple-400 to-blue-300">{t.landing_caract3}</p>
+                    <p className="text-sm mobile2:text-base tablet2:text-lg 2xl:text-2xl mt-3 font-thin">{t.landing_caract3_desc}</p>
+                  </div>
                 </div>
               </section>
               </>
