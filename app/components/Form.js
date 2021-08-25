@@ -255,7 +255,7 @@ export default function Form({ endpoint }){
                     <button id="yes" aria-label={t.pos_aria} onClick={ async () => {{  const distanceSelect = (await import("./input/distanceSelect")).default; distanceSelect("yes", handlePos) } }} className="uppercase text-4xl border-2 rounded border-gray-900 p-2 text-gray-700 hover:border-green-400 hover:text-green-400 focus:border-green-500 focus:text-green-500">{t.pos_yes}</button>
                 </div>
 
-                <div className="m-auto space-x-2 flex flex-col my-0">
+                <div className="m-auto space-x-2 flex flex-col my-0 text-lg">
                   <div className="inline-flex items-center">                
                     <input name="consent-privacy" type="checkbox" className="text-purple-500"></input>
                     <span className="ml-2 text-gray-800">{t.consent_title}<a className="underline" href="https://vibezz.live/privacy-policy.html" target="_blank">{t.consent_privacy}</a></span>
