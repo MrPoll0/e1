@@ -39,7 +39,7 @@ const io = require('socket.io')(server, {
 io.use((socket, next) => {
   if(socket.handshake){
     if(socket.handshake.headers.origin !== "https://vibezz.live"){
-      console.log("Origin trying to access socket connection: " + socket.handshake.headers.origin);
+      console.log("[418] Origin trying to access socket connection: " + socket.handshake.headers.origin);
       const err = new Error("418");
       next(err);
     }else{
