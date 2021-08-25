@@ -114,13 +114,10 @@ export default function Form({ endpoint }){
             let dmaxLength = 306;
             let dmaxRows = 5;
 
-            //let dcond1 = description != "";
             let dcond2 = description.length < dmaxLength;
             let dcond3 = description.split(/\r\n|\r|\n/).length <= dmaxRows;
             if(dcond2 && dcond3){
               return true;
-            /*}else if(!dcond1){
-              return t.error_description_empty;*/
             }else if(!dcond2){
               return t.error_description_length + " " + dmaxLength;
             }else if(!dcond3){
@@ -260,7 +257,7 @@ export default function Form({ endpoint }){
 
                 <div className="m-auto space-x-2 flex flex-col my-0">
                   <div className="inline-flex items-center">                
-                    <input name="consent-privacy" type="checkbox"></input>
+                    <input name="consent-privacy" type="checkbox" className="text-purple-500"></input>
                     <span className="ml-2 text-gray-800">{t.consent_title}<a className="underline" href="https://vibezz.live/privacy-policy.html" target="_blank">{t.consent_privacy}</a></span>
                   </div>
                 </div>

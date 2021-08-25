@@ -1,4 +1,7 @@
 export default {
+    meta_title: `Love, friendship or whatever arises | Vibezz.live`,
+    meta_description: `In Vibezz.live you can meet the people that really interest you and chat with them. No detours or long waits!`,
+
     name_title: `My name is`,
     name_placeholder: "Name",
 

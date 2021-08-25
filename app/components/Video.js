@@ -246,21 +246,22 @@ const Video = () => {
             remoteStream = undefined;
             setTimeout(() => {
               socket.emit("next");
-            }, 3000)
+            }, 1000)
           });
 
           socket.on('room_joined', async (bool, room) => {
-              await setLocalStream(mediaConstraints);
-              isCaller = bool;
-              roomId = room;
+            await setLocalStream(mediaConstraints);
 
-              console.log("room_joined --> " + isCaller);
+            isCaller = bool;
+            roomId = room;
 
-              if(isCaller){
-                socket.emit('caller_ready', room);
-              }else{
-                socket.emit('receiver_ready', room);
-              }
+            console.log("room_joined --> " + isCaller);
+
+            if(isCaller){
+              socket.emit('caller_ready', room);
+            }else{
+              socket.emit('receiver_ready', room);
+            }
           })
             
           socket.on('start_call', async (info) => {

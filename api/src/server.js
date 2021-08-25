@@ -14,6 +14,8 @@ app.use(cors());
 // Enable pre-flight
 app.options("*", cors());
 
+app.disable("x-powered-by");
+
 app.get("*", function(req, res) {
   res.send("So... you're a spy, huh?")
 })
