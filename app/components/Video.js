@@ -248,9 +248,7 @@ const Video = () => {
             handleRemoting(false);
             localStream = undefined;
             remoteStream = undefined;
-            setTimeout(() => {
-              socket.emit("next");
-            }, 1000)
+            socket.emit("next");
           });
 
           socket.on('room_joined', async (bool, room) => {
@@ -336,6 +334,11 @@ const Video = () => {
 
     useEffect(() => {
       if(streaming){ 
+
+        window.onbeforeunload = function() {
+          return "";
+        }
+
         var isMobile = false;
 
         if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) 
@@ -384,6 +387,9 @@ const Video = () => {
             var y = parseInt(local.style.top);
           });
         }
+      }
+      return () => {
+        window.onbeforeunload = undefined;
       }
     }, [streaming]);
 

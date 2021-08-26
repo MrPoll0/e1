@@ -258,7 +258,7 @@ export default function Form({ endpoint }){
                 <div className="m-auto space-x-2 flex flex-col my-0 text-lg">
                   <div className="inline-flex items-center">                
                     <input name="consent-privacy" type="checkbox" className="text-purple-500"></input>
-                    <span className="ml-2 text-gray-800">{t.consent_title}<a className="underline" href="https://vibezz.live/privacy-policy.html" target="_blank">{t.consent_privacy}</a></span>
+                    <span className="ml-2 text-gray-800">{t.consent_title}<a className="underline" href="https://vibezz.live/privacy-policy.html" target="_blank">{t.consent_privacy}</a> {t.consent_and} <a className="underline" href="https://vibezz.live/terms-of-use.html" target="_blank">{t.consent_terms}</a>.</span>
                   </div>
                 </div>
                 <button id="connect" onClick={ handleClick } className="uppercase shadow-md max-w-xs h-16 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-5 m-auto mb-1 px-24 z-10 text-2xl tracking-tighter">{t.connect}</button>

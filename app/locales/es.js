@@ -49,6 +49,8 @@ export default {
     consent_title: `He revisado y acepto la `,
     consent_privacy: "política de privacidad",
     consent_error: ` Sin el consentimiento, no podemos procesar tu información y por lo tanto, no te puedes conectar al servicio.`,
+    consent_and: "y los",
+    consent_terms: "términos de uso",
 
     landing_h1: `Conoce a gente `,
     landing_h1_2: `increíble`,

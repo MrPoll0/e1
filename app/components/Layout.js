@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import en from "../locales/en";
 import es from "../locales/es";
 import fr from "../locales/fr";

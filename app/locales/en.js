@@ -49,6 +49,8 @@ export default {
     consent_title: `I have reviewed and agree to the `,
     consent_privacy: "privacy policy",
     consent_error: `Without the consent, we cannot process your information and therefore, you are unable to connect to the service.`,
+    consent_and: "and the",
+    consent_terms: "terms of use",
 
     landing_h1: `Meet `,
     landing_h1_2: `amazing`,
