@@ -137,12 +137,12 @@ export default function Form({ endpoint }){
             content = (
               <>
               {locale === "en" ? 
-                <h1 className="text-4xl mobile2:text-5xl tablet2:text-6xl 2xl:text-8xl filter drop-shadow-lg font-bold tracking-tighter text-center mt-4">{t.landing_h1}<span className="text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-purple-900">{t.landing_h1_2}</span>{t.landing_h1_3}</h1>
+                <h1 className="text-3xl mobile2:text-4xl tablet2:text-5xl 2xl:text-7xl filter drop-shadow-lg font-bold tracking-tighter text-center mt-5">{t.landing_h1}<span className="text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-purple-900">{t.landing_h1_2}</span>{t.landing_h1_3}</h1>
               :
-                <h1 className="text-4xl mobile2:text-5xl tablet2:text-6xl 2xl:text-8xl filter drop-shadow-lg font-bold tracking-tighter text-center mt-4">{t.landing_h1}<span className="text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-purple-900">{t.landing_h1_2}</span></h1>
+                <h1 className="text-4xl mobile2:text-5xl tablet2:text-6xl 2xl:text-8xl filter drop-shadow-lg font-bold tracking-tighter text-center mt-5">{t.landing_h1}<span className="text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-purple-900">{t.landing_h1_2}</span></h1>
               }
               <h2 className="text-xl mobile2:text-2xl tablet2:text-3xl 2xl:text-5xl font-thin text-center mt-2">{t.landing_h2}</h2>
-              <button onClick={() => changeStep(1)} type="button" className="uppercase shadow-md max-w-xs 2xl:max-w-md h-14 2xl:h-20 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-900 rounded-xl mt-12 m-auto mb-0 px-28 z-10 text-xl 2xl:text-4xl tracking-tighter">{t.landing_go}</button>
+              <button onClick={() => changeStep(1)} type="button" className="shadow-purple uppercase max-w-xs 2xl:max-w-md h-14 2xl:h-20 bg-gradient-to-r text-white font-semibold from-blue-200 via-purple-400 to-purple-800 rounded-xl mt-12 m-auto mb-0 px-28 z-10 text-xl 2xl:text-4xl tracking-tighter">{t.landing_go}</button>
 
               <section className="mt-20">
                 <div className="inline-flex space-x-5">
@@ -177,6 +177,65 @@ export default function Form({ endpoint }){
                     <p className="text-xl mobile2:text-2xl tablet2:text-3xl 2xl:text-5xl font-bold filter drop-shadow-lg tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-purple-900 via-purple-400 to-blue-300">{t.landing_caract3}</p>
                     <p className="text-sm mobile2:text-base tablet2:text-lg 2xl:text-2xl mt-3 font-thin">{t.landing_caract3_desc}</p>
                   </div>
+                </div>
+              </section>
+
+              <section className="pt-24 max-w-screen-lg mx-auto">
+                <div className="text-center mb-16">
+                  <p className="mt-4 text-sm leading-7 text-gray-500 font-regular">
+                      F.A.Q
+                  </p>
+                  <h3 className="text-3xl sm:text-4xl leading-normal font-extrabold tracking-tight text-gray-900">
+                    {t === "en" ? 
+                    <> {t.faq_title1}<span className="text-purple-600">{t.faq_title2}</span> </>
+                    :
+                    <> <span className="text-purple-600">{t.faq_title1}</span>{t.faq_title2} </>
+                    }
+                  </h3>
+                </div>
+                
+                <div className="px-10 sm:px-16 sm:flex">
+                  <div>
+                    <div className="flex items-start mb-8">
+                      <div className="hidden sm:flex items-center justify-center p-3 mr-3 rounded-full bg-purple-500 text-white border-4 border-white text-xl font-semibold">
+                        <svg width="24px" fill="white" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g data-name="Layer 2"><g data-name="menu-arrow"><rect width="24" height="24" transform="rotate(180 12 12)" opacity="0"/><path d="M17 9A5 5 0 0 0 7 9a1 1 0 0 0 2 0 3 3 0 1 1 3 3 1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-1.1A5 5 0 0 0 17 9z"/><circle cx="12" cy="19" r="1"/></g></g></svg>
+                      </div>
+                      <div className="text-md">
+                        <h1 className="text-gray-900 font-semibold mb-2">{t.faq_q1}</h1>
+                        <p className="text-gray-500 text-sm">{t.faq_a1}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start mb-8">
+                      <div className="hidden sm:flex items-center justify-center p-3 mr-3 rounded-full bg-purple-500 text-white border-4 border-white text-xl font-semibold">
+                        <svg width="24px" fill="white" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g data-name="Layer 2"><g data-name="menu-arrow"><rect width="24" height="24" transform="rotate(180 12 12)" opacity="0"/><path d="M17 9A5 5 0 0 0 7 9a1 1 0 0 0 2 0 3 3 0 1 1 3 3 1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-1.1A5 5 0 0 0 17 9z"/><circle cx="12" cy="19" r="1"/></g></g></svg>
+                      </div>
+                      <div className="text-md">
+                        <h1 className="text-gray-900 font-semibold mb-2">{t.faq_q2}</h1>
+                        <p className="text-gray-500 text-sm">{t.faq_a2}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start mb-8">
+                      <div className="hidden sm:flex items-center justify-center p-3 mr-3 rounded-full bg-purple-500 text-white border-4 border-white text-xl font-semibold">
+                        <svg width="24px" fill="white" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g data-name="Layer 2"><g data-name="menu-arrow"><rect width="24" height="24" transform="rotate(180 12 12)" opacity="0"/><path d="M17 9A5 5 0 0 0 7 9a1 1 0 0 0 2 0 3 3 0 1 1 3 3 1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-1.1A5 5 0 0 0 17 9z"/><circle cx="12" cy="19" r="1"/></g></g></svg>
+                      </div>
+                      <div className="text-md">
+                        <h1 className="text-gray-900 font-semibold mb-2">{t.faq_q3}</h1>
+                        <p className="text-gray-500 text-sm">{t.faq_a3}<a href="https://vibezz.live/privacy-policy.html" className="underline" target="_blank">{t.consent_privacy}.</a></p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start mb-8">
+                      <div className="hidden sm:flex items-center justify-center p-3 mr-3 rounded-full bg-purple-500 text-white border-4 border-white text-xl font-semibold">
+                        <svg width="24px" fill="white" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g data-name="Layer 2"><g data-name="menu-arrow"><rect width="24" height="24" transform="rotate(180 12 12)" opacity="0"/><path d="M17 9A5 5 0 0 0 7 9a1 1 0 0 0 2 0 3 3 0 1 1 3 3 1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-1.1A5 5 0 0 0 17 9z"/><circle cx="12" cy="19" r="1"/></g></g></svg>
+                      </div>
+                      <div className="text-md">
+                        <h1 className="text-gray-900 font-semibold mb-2">{t.faq_q4}</h1>
+                        <p className="text-gray-500 text-sm">{t.faq_a4}</p>
+                      </div>
+                    </div>
+                  </div> 
                 </div>
               </section>
               </>

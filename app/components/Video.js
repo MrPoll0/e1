@@ -50,7 +50,7 @@ const Video = () => {
         t = pt;
         break;
     }
-      // https://e1-api.herokuapp.com
+      // https://e1-api.herokuapp.com   https://api.vibezz.live
     const ENDPOINT = "https://api.vibezz.live";
 
     const iceServers = {

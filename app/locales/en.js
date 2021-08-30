@@ -66,4 +66,15 @@ export default {
     landing_caract3: `You're free to do whatever you want`,
     landing_caract3_desc: `Change of conversation whenever you want and meet new people.`,
     landing_caract3_alt: `Boy and girl running happily`,
+
+    faq_title1: `Frequently Asked `,
+    faq_title2: `Questions`,
+    faq_q1: `What can I do on Vibezz.live?`,
+    faq_a1: `Vibezz.live gives you the chance to meet many people, so you can make new friends or find a partner. Obviously, there will be people who do not interest you nor they are instered for you, but that is why you can change of conversation whenever you want. Work on it up a bit and you've got it done.`,
+    faq_q2: `How does Vibezz.live work?`,
+    faq_a2: `It's very simple. Users join and mark some of their personal data, as well as their preferences. With all this information, we take care of making an ideal match so that every user can talk with whoever they really want through their webcam.`,
+    faq_q3: `Do I need to put my personal data?`,
+    faq_a3: `We do not force you to put your personal data. It is simply information that we need to match people in the best possible way so that they have a great experience on the platform. To know more about your privacy, check out the `,
+    faq_q4: `Is Vibezz.live totally free?`,
+    faq_a4: `Everything you can do on the platform today is free. We monetize with donations of people who believe in the project and support it, you could be one!`,
 }
