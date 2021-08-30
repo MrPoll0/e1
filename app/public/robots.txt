@@ -1,8 +1,10 @@
-Sitemap: https://vibezz.live/api/sitemap
+Sitemap: https://vibezz.live/sitemap.xml
 
 
 # Allow all user agents.
 User-agent: *
+Allow: /
 
-Allow: /*
-Disallow: /api/*
+# User agent "Googlebot" should not crawl the `http://example.com/nogooglebot/` folder or any of its subdirectories.
+User-agent: Googlebot
+Disallow: /nogooglebot/
