@@ -30,7 +30,7 @@ export default function Layout({ children }) {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <meta charSet="utf-8" />
 
-                <title>{t.meta_title}</title>
+                <title>Vibezz.live · {t.meta_title}</title>
                 <meta name="theme-color" content="#a05cf6" />
                 <meta name="description" content={t.meta_description} />
                 <meta hrefLang={locale} />

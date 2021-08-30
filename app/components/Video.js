@@ -1,4 +1,4 @@
-import { useEffect, useRef, useContext, useState } from "react";
+import { useEffect, useRef, useContext } from "react";
 import socketIOClient from "socket.io-client";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -50,8 +50,8 @@ const Video = () => {
         t = pt;
         break;
     }
-      // https://e1-api.herokuapp.com
-    const ENDPOINT = "https://api.vibezz.live";
+      // https://e1-api.herokuapp.com   https://api.vibezz.live
+    const ENDPOINT = process.env.NEXT_PUBLIC_ENDPOINT;
 
     const iceServers = {
         iceServers: [
@@ -60,12 +60,12 @@ const Video = () => {
           { url: 'stun:stun2.l.google.com:19302' },
           { url: 'stun:stun3.l.google.com:19302' },
           { url: 'stun:stun4.l.google.com:19302' },
-          { url: 'stun:turn.vibezz.live' },
+          /*{ url: 'stun:turn.vibezz.live' },
           {
             url: 'turn:turn.vibezz.live',
             credential: 'qwertyuiopasdfghjklñzxcvbnm121;!',
             username: 'admin',
-          },
+          },*/
         ],
     }
 
@@ -232,11 +232,15 @@ const Video = () => {
       
           // SOCKET EVENT CALLBACKS =====================================================
           socket.on("connect", () => {
-            console.log("Socket connected: " + socket.id);
+            //console.log("Socket connected: " + socket.id);
           });
 
           socket.on("disconnect", () => {
-            console.log("Socket disconnected: " + socket.id);
+            //console.log("Socket disconnected: " + socket.id);
+          });
+
+          socket.on("connect_error", (err) => {
+            console.log("Error code: " + err);
           });
 
           socket.on("peer_disconnected", () => {
@@ -244,9 +248,7 @@ const Video = () => {
             handleRemoting(false);
             localStream = undefined;
             remoteStream = undefined;
-            setTimeout(() => {
-              socket.emit("next");
-            }, 1000)
+            socket.emit("next");
           });
 
           socket.on('room_joined', async (bool, room) => {
@@ -307,7 +309,7 @@ const Video = () => {
           })
             
           socket.on('webrtc_ice_candidate', (event) => {
-              console.log('Socket event callback: webrtc_ice_candidate')
+              //console.log('Socket event callback: webrtc_ice_candidate')
             
               // ICE candidate configuration.
               var candidate = new RTCIceCandidate({
@@ -332,6 +334,11 @@ const Video = () => {
 
     useEffect(() => {
       if(streaming){ 
+
+        window.onbeforeunload = function() {
+          return "";
+        }
+
         var isMobile = false;
 
         if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) 
@@ -380,6 +387,9 @@ const Video = () => {
             var y = parseInt(local.style.top);
           });
         }
+      }
+      return () => {
+        window.onbeforeunload = undefined;
       }
     }, [streaming]);
 

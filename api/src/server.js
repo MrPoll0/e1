@@ -32,7 +32,23 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
   cors: {
     origin: "https://vibezz.live",
-    methods: ["GET", "POST"]
+    methods: ["GET", "POST"],
+  },
+  cookie: false,
+});
+
+io.use((socket, next) => {
+  if(socket.handshake){
+    if(socket.handshake.headers.origin !== "https://vibezz.live"){
+      console.log("[418] Origin trying to access socket connection: " + socket.handshake.headers.origin);
+      const err = new Error("418");
+      next(err);
+    }else{
+      next();
+    }
+  }else{
+    const err = new Error("406");
+    next(err);
   }
 });
 

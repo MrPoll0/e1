@@ -7,6 +7,8 @@ export default function Footer() {
             <div className="space-x-5">
                 <LanguageSelector/>
                 <a target="_blank" href="/privacy-policy.html" className="text-base underline">Privacy Policy</a>
+                <a target="_blank" href="/terms-of-use.html" className="text-base underline">Terms of Use</a>
+                <a href="mailto:admin@vibezz.live" className="text-base underline">Contact</a>
             </div>
             <p>&copy; MrPoll0 2021</p>
             <p><a target="_blank" href="/credits.html" className="underline">Credits</a></p>

@@ -1,5 +1,4 @@
-# Vibezz
-## Not compatible with Socket.io 2.4.0 at the moment!
+# Vibezz.live
 
 ## Getting started
 To get started, run the following commands:

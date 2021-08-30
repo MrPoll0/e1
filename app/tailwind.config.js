@@ -43,6 +43,7 @@ module.exports = {
     },
     boxShadow: {
       'highlight': '0 0 0 4px #60A5FA',
+      'purple': '0 2px 35px 5px rgba(158, 91, 245, 1)',
       ...defaultTheme.boxShadow,
     },
   },

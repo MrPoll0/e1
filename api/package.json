@@ -1,5 +1,5 @@
 {
-    "name": "mysql-node-express",
+    "name": "vibezz.live-api",
     "version": "1.0.0",
     "description": "",
     "main": "src/server.js",
@@ -16,7 +16,7 @@
         "express-validator": "^6.6.0",
         "jsonwebtoken": "^8.5.1",
         "mysql2": "^2.1.0",
-        "socket.io": "^2.3.0"
+        "socket.io": "^2.4.1"
     },
     "devDependencies": {
         "nodemon": "^2.0.4"

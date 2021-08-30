@@ -7,6 +7,7 @@ const distanceSelect = (e, handlePos) => {
         setButtonStyle("d", "yes");
       }else{
         alert("Distance not available");
+        handlePos([]);
       }
     }else if(e === "no"){
       handlePos([]);
