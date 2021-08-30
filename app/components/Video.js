@@ -232,11 +232,11 @@ const Video = () => {
       
           // SOCKET EVENT CALLBACKS =====================================================
           socket.on("connect", () => {
-            console.log("Socket connected: " + socket.id);
+            //console.log("Socket connected: " + socket.id);
           });
 
           socket.on("disconnect", () => {
-            console.log("Socket disconnected: " + socket.id);
+            //console.log("Socket disconnected: " + socket.id);
           });
 
           socket.on("connect_error", (err) => {
@@ -309,7 +309,7 @@ const Video = () => {
           })
             
           socket.on('webrtc_ice_candidate', (event) => {
-              console.log('Socket event callback: webrtc_ice_candidate')
+              //console.log('Socket event callback: webrtc_ice_candidate')
             
               // ICE candidate configuration.
               var candidate = new RTCIceCandidate({
