@@ -1,4 +1,4 @@
-import { useEffect, useRef, useContext, useState } from "react";
+import { useEffect, useRef, useContext } from "react";
 import socketIOClient from "socket.io-client";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -51,7 +51,7 @@ const Video = () => {
         break;
     }
       // https://e1-api.herokuapp.com   https://api.vibezz.live
-    const ENDPOINT = "https://api.vibezz.live";
+    const ENDPOINT = process.env.NEXT_PUBLIC_ENDPOINT;
 
     const iceServers = {
         iceServers: [
