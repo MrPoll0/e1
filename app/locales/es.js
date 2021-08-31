@@ -1,5 +1,5 @@
 export default {
-    meta_title: `Amor, amistad o lo que surja`,
+    meta_title: `Amr, amistad o lo que surja`,
     meta_description: `En Vibezz.live podrás conocer a las personas que realmente te interesan y charlar con ellas. ¡Sin rodeos ni largas esperas!`,
 
     name_title: `Mi nombre es`,
@@ -69,7 +69,7 @@ export default {
     faq_title1: `Preguntas`,
     faq_title2: ` frecuentes`,
     faq_q1: `¿Qué puedo hacer en Vibezz.live?`,
-    faq_a1: `Vibezz.live te da la posibilidad de conocer a muchas personas, por lo que podrás hacer amgios nuevos o encontrar pareja. Evidentemente, habrá personas que no te interesen ni tú a ellas, pero por eso puedes cambiar de conversación cuando quieras. Cúrratelo un poco y lo tienes hecho.`,
+    faq_a1: `Vibezz.live te da la posibilidad de conocer a muchas personas, por lo que podrás hacer amigos nuevos o encontrar pareja. Evidentemente, habrá personas que no te interesen ni tú a ellas, pero por eso puedes cambiar de conversación cuando quieras. Cúrratelo un poco y lo tienes hecho.`,
     faq_q2: `¿Cómo funciona Vibezz.live?`,
     faq_a2: `Es muy simple. Los usuarios entran y marcan algunos de sus datos personales, así como sus preferencias. Con toda esta información nos encargamos de realizar un match ideal para que todo usuario pueda hablar con quien realmente quiere a través de su webcam.`,
     faq_q3: `¿Es necesario que ponga mis datos personales?`,
