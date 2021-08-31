@@ -1,5 +1,5 @@
 export default {
-    meta_title: `Amr, amistad o lo que surja`,
+    meta_title: `Amor, amistad o lo que surja`,
     meta_description: `En Vibezz.live podrás conocer a las personas que realmente te interesan y charlar con ellas. ¡Sin rodeos ni largas esperas!`,
 
     name_title: `Mi nombre es`,
