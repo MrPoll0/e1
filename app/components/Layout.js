@@ -8,6 +8,7 @@ import pt from "../locales/pt";
 export default function Layout({ children }) {
     const router = useRouter();
     const { locale } = router;
+    const locales = ["es", "pt", "fr"]
     let t;
     switch(locale){
       case "en":
@@ -24,6 +25,12 @@ export default function Layout({ children }) {
         break;
     }
 
+    for(i=0; i < locales.length; i++){
+      if(locale == locales[i]){
+        locales.splice(locales.indexOf(locale), 1);
+      }
+    }
+
     return ( 
         <>
             <Head>
@@ -35,10 +42,14 @@ export default function Layout({ children }) {
                 <meta name="description" content={t.meta_description} />
                 <meta hrefLang={locale} />
 
-                {locale === "en" ? 
-                <link rel="canonical" href="https://vibezz.live" />
-                :
-                <link rel="canonical" href={`https://vibezz.live/${locale}`} />
+                {locales.map((l) => (
+                  <link rel="alternate" href={l} href={`https://vibezz.live/${l}`}/>
+                ))}
+
+                {locale != "en" ? 
+                  <link rel="alternate" href="https://vibezz.live" />
+                  :
+                  <></>
                 }
 
                 <meta name="og:type" property="og:type" content="website" />
@@ -61,3 +72,13 @@ export default function Layout({ children }) {
         </>
     )
 }
+
+/*
+
+                {locale === "en" ? 
+                <link rel="canonical" href="https://vibezz.live" />
+                :
+                <link rel="canonical" href={`https://vibezz.live/${locale}`} />
+                }
+
+                */
