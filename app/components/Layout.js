@@ -25,7 +25,7 @@ export default function Layout({ children }) {
         break;
     }
 
-    for(i=0; i < locales.length; i++){
+    for(let i=0; i < locales.length; i++){
       if(locale == locales[i]){
         locales.splice(locales.indexOf(locale), 1);
       }
