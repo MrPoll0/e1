@@ -52,10 +52,10 @@ export default function Layout({ children }) {
                   <link rel="alternate" href={l} href={`https://vibezz.live/${l}`}/>
                 ))}
 
-                {locale != "en" ? 
-                  <link rel="alternate" href="https://vibezz.live" />
-                  :
+                {locale === "en" ? 
                   <></>
+                  :
+                  <link rel="alternate" href="https://vibezz.live" />
                 }
 
                 <meta name="og:type" property="og:type" content="website" />
