@@ -42,6 +42,12 @@ export default function Layout({ children }) {
                 <meta name="description" content={t.meta_description} />
                 <meta hrefLang={locale} />
 
+                {locale === "en" ? 
+                <link rel="canonical" href="https://vibezz.live" />
+                :
+                <link rel="canonical" href={`https://vibezz.live/${locale}`} />
+                }
+
                 {locales.map((l) => (
                   <link rel="alternate" href={l} href={`https://vibezz.live/${l}`}/>
                 ))}
@@ -74,11 +80,5 @@ export default function Layout({ children }) {
 }
 
 /*
-
-                {locale === "en" ? 
-                <link rel="canonical" href="https://vibezz.live" />
-                :
-                <link rel="canonical" href={`https://vibezz.live/${locale}`} />
-                }
 
                 */
